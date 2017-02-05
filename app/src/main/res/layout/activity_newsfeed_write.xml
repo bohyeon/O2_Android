@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/mainBlue">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/write_back_btn"
+                android:layout_width="13dp"
+                android:layout_height="22dp"
+                android:src="@drawable/arrow_icon"
+                android:background="@null"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="30dp"
+                android:text="글쓰기"
+                android:textColor="#ffffff"
+                android:textSize="15.5dp"/>
+            <TextView
+                android:id="@+id/write_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="완료"
+                android:textColor="#ffffff"
+                android:textSize="15.5dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/toolbar_title"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="48dp">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true"
+            android:layout_marginBottom="51dp">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/middlelayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:minHeight="97dp">
+
+                        <LinearLayout
+                            android:layout_width="0dip"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1">
+
+                            <EditText
+                                android:id="@+id/edit_post"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:focusableInTouchMode="true"
+                                android:gravity="start"
+                                android:imeOptions="normal"
+                                android:inputType="text|textMultiLine"
+                                android:maxLength="500"
+                                android:hint="운동 중에 궁금한 것, 고민되는 것 물어 보세요. 꿈나무에게 힘이 되는 정보 알려 주세요."
+                                android:paddingBottom="15.0dip"
+                                android:paddingLeft="16.0dip"
+                                android:paddingRight="16.0dip"
+                                android:paddingTop="16.0dip"
+                                android:privateImeOptions="inputType=PredictionOff"
+                                android:textColor="@color/gray2"
+                                android:textColorHint="#808080"
+                                android:textSize="14.0sp"
+                                android:minHeight="150dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/post_selected_img"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="20dp"
+                            android:adjustViewBounds="true"
+                            android:layout_gravity="bottom|center" />
+
+                        <TextView
+                            android:id="@+id/picture_x_btn"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginRight="25dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20dp"
+                            android:textColor="@color/gray"
+                            android:text="x"/>
+
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </ScrollView>
+
+
+        <LinearLayout
+            android:id="@+id/bottomBar"
+            style="@android:style/Holo.ButtonBar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/utility_bar"
+                android:layout_width="fill_parent"
+                android:layout_height="51dip"
+                android:background="#ccc"
+                android:gravity="bottom">
+
+                <ImageView
+                    android:id="@+id/util_divider"
+                    android:layout_width="1.5dip"
+                    android:layout_height="fill_parent"
+                    android:alpha="0.1"
+                    android:background="#ffffffff" />
+
+
+                <Button
+                    android:id="@+id/btnCamera"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="22dip"
+                    android:layout_marginTop="13dp"
+                    android:layout_toRightOf="@+id/util_divider"
+                    android:background="@drawable/ic_menu_camera" />
+
+
+
+            </RelativeLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</RelativeLayout>

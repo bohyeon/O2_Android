@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="tabstyle" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <style name="tabstyle_gray" parent="AppTheme">
+        <item name="android:textColorPrimary">#555</item>
+    </style>
+
+</resources>

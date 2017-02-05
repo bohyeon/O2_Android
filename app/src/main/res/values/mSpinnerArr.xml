@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string-array name="mSpinnerArr">
+       <item>종목선택</item>
+       <item>축구2</item>
+       <item>축구3</item>
+       <item>축구4</item>
+       <item>축구5</item>
+       <item>축구6</item>
+       <item>축구7</item>
+       <item>축구8</item>
+       <item>축구9</item>
+       <item>축구10</item>
+       <item>축구11</item>
+       <item>축구12</item>
+       <item>축구13</item>
+       <item>축구14</item>
+       <item>축구15</item>
+
+   </string-array>
+
+</resources>

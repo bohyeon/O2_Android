@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="vertical"
+        android:background="@color/mainBlue">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="30dp">
+
+
+            <ImageButton
+                android:id="@+id/search_back_icon"
+                android:layout_width="20dp"
+                android:layout_height="18dp"
+                android:background="@drawable/arrow_icon"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/white"
+                android:text="검색"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp">
+
+            <EditText
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:textSize="12dp"
+                android:textColor="@color/white"
+                android:hint="ex)삼성생명 라이온즈"/>
+
+            <ImageButton
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/search_icon"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"></LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#eeeeee"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:gravity="center">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="+"-->
+            <!--android:textSize="30dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/gray2"/>-->
+
+    <!--</LinearLayout>-->
+
+
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:padding="5dp"
+        android:background="#eeeeee">
+
+        <TextView
+            android:id="@+id/life_box_01"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="법률 전문가"
+            android:background="@color/white"
+            android:textColor="@color/gray2"
+            android:layout_margin="5dp"
+            android:textSize="11dp"
+            />
+
+        <TextView
+            android:id="@+id/life_box_02"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="세무,회계 전문가"
+            android:background="@color/white"
+            android:layout_margin="5dp"
+            android:textColor="@color/gray2"
+            android:textSize="11dp"/>
+
+
+        <TextView
+            android:id="@+id/life_box_03"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="부동산 전문가"
+            android:background="@color/white"
+            android:textColor="@color/gray2"
+            android:layout_margin="5dp"
+            android:textSize="11dp"
+            />
+
+        <TextView
+            android:id="@+id/life_box_04"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="뭐라고쓰신거지"
+            android:background="@color/white"
+            android:layout_margin="5dp"
+            android:textColor="@color/gray2"
+            android:textSize="11dp"/>
+
+        <TextView
+            android:id="@+id/life_box_05"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="증권,투자 전문가"
+            android:background="@color/white"
+            android:textColor="@color/gray2"
+            android:layout_margin="5dp"
+            android:textSize="11dp"
+            />
+
+        <TextView
+            android:id="@+id/life_box_06"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="fill_horizontal"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="보험 전문가"
+            android:background="@color/white"
+            android:layout_margin="5dp"
+            android:textColor="@color/gray2"
+            android:textSize="11dp"/>
+
+    </GridLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:background="@color/navy"-->
+        <!--android:paddingRight="10dp">-->
+
+        <!--<ImageButton-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:background="@drawable/menu_icon"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginLeft="30dp"-->
+            <!--android:layout_marginRight="10dp"/>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:background="@color/navy2"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:paddingLeft="20dp">-->
+
+            <!--<ImageView-->
+                <!--android:layout_width="15dp"-->
+                <!--android:layout_height="15dp"-->
+                <!--android:background="@drawable/search_icon"-->
+                <!--android:layout_gravity="center_vertical"/>-->
+
+            <!--<EditText-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:textSize="17dp"-->
+                <!--android:hint="검색"-->
+                <!--android:textColor="@color/gray" />-->
+        <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+
+
+
+</LinearLayout>

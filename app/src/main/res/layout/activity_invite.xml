@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight = "1">
+
+
+    <FrameLayout
+        android:id="@+id/member_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+       <ImageView
+           android:layout_width="match_parent"
+           android:layout_height="300dp"
+           android:layout_marginBottom="30dp"
+           android:background="@drawable/invite_img3"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="350dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/mail_icon"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="스포츠인을 초대해주세요!"
+                    android:textColor="@color/mainBlue"
+                    android:textSize="22dp"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/invite_kakaoBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/icon_kakao"
+                    android:layout_marginRight="10dp"/>
+
+                <ImageButton
+                    android:id="@+id/invite_smsBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/chat"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="80dp"
+                android:layout_marginTop="30dp">
+
+                <TextView
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:text="O2 SPORT는 초대 받은 스포츠인만 가입이 가능합니다. \n주변 스포츠인에게 초대장을 보내주세요!"
+                    android:textColor="@color/gray2"
+                    android:textSize="15dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    </ScrollView>
+
+
+
+
+
+
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
+
+
+</android.support.v4.widget.DrawerLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"></LinearLayout>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:paddingTop="10dp"
+       android:paddingLeft="20dp"
+       android:paddingRight="20dp"
+       android:paddingBottom="10dp"
+       android:background="@color/white"
+       android:orientation="vertical">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+
+           <ImageView
+               android:layout_width="45dp"
+               android:layout_height="45dp"
+               android:id="@+id/alarm_photo"
+               android:background="@drawable/main_top_pic"/>
+
+           <GridLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:columnCount="1"
+               android:rowCount="2"
+               android:layout_marginLeft="10dp"
+               android:layout_gravity="center_vertical">
+
+               <TextView
+                   android:id="@+id/alarm_content"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:textSize="14dp"
+                   android:textColor="@color/black" />
+
+               <TextView
+                   android:id="@+id/alarm_date"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:textSize="12dp"
+                   android:textColor="@color/gray2"
+                   android:layout_marginTop="5dp"
+                   android:layout_marginLeft="3dp"/>
+
+
+
+           </GridLayout>
+
+       </LinearLayout>
+
+
+
+   </LinearLayout>
+
+</LinearLayout>

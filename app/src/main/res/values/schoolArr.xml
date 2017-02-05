@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string-array name="schoolArr">
+       <item>학력을 선택해주세요.</item>
+       <item>초등학교</item>
+       <item>중학교</item>
+       <item>고등학교</item>
+
+   </string-array>
+
+</resources>

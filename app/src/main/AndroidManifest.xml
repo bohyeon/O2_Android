@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.hyerimhyeon.o2_android">
+
+
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <permission android:name="com.o2.o2sport.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.o2.o2sport.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="O2 Sport"
+        android:supportsRtl="true"
+        android:theme="@style/CustomTheme"
+        android:largeHeap="true">
+        <activity
+            android:name=".MainActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme">
+
+
+        </activity>
+
+        <activity
+            android:name=".NewsfeedWriteActivity"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".MypageActivity"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".GalleryUtil"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".NoticeActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme">
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".RegisterActivity"
+            android:label="O2 Sport"
+         android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".MemberActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme">
+        </activity>
+
+        <activity
+            android:name=".MentoRegisterActivity"
+            android:label="O2 Sport"
+         android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".ExpertRegisterActivity"
+            android:label="O2 Sport"
+         android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".ChildRegisterActivity"
+            android:label="O2 Sport"
+         android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".SubjectFeedActivity"
+            android:label="O2 Sport"
+         android:theme="@style/CustomTheme">
+        </activity>
+
+
+        <activity
+            android:name=".SubjectFeedActivity2"
+            android:label="O2 Sport"
+         android:theme="@style/CustomTheme">
+        </activity>
+
+        <activity
+            android:name=".ExpertFeedActivity"
+            android:label="O2 Sport"
+         android:theme="@style/CustomTheme">
+        </activity>
+
+        <activity
+            android:name=".LifeExpertFeedActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme">
+        </activity>
+
+        <activity
+            android:name=".FeedDetailActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme"
+            >
+
+        </activity>
+
+        <activity
+            android:name=".SearchActivity"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
+
+
+
+        <activity
+            android:name=".InviteActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme"
+            android:hardwareAccelerated="false">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appshc" android:host="checkApp" />
+                <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_app_key"/>
+                <data android:scheme="@string/kakao_scheme" android:host="@string/kakaolink_host" />
+                <data android:scheme="@string/kakao_scheme" android:host="@string/kakaolink_host" />
+            </intent-filter>
+
+
+        </activity>
+
+        <activity
+            android:name=".LifeExpertRegisterActivity"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
+        <activity
+            android:name=".MypageSettingActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme">
+
+        </activity>
+
+
+        <activity
+            android:name=".SplashActivity"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:largeHeap="true">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+
+
+            </activity>
+    </application>
+
+</manifest>

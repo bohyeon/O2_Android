@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/splash_img"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+app:layout_behavior="@string/appbar_scrolling_view_behavior"
+tools:context="com.example.hyerimhyeon.o2_android.MainActivity"
+tools:showIn="@layout/app_bar_main">
+
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    android:padding="20dp"
+    android:layout_marginTop="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:textSize="30dp"
+        android:paddingRight="20dp"
+        android:layout_alignParentRight="true" />
+</RelativeLayout>
+
+<LinearLayout
+    android:layout_width="230dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="50dp"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+
+    <LinearLayout
+        android:layout_width="30dp"
+        android:layout_height="1px"
+        android:background="@color/black"
+        android:layout_gravity="center"
+        android:layout_marginBottom="15dp"></LinearLayout>
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="아래에서 자신의 포지션 버튼을 선택하고 회원가입을 진행해주세요."
+        android:textSize="12dp"
+        android:textColor="@color/gray2"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+
+
+    <Button
+        android:id="@+id/register_child_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/childColor_o"
+        android:text="꿈나무"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="50dp"/>
+
+
+    <Button
+        android:id="@+id/register_mento_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/mentoColor_o"
+        android:text="멘토"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="30dp"/>
+
+    <Button
+        android:id="@+id/register_expe_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/expertColor_o"
+        android:text="스포츠 전문가"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:textSize="13dp"
+        android:layout_marginTop="30dp"/>
+
+</LinearLayout>
+</LinearLayout>

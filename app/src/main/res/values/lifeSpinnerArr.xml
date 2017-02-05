@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string-array name="lifeSpinnerArr">
+       <item>분야선택</item>
+       <item>법률전문가</item>
+       <item>세무,회계 전문가</item>
+       <item>부동산전문가</item>
+       <item>손해사정인</item>
+       <item>증권,투자전문가</item>
+       <item>보험전문가</item>
+
+
+   </string-array>
+
+</resources>
