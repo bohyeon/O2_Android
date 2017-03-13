@@ -147,7 +147,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("생활스포츠전문가 지식나눔");
+        actionbar_title.setText("생활스포츠전문가 지식 On");
 
         buttonStateOpen = false;
 

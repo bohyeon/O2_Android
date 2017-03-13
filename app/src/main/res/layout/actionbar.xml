@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/action_bar_title"
-        android:text="스포츠 지식나눔"
+        android:text="스포츠 지식 On"
         android:textColor="#ffffff"
         android:background="@color/mainBlue"
         android:textSize="17dp"

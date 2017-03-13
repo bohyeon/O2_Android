@@ -98,6 +98,9 @@ public class MemberActivity extends AppCompatActivity
         mentoSearch = (EditText) findViewById(R.id.member_mentoSearch);
         childSearch = (EditText) findViewById(R.id.member_childSearch);
 
+        expertSearch.getBackground().clearColorFilter();
+        mentoSearch.getBackground().clearColorFilter();
+        childSearch.getBackground().clearColorFilter();
 
     }
 

@@ -60,6 +60,8 @@
                                     android:id="@+id/member_expertSearch"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:background="@android:color/transparent"
+                                    android:paddingLeft="10dp"
                                     android:hint="search"/>
                             </LinearLayout>
 
@@ -87,6 +89,8 @@
                                     android:id="@+id/member_mentoSearch"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:background="@android:color/transparent"
+                                    android:paddingLeft="10dp"
                                     android:hint="search"/>
                             </LinearLayout>
 
@@ -114,6 +118,8 @@
                                     android:id="@+id/member_childSearch"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
+                                    android:background="@android:color/transparent"
+                                    android:paddingLeft="10dp"
                                     android:hint="search"/>
                             </LinearLayout>
 

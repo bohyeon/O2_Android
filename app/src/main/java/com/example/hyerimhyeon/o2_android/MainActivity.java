@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("스포츠 지식나눔");
+        actionbar_title.setText("스포츠 지식 On");
 
 
        buttonStateOpen = false;
@@ -195,11 +195,13 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 if (buttonStateOpen == false) {
-                    drawer.openDrawer(Gravity.LEFT);
                     buttonStateOpen = true;
+                    drawer.openDrawer(Gravity.LEFT);
+
                 } else if (buttonStateOpen == true) {
-                    drawer.closeDrawer(Gravity.LEFT);
                     buttonStateOpen = false;
+                    drawer.closeDrawer(Gravity.LEFT);
+
                 }
 
             }

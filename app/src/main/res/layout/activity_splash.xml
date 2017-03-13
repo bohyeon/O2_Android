@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/splash_img"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.hyerimhyeon.o2_android.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+
+    >
 
 
     <LinearLayout
@@ -17,14 +16,25 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="세계 챔피언을 꿈꾸는 자여
+                            오투스포츠와 함께라면
+                            반드시 꿈*은 이루어진다!!" />
 
         <ImageView
-            android:layout_width="80dp"
+            android:layout_width="200dp"
             android:layout_height="65dp"
             android:background="@drawable/o2_logo"
             android:layout_gravity="center|center_vertical"
             android:layout_marginBottom="100dp"
-            android:layout_marginTop="200dp"/>
+            android:layout_marginTop="50dp"/>
 
         <Button
             android:id="@+id/splash_login_btn"

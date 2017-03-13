@@ -23,8 +23,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="O2 Sport"
-        android:supportsRtl="true"
         android:theme="@style/CustomTheme"
+        android:supportsRtl="true"
         android:largeHeap="true">
         <activity
             android:name=".MainActivity"
@@ -173,8 +173,9 @@
         <activity
             android:name=".SplashActivity"
             android:label="O2 Sport"
+            android:largeHeap="true"
             android:theme="@style/AppTheme.NoActionBar"
-            android:largeHeap="true">
+            >
 
 
             <intent-filter>

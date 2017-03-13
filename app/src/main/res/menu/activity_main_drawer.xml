@@ -6,33 +6,30 @@
         <item
             android:id="@+id/nav_camera"
 
-            android:title="스포츠 지식나눔" />
+            android:title="스포츠 지식 On" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:title="스포츠전문가 지식 On" />
+        <item
+            android:id="@+id/nav_lifesport"
+            android:title="생활스포츠전문가 지식 On" />
         <item
             android:id="@+id/nav_gallery"
             android:title="종목별피드" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:title="스포츠전문가 지식나눔" />
-        <item
-            android:id="@+id/nav_lifesport"
-            android:title="생활스포츠전문가 지식나눔" />
         <item
             android:id="@+id/people"
             android:title="회원" />
         <item
             android:id="@+id/nav_manage"
             android:title="초대하기" />
+
+        <item
+            android:id="@+id/nav_share"
+            android:title="공지사항" />
+        <item
+            android:id="@+id/nav_send"
+            android:title="마이페이지" />
     </group>
 
-    <item android:title="">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:title="공지사항" />
-            <item
-                android:id="@+id/nav_send"
-                android:title="마이페이지" />
-        </menu>
-    </item>
 
 </menu>
