@@ -1,7 +1,10 @@
 package com.example.hyerimhyeon.o2_android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,46 +15,45 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.DB.DBConnector;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SubjectFeedActivity2 extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ListView newsfeedLv;
+    SubjectFeedActivity2 subjectFeedActivity2;
     SubjectfeedAdapterActivity subjectfeedAdapterActivity;
     NewsFeed newsFeed;
-
+    String sport_type;
     TextView actionbar_title;
+    String token;
+    Handler handler;
+    public SharedPreferences loginPreferences;
+    private static final int REQUEST_EXTERNAL_STORAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setCustomView(R.layout.actionbar);
 
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        token = loginPreferences.getString("token", "");
 
+        Intent intent = getIntent();
+        sport_type = intent.getStringExtra("sport_type");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -60,23 +62,127 @@ public class SubjectFeedActivity2 extends AppCompatActivity
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
 
 
-//        View header = getLayoutInflater().inflate(R.layout.main_header, null, false);
-//        this.newsfeedLv.addHeaderView(header);
-
         this.newsFeed = NewsFeed.getNewsFeed();
         this.subjectfeedAdapterActivity = new SubjectfeedAdapterActivity(this, newsFeed, this);
         this.newsfeedLv.setAdapter(subjectfeedAdapterActivity);
 
-        newsfeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(SubjectFeedActivity2.this, FeedDetailActivity.class);
-                startActivity(intent);
-            }
-        });
 
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+
+//        int permissionReadStorage = ContextCompat.checkSelfPermission(subjectFeedActivity2, android.Manifest.permission.ACCESS_NETWORK_STATE);
+//        //  int permissionWriteStorage = ContextCompat.checkSelfPermission(mainActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        if(permissionReadStorage == PackageManager.PERMISSION_DENIED ) {
+//            ActivityCompat.requestPermissions(subjectFeedActivity2, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_EXTERNAL_STORAGE);
+//        } else {
+
+            new GetPosts().execute(new DBConnector());
+//            Log.d("response", "read/write storage  permission authorized");
+//        }
+
+    }
+
+
+    private class GetPosts extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].GetPost_sport(token, sport_type);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter(jsonArray);
+
+            handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    try {
+
+                        subjectfeedAdapterActivity.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }, 100);
+
+
+        }
+    }
+
+    public void settextToAdapter(JSONArray jsonArray) {
+
+        //  Log.d("response" , "post : " + jsonArray.toString());
+
+        // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
+        NewsfeedItem newsfeedItem;
+
+
+        if(jsonArray == null){
+            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
+                    Toast.LENGTH_LONG).show();
+        }else{
+
+            subjectfeedAdapterActivity.clear();
+
+            for(int i = 0 ; i<jsonArray.length(); i++){
+
+                newsfeedItem = new NewsfeedItem();
+
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject userJsonObj = jsonObject.getJSONObject("user");
+
+                    newsfeedItem.name = userJsonObj.getString("name");
+                    newsfeedItem.email = userJsonObj.getString("email");
+                    newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+
+                    newsfeedItem.content = jsonObject.getString("content");
+                    newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
+                    newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
+                    newsfeedItem.like_num = jsonObject.getString("like_num");
+                    newsfeedItem.comment_num = jsonObject.getString("comment_num");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                    newsfeedItem.is_like = jsonObject.getBoolean("is_like");
+                    newsfeedItem.post_id = jsonObject.getString("id");
+                    newsfeedItem.member_type = userJsonObj.getString("member_type");
+                    newsfeedItem.company = userJsonObj.getString("company");
+                    newsfeedItem.sport_type = userJsonObj.getString("sport_type");
+                    newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
+                    newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+
+
+                    subjectfeedAdapterActivity.add(newsfeedItem);
+                    subjectfeedAdapterActivity.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        }
+
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -112,7 +218,7 @@ public class SubjectFeedActivity2 extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("종목별피드");
+        actionbar_title.setText(sport_type+" 전용피드");
         return true;
     }
 

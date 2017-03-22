@@ -1,7 +1,10 @@
 package com.example.hyerimhyeon.o2_android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -15,10 +18,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.DB.DBConnector;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ExpertFeedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,68 +38,44 @@ public class ExpertFeedActivity extends AppCompatActivity
 
     ExpertfeedAdapterActivity expertfeedAdapterActivity;
     NewsFeed newsFeed;
-
+    String token;
     Boolean buttonStateOpen;
-
+    Handler handler;
     DrawerLayout drawer;
+
+    public SharedPreferences loginPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setCustomView(R.layout.actionbar);
 
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        ImageView logo = (ImageView) headerView.findViewById(R.id.nav_header_logo);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent intent = new Intent(ExpertFeedActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            }
+        });
+
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        token = loginPreferences.getString("token", "");
+
+      //  drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 //        drawer.setDrawerListener(toggle);
 //        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.home_item:
-                                //home is here
-                                return true;
-                            case R.id.noty_item:
-                                Intent intent = new Intent(ExpertFeedActivity.this, MypageActivity.class);
-                                startActivity(intent);
-                                return true;
-                            case R.id.write_item:
-
-                                return true;
-//                            case R.id.setting_item:
-//                                Intent intent1 = new Intent(ExpertFeedActivity.this, MypageActivity.class);
-//                                startActivity(intent1);
-//                                return true;
-                        }
-                        return true;
-                    }
-                });
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
 
@@ -102,16 +88,122 @@ public class ExpertFeedActivity extends AppCompatActivity
         this.expertfeedAdapterActivity = new ExpertfeedAdapterActivity(this, newsFeed, this);
         this.newsfeedLv.setAdapter(expertfeedAdapterActivity);
 
-        newsfeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        newsfeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+////                Intent intent = new Intent(ExpertFeedActivity.this, FeedDetailActivity.class);
+////                startActivity(intent);
+//            }
+//        });
 
-                Intent intent = new Intent(ExpertFeedActivity.this, FeedDetailActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
     }
+
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        new GetPosts().execute(new DBConnector());
+
+    }
+
+    private class GetPosts extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].GetPost(token, "sport_expert_knowledge_feed" ,"");
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter(jsonArray);
+
+            handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    try {
+
+                        expertfeedAdapterActivity.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }, 100);
+
+
+        }
+    }
+
+    public void settextToAdapter(JSONArray jsonArray) {
+
+        //  Log.d("response" , "post : " + jsonArray.toString());
+
+        // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
+        NewsfeedItem newsfeedItem;
+
+
+        if (jsonArray == null) {
+            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
+                    Toast.LENGTH_LONG).show();
+        } else {
+
+            expertfeedAdapterActivity.clear();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+
+                newsfeedItem = new NewsfeedItem();
+
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject userJsonObj = jsonObject.getJSONObject("user");
+
+                    newsfeedItem.name = userJsonObj.getString("name");
+                    newsfeedItem.email = userJsonObj.getString("email");
+                    newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+
+                    newsfeedItem.content = jsonObject.getString("content");
+                    newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
+                    newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
+                    newsfeedItem.like_num = jsonObject.getString("like_num");
+                    newsfeedItem.comment_num = jsonObject.getString("comment_num");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                    newsfeedItem.is_like = jsonObject.getBoolean("is_like");
+                    newsfeedItem.post_id = jsonObject.getString("id");
+                    newsfeedItem.member_type = userJsonObj.getString("member_type");
+                    newsfeedItem.company = userJsonObj.getString("company");
+                    newsfeedItem.sport_type = userJsonObj.getString("sport_type");
+                    newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
+                    newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+
+
+
+                    expertfeedAdapterActivity.add(newsfeedItem);
+                    expertfeedAdapterActivity.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -147,7 +239,7 @@ public class ExpertFeedActivity extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("스포츠전문가 지식나눔");
+        actionbar_title.setText("스포츠전문가 지식On");
 
         buttonStateOpen = false;
 
@@ -155,7 +247,7 @@ public class ExpertFeedActivity extends AppCompatActivity
         menu_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 if (buttonStateOpen == false) {
                     drawer.openDrawer(Gravity.LEFT);
                     buttonStateOpen = true;
@@ -176,6 +268,45 @@ public class ExpertFeedActivity extends AppCompatActivity
                 startActivityForResult(intent,1);
             }
         });
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.home_item:
+                                Intent intent3 = new Intent(ExpertFeedActivity.this, MainActivity.class);
+                                startActivity(intent3);
+                                finish();
+                                return true;
+                            case R.id.noty_item:
+                                Intent intent = new Intent(ExpertFeedActivity.this, MypageActivity.class);
+                                startActivity(intent);
+                                finish();
+                                return true;
+                            case R.id.write_item:
+
+                                Intent intent2 = new Intent(ExpertFeedActivity.this, NewsfeedWriteActivity.class);
+                                intent2.putExtra("post_type", "sport_expert_knowledge_feed");
+
+                                startActivityForResult(intent2, 300);
+
+                                return true;
+//                            case R.id.setting_item:
+//                                Intent intent1 = new Intent(ExpertFeedActivity.this, MypageActivity.class);
+//                                startActivity(intent1);
+//                                return true;
+                        }
+                        return true;
+                    }
+                });
+
 
         return true;
     }
@@ -203,44 +334,62 @@ public class ExpertFeedActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_gallery) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, SubjectFeedActivity.class);
+            Intent intent = new Intent(this, SubjectFeedActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_slideshow) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, ExpertFeedActivity.class);
+            Intent intent = new Intent(this, ExpertFeedActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_manage) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, InviteActivity.class);
+            Intent intent = new Intent(this, InviteActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_share) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, NoticeActivity.class);
+            Intent intent = new Intent(this, NoticeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+            finish();
         } else if (id == R.id.nav_send) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, MypageActivity.class);
+            Intent intent = new Intent(this, MypageActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+            finish();
         } else if (id == R.id.people) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, MemberActivity.class);
+            Intent intent = new Intent(this, MemberActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+            finish();
         }else if (id == R.id.nav_lifesport) {
 
-            Intent intent = new Intent(ExpertFeedActivity.this, LifeExpertFeedActivity.class);
+            Intent intent = new Intent(this, LifeExpertFeedActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
+        }else if(id == R.id.nav_header_logo){
 
+            Intent intent = new Intent(this, LifeExpertFeedActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

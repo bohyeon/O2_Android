@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    <string-array name="schoolArr">
-       <item>학력을 선택해주세요.</item>
+       <item>학력선택</item>
        <item>초등학교</item>
        <item>중학교</item>
        <item>고등학교</item>
 
    </string-array>
+
+    <string-array name="locationArrr">
+        <item>지역선택</item>
+        <item>서울</item>
+        <item>인천</item>
+        <item>경기도</item>
+
+    </string-array>
+
+    <string-array name="SportTypeArrr">
+        <item>분야선택</item>
+        <item>스포츠 의학</item>
+        <item>스포츠 심리</item>
+        <item>스포츠 트레이닝</item>
+        <item>스포츠 영양</item>
+        <item>스스포츠 재활</item>
+        <item>스포츠 진로</item>
+        <item>기타</item>
+
+    </string-array>
 
 </resources>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/splash_img"
+    android:background="@color/mainBlue"
 
     >
 
@@ -16,17 +16,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:textSize="15dp"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:text="세계 챔피언을 꿈꾸는 자여
-                            오투스포츠와 함께라면
-                            반드시 꿈*은 이루어진다!!" />
+
 
         <ImageView
             android:layout_width="200dp"
@@ -60,6 +50,17 @@
             android:background="@color/gray_box"
             android:textColor="@color/white"
             android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="오투스포츠는 꿈나무 선수를 응원합니다." />
+
     </LinearLayout>
 
 </LinearLayout>

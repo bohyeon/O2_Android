@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:orientation="vertical"
-        android:background="@drawable/main_top_pic">
+        android:background="@drawable/newsfeed_img">
 
     </RelativeLayout>
 

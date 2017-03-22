@@ -98,7 +98,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/id_hint"
-                        android:inputType="textPassword"
+                        android:inputType="textEmailAddress"
                         android:background="@android:color/transparent"
                         />
 
@@ -232,7 +232,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/phone_hint"
-                        android:inputType="phone"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 
@@ -290,6 +290,8 @@
                     android:textColor="@color/black"
                     android:layout_marginTop="30dp"/>
 
+
+
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -299,6 +301,7 @@
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
 
 
                         <RadioButton
@@ -340,7 +343,6 @@
 
                     </TableRow>
 
-
                 </TableLayout>
 
 
@@ -377,7 +379,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/belong_hint"
-                        android:inputType="date"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 

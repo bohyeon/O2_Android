@@ -1,11 +1,13 @@
 package com.example.hyerimhyeon.o2_android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,12 +18,24 @@ public class RegisterActivity extends AppCompatActivity
 
 
     Button child_btn, mento_btn, expert_btn;
+    String invite_code;
 
+    public SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        Intent intent = getIntent();
+        invite_code = intent.getStringExtra("invite_code");
+
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+        Log.d("response" , "invite_code" +invite_code);
+        loginPrefsEditor.putString("invite_code",invite_code);
+        loginPrefsEditor.commit();
 
         child_btn = (Button) findViewById(R.id.register_child_btn);
         mento_btn = (Button) findViewById(R.id.register_mento_btn);

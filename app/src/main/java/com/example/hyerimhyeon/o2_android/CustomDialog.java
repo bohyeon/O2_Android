@@ -14,11 +14,12 @@ public class CustomDialog extends Dialog {
 
     private TextView mTitleView;
     private TextView mContentView;
-    private EditText codeEt;
+    public EditText codeEt;
     private Button codeBtn;
     private Button cancelBtn;
     private String mTitle;
     private String mContent;
+
 
     private View.OnClickListener mLeftClickListener;
     private View.OnClickListener mRightClickListener;
@@ -39,6 +40,7 @@ public class CustomDialog extends Dialog {
         mContentView = (TextView) findViewById(R.id.txt_content);
         codeBtn = (Button) findViewById(R.id.btn_left);
         cancelBtn = (Button) findViewById(R.id.btn_right);
+        codeEt = (EditText) findViewById(R.id.code_Et);
 
         // 제목과 내용을 생성자에서 셋팅한다.
         mTitleView.setText(mTitle);

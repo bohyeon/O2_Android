@@ -1,7 +1,5 @@
 package com.example.hyerimhyeon.o2_android;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 
@@ -17,8 +15,8 @@ public class NewsFeed {
 
 //        newsFeed = new NewsFeed();
         this.newsfeedItem =  new ArrayList<NewsfeedItem>();
-        Log.d("","뚠뚜니332");
-        this.addmockupData();
+   //     Log.d("","뚠뚜니332");
+   //     this.addmockupData();
     }
 
 

@@ -1,29 +1,60 @@
 package com.example.hyerimhyeon.o2_android;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.example.DB.DBConnector;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.URL;
 
 public class FeedDetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ListView comment_lv;
-    TextView actionbar_title, name, type, belong, content, registdate;
+    EditText comment_Et;
+    TextView actionbar_title, name, type, belong, content, registdate, like, like_btn, comment_btn;
+    String comment;
     FeedCommentAdapterActivity feedCommentAdapterActivity;
+    FeedDetailActivity feedDetailActivity;
     NewsFeed newsFeed;
-
+    String token, post_id;
+    int like_int, comment_int;
+    Handler handler;
+    ImageView image, profile_img;
+    private static final int REQUEST_INTERNET = 1;
     private PopupWindow popWindow;
 
     @Override
@@ -47,7 +78,6 @@ public class FeedDetailActivity extends AppCompatActivity
         this.comment_lv.addHeaderView(header);
 
 
-
         this.newsFeed = NewsFeed.getNewsFeed();
         this.feedCommentAdapterActivity = new FeedCommentAdapterActivity(this, newsFeed, this);
         this.comment_lv.setAdapter(feedCommentAdapterActivity);
@@ -58,17 +88,362 @@ public class FeedDetailActivity extends AppCompatActivity
         belong = (TextView) header.findViewById(R.id.detail_newsfeed_lv_belong);
         content = (TextView) header.findViewById(R.id.detail_newsfeed_lv_content);
         registdate = (TextView) header.findViewById(R.id.detail_newsfeed_lv_registDate);
+        like = (TextView) header.findViewById(R.id.detail_newsfeed_like);
+        like_btn = (TextView) header.findViewById(R.id.detail_like_btn);
 
-        name.setText("김진흥");
-        type.setText("멘토");
-        belong.setText("삼성생명 배구단");
-        content.setText("인간의 행동에 대한 관찰 및 관련 분야 정보수집에 대해서 알아보고 싶습니다.!!!");
-        registdate.setText("2015년 12월 19일");
+        profile_img = (ImageView) header.findViewById(R.id.detail_profile_img);
+        image = (ImageView) header.findViewById(R.id.detail_newsfeed_lv_img);
+
+        comment_Et = (EditText) findViewById(R.id.writeComment);
+        comment_btn = (TextView) findViewById(R.id.detail_writeComment_completeBtn);
+
+
+
+        final Intent intent = getIntent();
+        //Log.d("response","name : " + name);
+        name.setText(intent.getStringExtra("name"));
+
+        String type_str = "";
+            if(intent.getStringExtra("type").equals("mentor")){
+                type_str = "멘토";
+            }else if(intent.getStringExtra("type").equals("mentee")){
+                type_str = "꿈나무";
+            }else if(intent.getStringExtra("type").equals("expert")){
+                type_str = "전문가";
+            }
+
+            type.setText(type_str);
+        Log.d("response","03203 : " + intent.getStringExtra("type"));
+
+       // type.setText(intent.getStringExtra("type"));
+        belong.setText(intent.getStringExtra("belong"));
+
+
+        if(!intent.getStringExtra("type").equals("mentee")){
+            belong.setText(intent.getStringExtra("belong"));
+        }else{
+            belong.setText("");
+        }
+
+
+        content.setText(intent.getStringExtra("content"));
+        registdate.setText(intent.getStringExtra("regist_date"));
+        like.setText("좋아요 " + intent.getStringExtra("like_num") + "개  댓글 " + intent.getStringExtra("comment_num") + "개");
+
+        if(intent.getStringExtra("like_num") == null){
+
+        }else{
+            like_int = Integer.parseInt(intent.getStringExtra("like_num"));
+        }
+
+        if(intent.getStringExtra("comment_num") == null){
+
+        }else{
+            comment_int = Integer.parseInt(intent.getStringExtra("comment_num"));
+        }
+
+
+        token = intent.getStringExtra("token");
+        post_id = intent.getStringExtra("post_id");
+
+        if(intent.getBooleanExtra("is_like",false) == true){
+            like_btn.setTextColor(Color.parseColor("#3F51B5"));
+        }else{
+            like_btn.setTextColor(Color.parseColor("#555555"));
+        }
+
+      //  Log.d("response" , "profile_url_post: " + intent.getStringExtra("post_image_url"));
+
+        if(intent.getStringExtra("post_image_url").equals("")|| intent.getStringExtra("post_image_url") == null|| intent.getStringExtra("post_image_url") == " "|| intent.getStringExtra("post_image_url") == "null"|| intent.getStringExtra("post_image_url") == "" || intent.getStringExtra("post_image_url")=="http://" || intent.getStringExtra("post_image_url")=="http://null" || intent.getStringExtra("post_image_url").equals("http://") || intent.getStringExtra("post_image_url").equals("http:/null/")){
+
+            Log.d("response" , "profile_url_post 3: " + intent.getStringExtra("post_image_url"));
+            int width = 0;
+            int height = 0;
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+            image.setLayoutParams(parms);
+
+
+        }else{
+            Log.d("response" , "profile_url_post 4: " + intent.getStringExtra("post_image_url"));
+                new DownLoadImageTask(image).execute("http://"+intent.getStringExtra("post_image_url"));
+
+        }
+
+
+        if(intent.getStringExtra("profile_url").equals("")|| intent.getStringExtra("profile_url") == null|| intent.getStringExtra("profile_url") == " "|| intent.getStringExtra("profile_url") == "null"|| intent.getStringExtra("profile_url") == "" || intent.getStringExtra("profile_url")=="http://" || intent.getStringExtra("profile_url")=="http://null" || intent.getStringExtra("profile_url").equals("http://") || intent.getStringExtra("profile_url").equals("http:/null/")){
+
+
+        }else{
+//            int permissionCamera = ContextCompat.checkSelfPermission(feedDetailActivity, android.Manifest.permission.ACCESS_NETWORK_STATE);
+//            if(permissionCamera == PackageManager.PERMISSION_DENIED) {
+//                ActivityCompat.requestPermissions(feedDetailActivity, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
+//            } else {
+                new DownLoadImageTask_profile(profile_img).execute("http://"+intent.getStringExtra("profile_url"));
+                Log.d( "response", "internet permission authorized" );
+
+                // }
+                // Log.d("response2", "response img: " + uri);
+            //   profile_img.setImageURI(uri);
+            }
+//
+
+
+
+        //get comments by post id
+        new GetComments().execute(new DBConnector());
+
+
+
+        final Boolean[] is_like = {intent.getBooleanExtra("is_like", false)};
+
+        like_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if( is_like[0] == true ){
+                    like_btn.setTextColor(Color.parseColor("#555555"));
+                    new DeleteLike().execute(new DBConnector());
+                    is_like[0] = false;
+                    like_int = like_int -1;
+                    like.setText("좋아요 " + like_int + "개  댓글 " + intent.getStringExtra("comment_num") + "개");
+
+                }else{
+                    like_btn.setTextColor(Color.parseColor("#3F51B5"));
+                    new Like().execute(new DBConnector());
+                    is_like[0] = true;
+                    like_int = like_int +1;
+                    like.setText("좋아요 " + like_int + "개  댓글 " + intent.getStringExtra("comment_num") + "개");
+
+                }
+            }
+        });
+
+        comment_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                comment = comment_Et.getText().toString();
+
+                if(comment == null){
+
+                }else{
+
+                    new Comment().execute(new DBConnector());
+                    comment_Et.setText("");
+
+                    //get comments by post id
+                    new GetComments().execute(new DBConnector());
+
+                    comment_int++;
+                    like.setText("좋아요 " + like_int + "개  댓글 " + comment_int + "개");
+                }
+
+            }
+        });
+
     }
 
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+
+            case REQUEST_INTERNET:
+                for (int i = 0; i < permissions.length; i++) {
+                    String permission = permissions[i];
+                    int grantResult = grantResults[i];
+                    if (permission.equals(android.Manifest.permission.ACCESS_NETWORK_STATE)) {
+                        if(grantResult == PackageManager.PERMISSION_GRANTED) {
+                            Log.d("response", "read/write storage  permission authorized2");
+
+                        } else {
+                            Log.d("response", "read/write storage  permission denied2");
+
+                        }
+                        break;
+                    }
+                }
+                break;
+        }
+    }
+    private class Like extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+           // Log.d("response22 " , "hihi" + token + "  " + select_pods_id);
+            return params[0].Like(token, post_id);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter(JSONObject jsonObject) {
+
+        if(jsonObject == null){
+
+        }else{
+
+        }
+
+    }
+
+    private class DeleteLike extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+          //  Log.d("response22 " , "delete" + token + "  " + select_pods_id);
+            return params[0].DeleteLike(token, post_id);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter_deleteLike(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter_deleteLike(JSONObject jsonObject) {
+
+        if(jsonObject == null){
+
+        }else{
+
+        }
+
+    }
+
+    private class Comment extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+           // Log.d("response22 " , "hihi" + token + "  " + select_pods_id);
+            return params[0].Comment(token, post_id, comment);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter_comment(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter_comment(JSONObject jsonObject) {
+
+        if(jsonObject == null){
+
+        }else{
+           // Log.d("response" , "comment : " + jsonObject.toString());
+        }
+
+    }
+
+
+    private class GetComments extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+            // Log.d("response22 " , "hihi" + token + "  " + select_pods_id);
+            return params[0].GetComment(token, post_id);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter_Getcomment(jsonArray);
+
+            handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    try {
+
+                        feedCommentAdapterActivity.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }, 100);
+
+        }
+    }
+
+    public void settextToAdapter_Getcomment(JSONArray jsonArray) {
+
+        NewsfeedItem newsfeedItem;
+
+        if(jsonArray == null){
+
+        }else{
+             //Log.d("response" , "getcomment : " + jsonArray.toString());
+            feedCommentAdapterActivity.clear();
+
+            for(int i = 0 ; i<jsonArray.length(); i++){
+
+                newsfeedItem = new NewsfeedItem();
+
+                try {
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject userJsonObj = jsonObject.getJSONObject("user");
+
+                    newsfeedItem.name = userJsonObj.getString("name");
+                    newsfeedItem.email = userJsonObj.getString("email");
+                    newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.type = userJsonObj.getString("member_type");
+                    newsfeedItem.company = userJsonObj.getString("company");
+//                    newsfeedItem.sport_type = userJsonObj.getString("sport_type");
+//                    newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
+//                    newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                    newsfeedItem.content = jsonObject.getString("content");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                    newsfeedItem.belong = userJsonObj.getString("sport_type");
+
+                    feedCommentAdapterActivity.add(newsfeedItem);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        }
+
+    }
+
     @Override
     public void onBackPressed() {
+        finish();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -104,6 +479,8 @@ public class FeedDetailActivity extends AppCompatActivity
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
         actionbar_title.setText("댓글 달기");
+        ImageButton searchBtn = (ImageButton) findViewById(R.id.actionbar_search);
+        searchBtn.setBackgroundResource(0);
 
         return true;
     }
@@ -170,6 +547,101 @@ public class FeedDetailActivity extends AppCompatActivity
         return true;
     }
 
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap>{
+        ImageView imageView;
+
+        public DownLoadImageTask(ImageView imageView){
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            //String urlOfImage = urls[0];
+            String urlOfImage = urls[0];
+            Log.d("response" , "image url : " + urlOfImage);
+            Bitmap logo = null;
+            try{
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+                Log.d("response" ,"image back : " + e.toString());
+            }
+            return logo;
+        }
+
+        /*
+            onPostExecute(Result result)
+                Runs on the UI thread after doInBackground(Params...).
+         */
+        protected void onPostExecute(Bitmap result){
+
+            WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getMetrics(metrics);
+            int width = metrics.widthPixels;
+            int height = metrics.heightPixels/2 + 50;
+            Log.d("response" , "screen : " + width + " " + height);
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+            imageView.setLayoutParams(parms);
+
+            imageView.setImageBitmap(result);
+        }
+
+
+
+
+    }
+
+
+    private class DownLoadImageTask_profile extends AsyncTask<String,Void,Bitmap> {
+        ImageView imageView;
+
+        public DownLoadImageTask_profile(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String... urls) {
+            //String urlOfImage = urls[0];
+            String urlOfImage = urls[0];
+            Log.d("response", "image url : " + urlOfImage);
+            Bitmap logo = null;
+            try {
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            } catch (Exception e) { // Catch the download exception
+                e.printStackTrace();
+                Log.d("response", "image back : " + e.toString());
+            }
+            return logo;
+        }
+
+        /*
+            onPostExecute(Result result)
+                Runs on the UI thread after doInBackground(Params...).
+         */
+        protected void onPostExecute(Bitmap result) {
+
+
+            imageView.setImageBitmap(result);
+        }
+    }
 
 
 }

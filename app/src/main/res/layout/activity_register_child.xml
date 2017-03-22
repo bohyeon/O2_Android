@@ -54,7 +54,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/mento_descrip"
+                    android:text="꿈나무란 초.중.고등학교 내에 특정한 스포츠 종목에서 지속적인 운동과 스포츠 활동을 하고 있는 학생을 말합니다."
                     android:textColor="@color/white_99"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
@@ -100,7 +100,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/id_hint"
-                        android:inputType="textPassword"
+                        android:inputType="textEmailAddress"
                         android:background="@android:color/transparent"
                         />
 
@@ -233,7 +233,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/phone_hint"
-                        android:inputType="phone"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 
@@ -257,7 +257,7 @@
                         android:layout_height="wrap_content"
                         android:text="생년월일"
                         android:textSize="12dp"
-                        android:inputType="textEmailAddress"
+                        android:inputType="date"
                         android:textColor="@color/black"
                         android:layout_marginTop="30dp"/>
 
@@ -322,7 +322,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/school_hint"
-                        android:inputType="date"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 

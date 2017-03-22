@@ -2,27 +2,61 @@ package com.example.hyerimhyeon.o2_android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.DB.DBConnector;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SplashActivity extends Activity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Button loginBtn, registBtn;
+    String code_str;
     private CustomDialog mCustomDialog;
 
+
+    public SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+        //loginPrefsEditor.clear();
+        //loginPrefsEditor.commit();
+
+        String id = null;
+        id = loginPreferences.getString("id", "");
+       // Log.d("response" , "login : " + id);
+
+        if(id== null){
+
+        }else{
+            if (loginPreferences.getBoolean("saveLogin",false)){
+                String token = loginPreferences.getString("token","");
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                intent.putExtra("token",token);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        }
+
 
         loginBtn = (Button) findViewById(R.id.splash_login_btn);
         registBtn = (Button) findViewById(R.id.splah_regist_btn);
@@ -47,17 +81,65 @@ public class SplashActivity extends Activity
                         rightListener); // 오른쪽 버튼 이벤트
                 mCustomDialog.show();
 
+
+
             }
         });
 
 
     }
 
+    private class PostCode extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].PostCode(code_str);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter(JSONObject jsonObject) {
+
+        if(jsonObject == null){
+            Intent intent2 = new Intent(SplashActivity.this, RegisterActivity.class);
+            intent2.putExtra("invite_code" , code_str);
+           // Log.d("response" , "invite_code2" +code_str);
+             startActivityForResult(intent2,10);
+            finish();
+            Toast.makeText(getApplicationContext(), "회원가입을 해주세요!",
+                    Toast.LENGTH_LONG).show();
+
+        }else{
+            try {
+                String str = jsonObject.getString("detail").toString();
+                Toast.makeText(getApplicationContext(), "코드를 다시 입력해주세요!",
+                        Toast.LENGTH_LONG).show();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     private View.OnClickListener leftListener = new View.OnClickListener() {
         public void onClick(View v) {
-                Intent intent2 = new Intent(SplashActivity.this, RegisterActivity.class);
-                startActivity(intent2);
+
+            code_str = mCustomDialog.codeEt.getText().toString();
+              //  Log.d("response" , "code : " + code_str);
+
+            new PostCode().execute(new DBConnector());
         }
     };
 

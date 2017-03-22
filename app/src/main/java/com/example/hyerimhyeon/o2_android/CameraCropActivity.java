@@ -4,6 +4,7 @@ package com.example.hyerimhyeon.o2_android;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +14,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,11 +39,26 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_CAMERA = 2;
+
     private CameraCropActivity.PicturePickListener listener;
+
+    private CameraCropActivity cameraCropActivity = this;
 
     private Uri mImageCaptureUri;
     private ImageView mPhotoImageView;
     private Button mButton;
+    private static final String TAG = "AppPermission";
+
+    private final int MY_PERMISSION_REQUEST_STORAGE = 100;
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
+
+
+    private static final int REQUEST_MICROPHONE = 3;
+    private static final int REQUEST_EXTERNAL_STORAGE = 2;
+    private static final int REQUEST_CAMERA = 1;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -76,6 +93,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
             @Override
             public void onClick( View v ) {
 
+
                 doTakePhotoAction();
             }
         } );
@@ -100,18 +118,27 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
     }
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults ) {
-
-        super.onRequestPermissionsResult( requestCode, permissions, grantResults );
-//		ExtraFragmentPermissionsDispatcher.onRequestPermissionsResult( this, requestCode, grantResults );
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults ) {
+//
+//        super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+////		ExtraFragmentPermissionsDispatcher.onRequestPermissionsResult( this, requestCode, grantResults );
+//    }
 
     /**
      * 카메라에서 이미지 가져오기
      */
     private void doTakePhotoAction()
     {
+
+        int permissionCamera = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA);
+        if(permissionCamera == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA);
+        } else {
+            Log.d( "response", "camera permission authorized" );
+
+        }
+
     /*
      * 참고 해볼곳
      * http://2009.hfoss.org/Tutorial:Camera_and_Gallery_Demo
@@ -129,14 +156,61 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
         intent.putExtra( android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri );
         // 특정기기에서 사진을 저장못하는 문제가 있어 다음을 주석처리 합니다.
         intent.putExtra( "return-data", true );
+
         startActivityForResult( intent, PICK_FROM_CAMERA );
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CAMERA:
+                for (int i = 0; i < permissions.length; i++) {
+                    String permission = permissions[i];
+                    int grantResult = grantResults[i];
+                    if (permission.equals(android.Manifest.permission.CAMERA)) {
+                        if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                            Log.d("response", "camera permission authorized2");
+
+                        } else {
+                            Log.d("response", "camera permission denied");
+                            //  resultText.setText("camera permission denied");
+                        }
+                        break;
+                    }
+                }
+                break;
+            case REQUEST_EXTERNAL_STORAGE:
+                for (int i = 0; i < permissions.length; i++) {
+                    String permission = permissions[i];
+                    int grantResult = grantResults[i];
+                    if (permission.equals(android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        if(grantResult == PackageManager.PERMISSION_GRANTED) {
+                            Log.d("response", "read/write storage  permission authorized2");
+                        } else {
+                            Log.d("response", "read/write storage  permission denied2");
+
+                        }
+                        break;
+                    }
+                }
+                break;
+        }
+        }
 
     /**
      * 앨범에서 이미지 가져오기
      */
     private void doTakeAlbumAction()
     {
+        int permissionReadStorage = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionWriteStorage = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permissionReadStorage == PackageManager.PERMISSION_DENIED || permissionWriteStorage == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+        } else {
+            Log.d("response", "read/write storage  permission authorized");
+        }
+
         // 앨범 호출
         Log.d( "ALBUM", "GO" );
         Intent intent = new Intent( Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI );
@@ -396,6 +470,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
 
         void isFail();
     }
+
 
 }
 

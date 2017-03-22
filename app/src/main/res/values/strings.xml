@@ -8,7 +8,7 @@
     <string name="id_hint"><font size="14">O2sport@sport.com</font></string>
     <string name="pw_hint"><font size="14">1234567</font></string>
     <string name="phone_hint"><font size="14">010-1234-1234</font></string>
-    <string name="birthday_hint"><font size="14">1993.01.11</font></string>
+    <string name="birthday_hint"><font size="14">1993-01-11</font></string>
     <string name="belong_hint"><font size="14">삼성 라이온즈</font></string>
     <string name="school_hint"><font size="14">오투 고등학교</font></string>
     <string name="mento_descrip"><font size="14">멘토란 특정한 스포츠 종목에선수로서  충분한 지식/경험과 노하우를 갖고 계신 분으로서 스포츠 꿈나무에게 조언을 통하여 영감을 줄 수 있는 분을 말합니다.</font></string>

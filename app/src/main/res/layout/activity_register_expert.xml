@@ -53,7 +53,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/mento_descrip"
+                    android:text="전문가란 스포츠 선수가 아닌 분으로서 스포츠 분야(의학,영양,심리,트레이닝..)에서 충분한 지식/경험과 노하우를 갖고 계신 분으로서 멘토,꿈나무에게 조언을 통하여 도움을 줄 수 있는 분을 말합니다."
                     android:textColor="@color/white_99"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
@@ -100,7 +100,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/id_hint"
-                        android:inputType="textPassword"
+                        android:inputType="textEmailAddress"
                         android:background="@android:color/transparent"
                         />
 
@@ -234,7 +234,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/phone_hint"
-                        android:inputType="phone"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 
@@ -310,7 +310,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/belong_hint"
-                        android:inputType="date"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 
@@ -322,6 +322,75 @@
                         android:background="@color/black"></LinearLayout>
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="이력"
+                        android:textSize="12dp"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="30dp"/>
+
+                    <EditText
+                        android:id="@+id/e_register_experience01"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textSize="15dp"
+                        android:hint="1. 이력"
+                        android:inputType="text"
+                        android:background="@android:color/transparent"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:maxLength="20"
+                        android:singleLine="true"
+                        android:background="@color/black"></LinearLayout>
+
+                    <EditText
+                        android:id="@+id/e_register_experience02"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textSize="15dp"
+                        android:hint="2. 이력"
+                        android:inputType="text"
+                        android:background="@android:color/transparent"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:maxLength="20"
+                        android:singleLine="true"
+                        android:background="@color/black"></LinearLayout>
+
+                    <EditText
+                        android:id="@+id/e_register_experience03"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:textSize="15dp"
+                        android:hint="3. 이력"
+                        android:inputType="text"
+                        android:background="@android:color/transparent"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:maxLength="20"
+                        android:singleLine="true"
+                        android:background="@color/black"></LinearLayout>
+
+                </LinearLayout>
+
+
 
 
                 <Button

@@ -13,7 +13,6 @@ import android.widget.Button;
 import com.example.grid.DynamicHeightTextView;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /***
  * ADAPTER
@@ -29,17 +28,16 @@ public class SubjectAdapterActivity extends ArrayAdapter<String> {
     }
 
     private final LayoutInflater mLayoutInflater;
-    private final Random mRandom;
-    private final ArrayList<Integer> mBackgroundColors;
+   // private final Random mRandom;
+    public final ArrayList<Integer> mBackgroundColors;
 
     private static final SparseArray<Double> sPositionHeightRatios = new SparseArray<Double>();
 
     public SubjectAdapterActivity(final Context context, final int textViewResourceId) {
         super(context, textViewResourceId);
         mLayoutInflater = LayoutInflater.from(context);
-        mRandom = new Random();
+       // mRandom = new Random();
         mBackgroundColors = new ArrayList<Integer>();
-
 
     }
 
@@ -47,6 +45,11 @@ public class SubjectAdapterActivity extends ArrayAdapter<String> {
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
         ViewHolder vh;
+
+        double positionHeight = getPositionRatio(position);
+//        int backgroundIndex = position >= mBackgroundColors.size() ?
+//                position % mBackgroundColors.size() : position;
+
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.list_item_sample, parent, false);
             vh = new ViewHolder();
@@ -54,24 +57,44 @@ public class SubjectAdapterActivity extends ArrayAdapter<String> {
 
 
             convertView.setTag(vh);
-            mBackgroundColors.add(R.drawable.basketball);
+
+            //mBackgroundColors.add(R.drawable.basketball);
+            Log.d("response" , "mbackground size : " + mBackgroundColors.size());
+            if (position < mBackgroundColors.size()){
+                convertView.setBackgroundResource(mBackgroundColors.get(position));
+
+
+                Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
+
+                vh.txtLineOne.setHeightRatio(1);
+                vh.txtLineOne.setText(getItem(position) + position);
+            }else{
+
+            }
         }
         else {
             vh = (ViewHolder) convertView.getTag();
-            mBackgroundColors.add(R.drawable.basketball);
+            //mBackgroundColors.add(R.drawable.basketball);
+
+            //mBackgroundColors.add(R.drawable.basketball);
+            Log.d("response" , "mbackground size : " + mBackgroundColors.size());
+            if (position < mBackgroundColors.size()){
+                convertView.setBackgroundResource(mBackgroundColors.get(position));
+
+
+                Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
+
+                vh.txtLineOne.setHeightRatio(1);
+                vh.txtLineOne.setText(getItem(position) + position);
+            }else{
+
+            }
+
         }
 
-        double positionHeight = getPositionRatio(position);
-        int backgroundIndex = position >= mBackgroundColors.size() ?
-                position % mBackgroundColors.size() : position;
-
-        convertView.setBackgroundResource(mBackgroundColors.get(backgroundIndex));
 
 
-        Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
 
-        vh.txtLineOne.setHeightRatio(1);
-       // vh.txtLineOne.setText(getItem(position) + position);
 
         return convertView;
     }
@@ -87,7 +110,7 @@ public class SubjectAdapterActivity extends ArrayAdapter<String> {
             sPositionHeightRatios.append(position, ratio);
             Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
         }
-        return 50;
+        return 1;
     }
 
     private double getRandomHeightRatio() {

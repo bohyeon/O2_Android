@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class SampleData {
 
-    public static final int SAMPLE_DATA_ITEM_COUNT = 30;
+    public static final int SAMPLE_DATA_ITEM_COUNT = 1;
 
     public static ArrayList<String> generateSampleData() {
         final ArrayList<String> data = new ArrayList<String>(SAMPLE_DATA_ITEM_COUNT);

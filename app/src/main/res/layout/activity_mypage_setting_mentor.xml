@@ -22,9 +22,6 @@
             android:orientation="vertical">
 
 
-
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -38,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="15dp"
                     android:textColor="@color/mainBlue"
-                    android:text="전문가 회원정보 수정"
+                    android:text="멘토 회원정보 수정"
                     android:textStyle="bold"
                     android:layout_marginTop="30dp"/>
 
@@ -52,7 +49,7 @@
                     android:id="@+id/setting_profile_img"
                     android:layout_width="100dp"
                     android:layout_height="90dp"
-                    android:background="@drawable/profile_icon"
+                    android:background="@drawable/main_top_pic"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp" />
 
@@ -72,12 +69,12 @@
                         android:layout_marginTop="30dp"/>
 
                     <EditText
-                        android:id="@+id/e_setting_mail"
+                        android:id="@+id/mentor_setting_mail"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/id_hint"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 
@@ -106,7 +103,7 @@
                         android:layout_marginTop="30dp"/>
 
                     <EditText
-                        android:id="@+id/e_setting_pw"
+                        android:id="@+id/mentor_setting_pw"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
@@ -140,7 +137,7 @@
                         android:layout_marginTop="30dp"/>
 
                     <EditText
-                        android:id="@+id/e_setting_pw2"
+                        android:id="@+id/mentor_setting_pw2"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
@@ -173,7 +170,7 @@
                         android:layout_marginTop="30dp"/>
 
                     <EditText
-                        android:id="@+id/e_setting_name"
+                        android:id="@+id/mentor_setting_name"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
@@ -206,7 +203,7 @@
                         android:layout_marginTop="30dp"/>
 
                     <EditText
-                        android:id="@+id/e_setting_phone"
+                        android:id="@+id/mentor_setting_phone"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
@@ -240,7 +237,7 @@
                         android:layout_marginTop="30dp"/>
 
                     <EditText
-                        android:id="@+id/e_setting_birth"
+                        android:id="@+id/mentor_setting_birth"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
@@ -261,12 +258,83 @@
 
 
                 <Spinner
-                    android:id="@+id/e_setting_type"
+                    android:id="@+id/mentor_setting_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"></Spinner>
 
 
+                <Spinner
+                    android:id="@+id/mentor_setting_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"></Spinner>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="분야"
+                    android:textSize="12dp"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="30dp"/>
+
+
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*"
+                    android:layout_marginTop="10dp">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+
+                        <RadioButton
+                            android:id="@+id/mentor_setting_radio1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="현역선수"/>
+
+                        <RadioButton
+                            android:id="@+id/mentor_setting_radio2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="은퇴선수"/>
+
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <RadioButton
+                            android:id="@+id/mentor_setting_radio3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="감독"/>
+
+                        <RadioButton
+                            android:id="@+id/mentor_setting_radio4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="5dp"
+                            android:text="코치"/>
+
+
+                    </TableRow>
+
+                </TableLayout>
+
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -282,79 +350,12 @@
                         android:layout_marginTop="30dp"/>
 
                     <EditText
-                        android:id="@+id/e_setting_company"
+                        android:id="@+id/mentor_setting_company"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/belong_hint"
                         android:inputType="date"
-                        android:background="@android:color/transparent"
-                        />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:maxLength="20"
-                        android:singleLine="true"
-                        android:background="@color/black"></LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="이력"
-                        android:textSize="12dp"
-                        android:inputType="textEmailAddress"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="30dp"/>
-
-                    <EditText
-                        android:id="@+id/e_setting_experience01"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="15dp"
-                        android:hint="1. 이력"
-                        android:inputType="text"
-                        android:background="@android:color/transparent"
-                        />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:maxLength="20"
-                        android:singleLine="true"
-                        android:background="@color/black"></LinearLayout>
-
-                    <EditText
-                        android:id="@+id/e_setting_experience02"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="15dp"
-                        android:hint="2. 이력"
-                        android:inputType="text"
-                        android:background="@android:color/transparent"
-                        />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:maxLength="20"
-                        android:singleLine="true"
-                        android:background="@color/black"></LinearLayout>
-
-                    <EditText
-                        android:id="@+id/e_setting_experience03"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="15dp"
-                        android:hint="3. 이력"
-                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 
@@ -429,7 +430,7 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/e_setting_btn"
+                    android:id="@+id/mentor_setting_btn"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@color/black"
@@ -438,11 +439,10 @@
                     android:padding="10dp"
                     android:textSize="13dp"
                     android:layout_marginTop="50dp"
-                    android:layout_marginBottom="50dp"/>
-
+                    android:layout_marginBottom="20dp"/>
 
                 <Button
-                    android:id="@+id/e_setting_logout"
+                    android:id="@+id/mentor_setting_logout"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@color/gray2"

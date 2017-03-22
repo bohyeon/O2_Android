@@ -1,8 +1,9 @@
 package com.example.hyerimhyeon.o2_android;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.example.DB.DBConnector;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -30,9 +37,12 @@ public class ChildRegisterActivity extends AppCompatActivity
     Spinner type, location, school;
     ImageView profile_img;
     EditText mail, pw, pw_ck, name, phone, birth, type_name, location_name, school_name, shcool_name, school_type;
-
+    String email, password, name_str, password_ck, profile_img_url, phone_str, birth_str, sport_type, region, school_level, schcool_name_str, invite_code;
+    String phone_open, birth_open;
     private File file = null;
 
+    public SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +63,10 @@ public class ChildRegisterActivity extends AppCompatActivity
         type = (Spinner) findViewById(R.id.c_register_type);
         type.setAdapter(adapter);
 
+        String[] str1=getResources().getStringArray(R.array.locationArrr);
+        ArrayAdapter adapter1 = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, str1);
         location = (Spinner) findViewById(R.id.c_register_location);
-        location.setAdapter(adapter);
+        location.setAdapter(adapter1);
 
         String[] str2=getResources().getStringArray(R.array.schoolArr);
         ArrayAdapter adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, str2);
@@ -65,8 +77,99 @@ public class ChildRegisterActivity extends AppCompatActivity
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChildRegisterActivity.this, MainActivity.class);
-                startActivity(intent);
+
+                email = mail.getText().toString();
+                password = pw.getText().toString();
+                password_ck = pw_ck.getText().toString();
+                name_str = name.getText().toString();
+                phone_str = phone.getText().toString();
+                birth_str = birth.getText().toString();
+                schcool_name_str = school_name.getText().toString();
+                sport_type = type.getSelectedItem().toString();
+                region = location.getSelectedItem().toString();
+                school_level = school.getSelectedItem().toString();
+
+                loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+                invite_code = loginPreferences.getString("invite_code","");
+
+                birth_open = "true";
+                phone_open = "true";
+
+                if(file != null) {
+
+                    if (email != null) {
+
+                        if (password != null) {
+
+                            if (name_str != null) {
+
+                                if (phone_str != null) {
+
+                                    if (birth_str != null) {
+
+                                        if (schcool_name_str != null) {
+
+                                            if (!sport_type.equals("종목선택")) {
+
+                                                if (!region.equals("지역선택")) {
+
+                                                    if (!school_level.equals("학력선택")) {
+
+                                                        new UploadImage().execute(new DBConnector());
+
+
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "학력을 선택해주세요..",
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), "지역을 선택해주세요.",
+                                                            Toast.LENGTH_LONG).show();
+                                                }
+
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "종목을 선택해주세요.",
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "학교이름을 입력해주세요.",
+                                                    Toast.LENGTH_LONG).show();
+                                        }
+
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "생일을 입력해주세요.",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "핸드폰번호를 입력해주세요.",
+                                            Toast.LENGTH_LONG).show();
+                                }
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "이름을 입력해주세요.",
+                                        Toast.LENGTH_LONG).show();
+                            }
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "이메일을 입력해주세요.",
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                }else {
+                    Toast.makeText(getApplicationContext(), "프로필 사진을 올려주세요.",
+                            Toast.LENGTH_LONG).show();
+                }
+
+//                Intent intent = new Intent(ChildRegisterActivity.this, MainActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -79,8 +182,15 @@ public class ChildRegisterActivity extends AppCompatActivity
                     @Override
                     public void isSuccess(File files) {
                         file = files;
-                        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                        profile_img.setImageBitmap(bitmap);
+
+                      //  Log.d("response " , "file : " + file.toString());
+                        String fname = new File(getFilesDir(), file.toString()).getAbsolutePath();
+                        //Bitmap bitmap = BitmapFactory.decodeFile(fname);
+                        Uri uri = Uri.fromFile(file);
+                        //Log.d("response " , "bitmap : " + uri.toString());
+                        profile_img.setImageURI(uri);
+
+
                     }
 
                     @Override
@@ -95,7 +205,127 @@ public class ChildRegisterActivity extends AppCompatActivity
 
     }
 
-    @Override
+    private class UploadImage extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+            String token = "db4fdaf8d9cb71b454a47c114422e29c4165e203";
+
+            return params[0].UploadImage(file, token);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter(JSONObject jsonObject) {
+
+        if(jsonObject == null){
+
+        }else{
+
+            profile_img_url = "";
+            try {
+                profile_img_url = jsonObject.getString("profile_image_url").toString();
+
+                Log.d("response" , "profile_img L " + profile_img_url);
+                if(profile_img_url != ""){
+                    new RegistMentee().execute(new DBConnector());
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
+
+    }
+    private class RegistMentee extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].MenteeResgister(email, name_str, password,password_ck, profile_img_url, phone_str, phone_open, birth_str, birth_open, sport_type, region, school_level, schcool_name_str, invite_code);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter2(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter2(JSONObject jsonObject) {
+
+     //   Log.d("response ", "user : " + jsonObject.toString());
+
+        if(jsonObject == null){
+
+        }else{
+
+            loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+            loginPrefsEditor = loginPreferences.edit();
+
+            try {
+             //   Log.d("response" , "mentee name : " + jsonObject.getString("name"));
+
+//                loginPrefsEditor.putString("email",jsonObject.getString("email").toString());
+//                loginPrefsEditor.putString("name",jsonObject.getString("name").toString());
+//                loginPrefsEditor.putString("profile_url",jsonObject.getString("profile_url").toString());
+//                loginPrefsEditor.putString("phone_number",jsonObject.getString("phone_number").toString());
+//                loginPrefsEditor.putString("birthday",jsonObject.getString("birthday").toString());
+//                loginPrefsEditor.putString("sport_type",jsonObject.getString("sport_type").toString());
+//                loginPrefsEditor.putString("region",jsonObject.getString("phone_number").toString());
+//                loginPrefsEditor.putString("school_level",jsonObject.getString("birthday").toString());
+//                loginPrefsEditor.putString("school_name",jsonObject.getString("sport_type").toString());
+//                loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
+                loginPrefsEditor.putString("email",email);
+                loginPrefsEditor.putString("name",name_str);
+                loginPrefsEditor.putString("password",password);
+                loginPrefsEditor.putString("profile_url",profile_img_url);
+                loginPrefsEditor.putString("phone_number",phone_str);
+                loginPrefsEditor.putString("birthday",birth_str);
+                loginPrefsEditor.putString("sport_type",sport_type);
+                loginPrefsEditor.putString("region",region);
+                loginPrefsEditor.putString("school_level",school_level);
+                loginPrefsEditor.putString("school_name",schcool_name_str);
+                loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
+                loginPrefsEditor.putString("member_type","mentee");
+                loginPrefsEditor.putBoolean("saveLogin", true);
+
+                loginPrefsEditor.commit();
+
+                Toast.makeText(getApplicationContext(), name_str+"님 환영합니다.",
+                        Toast.LENGTH_LONG).show();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            Intent intent = new Intent(ChildRegisterActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
+
+        @Override
     public void onBackPressed() {
      finish();
     }

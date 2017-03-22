@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class MemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
+public class MentorMemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
     LayoutInflater layoutInflater;
     NewsFeed newsFeed;
@@ -15,11 +15,11 @@ public class MemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     Context context;
     NewsfeedItem newsfeedItem;
 
-    MemberAdapterActivity newsfeedAdapterActivity;
+    MentorMemberAdapterActivity newsfeedAdapterActivity;
 
     TextView name, type, belong, regist_date, content;
 
-    public MemberAdapterActivity(Context context, NewsFeed newsFeed, MemberActivity memberActivity) {
+    public MentorMemberAdapterActivity(Context context, NewsFeed newsFeed, MemberActivity memberActivity) {
 
         super(context, R.layout.activity_member, newsFeed.newsfeedItem);
 
@@ -51,20 +51,14 @@ public class MemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
             }else{
                 String member_type = "";
-                String company = " ";
+                String company = "";
                 if(newfeedItemPosition.member_type.equals("mentor")){
                     company = newfeedItemPosition.company;
                     member_type = "멘토" + " " + company;
                 }else if(newfeedItemPosition.member_type.equals("mentee")){
                     member_type = "꿈나무";
                 }else if(newfeedItemPosition.member_type.equals("expert")){
-                    company = newfeedItemPosition.company;
-                    if(company.equals(" ")){
-                        member_type = "전문가";
-                    }else{
-                        member_type = "전문가 " + company;
-                    }
-
+                    member_type = "전문가";
                 }else{
                     member_type = "";
                 }
@@ -98,8 +92,7 @@ public class MemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     }else if(newfeedItemPosition.member_type.equals("mentee")){
                         member_type = "꿈나무";
                     }else if(newfeedItemPosition.member_type.equals("expert")){
-                        company = newfeedItemPosition.company;
-                        member_type = "전문가 " + company;
+                        member_type = "전문가";
                     }else{
                         member_type = "";
                     }

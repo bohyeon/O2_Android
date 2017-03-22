@@ -52,7 +52,7 @@
                             android:orientation="vertical"
                             android:background="@color/white">
 
-                            <LinearLayout
+                            <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
                                 android:orientation="horizontal">
@@ -63,7 +63,18 @@
                                     android:background="@android:color/transparent"
                                     android:paddingLeft="10dp"
                                     android:hint="search"/>
-                            </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/member_search_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="검색"
+                                    android:layout_alignParentRight="true"
+                                    android:padding="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:textColor="@color/mainBlue"
+                                    android:textStyle="bold"/>
+                            </RelativeLayout>
 
                             <ListView
                                 android:id="@+id/member_expertLv"
@@ -97,7 +108,8 @@
                             <ListView
                                 android:id="@+id/member_mentoLv"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"></ListView>
+                                android:layout_height="wrap_content"
+                                android:background="@color/blue"></ListView>
 
 
                         </LinearLayout>
@@ -156,7 +168,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
 

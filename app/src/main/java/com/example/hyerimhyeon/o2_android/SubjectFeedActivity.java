@@ -7,6 +7,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,11 +19,13 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.grid.StaggeredGridView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubjectFeedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AbsListView.OnScrollListener, AbsListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -42,89 +46,97 @@ public class SubjectFeedActivity extends AppCompatActivity
 
     DrawerLayout drawer;
 
+    private StaggeredGridLayoutManager gaggeredGridLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subjectfeed);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setCustomView(R.layout.actionbar);
 
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        ImageView logo = (ImageView) headerView.findViewById(R.id.nav_header_logo);
 
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-//                findViewById(R.id.bottom_navigation);
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener(
-//                new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                    @Override
-//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.home_item:
-//                                //home is here
-//                                return true;
-//                            case R.id.noty_item:
-//                                Intent intent = new Intent(SubjectFeedActivity.this, MypageActivity.class);
-//                                startActivity(intent);
-//                                return true;
-//                            case R.id.write_item:
-//
-//                                return true;
-////                            case R.id.setting_item:
-////                                Intent intent1 = new Intent(SubjectFeedActivity.this, MypageActivity.class);
-////                                startActivity(intent1);
-////                                return true;
-//                        }
-//                        return true;
-//                    }
-//                });
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent intent = new Intent(SubjectFeedActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
 
-        mGridView = (StaggeredGridView) findViewById(R.id.grid_view);
+            }
+        });
 
-        subjectAdapterActivity = new SubjectAdapterActivity(this, R.id.txt_line1);
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.grid_view);
+        recyclerView.setHasFixedSize(true);
 
-        // do we have saved data?
-        if (savedInstanceState != null) {
-            mData = savedInstanceState.getStringArrayList(SAVED_DATA_KEY);
-        }
+        gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        recyclerView.setLayoutManager(gaggeredGridLayoutManager);
 
-        if (mData == null) {
-            mData = SampleData.generateSampleData();
-        }
+        List<Integer> gaggeredList = getListItemData();
 
-        for (String data : mData) {
-            subjectAdapterActivity.add(data);
-        }
-
-        mGridView.setAdapter(subjectAdapterActivity);
-        mGridView.setOnScrollListener(this);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setOnItemLongClickListener(this);
+        SolventRecyclerViewAdapter rcAdapter = new SolventRecyclerViewAdapter(SubjectFeedActivity.this, gaggeredList);
+        recyclerView.setAdapter(rcAdapter);
 
     }
+
+    private List<Integer> getListItemData(){
+        List<Integer> listViewItems = new ArrayList<Integer>();
+        listViewItems.add(R.drawable.soccer);
+        listViewItems.add(R.drawable.basketball);
+        listViewItems.add(R.drawable.valleyball);
+        listViewItems.add(R.drawable.pingpong);
+        listViewItems.add(R.drawable.tennis);
+        listViewItems.add(R.drawable.weightlifting);
+
+        listViewItems.add(R.drawable.yudo);
+        listViewItems.add(R.drawable.taekwondo);
+        listViewItems.add(R.drawable.boxing);
+        listViewItems.add(R.drawable.wrestling);
+        listViewItems.add(R.drawable.horse_riding);
+        listViewItems.add(R.drawable.gym);
+
+        listViewItems.add(R.drawable.track);
+        listViewItems.add(R.drawable.fencing);
+        listViewItems.add(R.drawable.yacht);
+        listViewItems.add(R.drawable.rowing);
+
+        listViewItems.add(R.drawable.shoot);
+        listViewItems.add(R.drawable.hockey);
+        listViewItems.add(R.drawable.handball);
+        listViewItems.add(R.drawable.geundae3);
+        listViewItems.add(R.drawable.triathlon);
+        listViewItems.add(R.drawable.badminton);
+
+        listViewItems.add(R.drawable.golf);
+        listViewItems.add(R.drawable.cycle);
+        listViewItems.add(R.drawable.swim);
+        listViewItems.add(R.drawable.rugby);
+        listViewItems.add(R.drawable.ssireum);
+        listViewItems.add(R.drawable.bodybuilding);
+
+        listViewItems.add(R.drawable.bobsleigh);
+        listViewItems.add(R.drawable.ski);
+        listViewItems.add(R.drawable.icehockey);
+        listViewItems.add(R.drawable.curling);
+        listViewItems.add(R.drawable.skating);
+        listViewItems.add(R.drawable.gongsudo);
+
+        listViewItems.add(R.drawable.archery);
+        listViewItems.add(R.drawable.balling);
+        listViewItems.add(R.drawable.kendo);
+        listViewItems.add(R.drawable.roller);
+        listViewItems.add(R.drawable.sepaktakraw);
+        listViewItems.add(R.drawable.softball);
+
+        listViewItems.add(R.drawable.squash);
+
+        return listViewItems;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -160,12 +172,13 @@ public class SubjectFeedActivity extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("종목별피드");
-
+        actionbar_title.setText("종목별 피드");
 
         buttonStateOpen = false;
 
         ImageButton menu_icon = (ImageButton) findViewById(R.id.actionbar_menu);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         menu_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,9 +193,24 @@ public class SubjectFeedActivity extends AppCompatActivity
 
             }
         });
+
+        ImageButton search_icon = (ImageButton) findViewById(R.id.actionbar_search);
+        search_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SubjectFeedActivity.this, SearchActivity.class);
+                intent.putExtra("type","sport");
+                startActivityForResult(intent,1);
+            }
+        });
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -204,47 +232,62 @@ public class SubjectFeedActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            Intent intent = new Intent(SubjectFeedActivity.this, MainActivity.class);
-            startActivity(intent);
 
+        if (id == R.id.nav_camera) {
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_gallery) {
 
-            Intent intent = new Intent(SubjectFeedActivity.this, SubjectFeedActivity.class);
+            Intent intent = new Intent(this, SubjectFeedActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_slideshow) {
 
-            Intent intent = new Intent(SubjectFeedActivity.this, ExpertFeedActivity.class);
+            Intent intent = new Intent(this, ExpertFeedActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_manage) {
 
-            Intent intent = new Intent(SubjectFeedActivity.this, InviteActivity.class);
+            Intent intent = new Intent(this, InviteActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_share) {
 
-            Intent intent = new Intent(SubjectFeedActivity.this, NoticeActivity.class);
+            Intent intent = new Intent(this, NoticeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+            finish();
         } else if (id == R.id.nav_send) {
 
-            Intent intent = new Intent(SubjectFeedActivity.this, MypageActivity.class);
+            Intent intent = new Intent(this, MypageActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+            finish();
         } else if (id == R.id.people) {
 
-            Intent intent = new Intent(SubjectFeedActivity.this, MemberActivity.class);
+            Intent intent = new Intent(this, MemberActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+            finish();
         }else if (id == R.id.nav_lifesport) {
 
-            Intent intent = new Intent(SubjectFeedActivity.this, LifeExpertFeedActivity.class);
+            Intent intent = new Intent(this, LifeExpertFeedActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
+            finish();
         }
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

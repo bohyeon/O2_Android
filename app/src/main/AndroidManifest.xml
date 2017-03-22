@@ -2,22 +2,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.hyerimhyeon.o2_android">
 
-
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+
     <permission android:name="com.o2.o2sport.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.o2.o2sport.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -62,6 +70,12 @@
             android:name=".LoginActivity"
             android:label="O2 Sport"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".SearchFeedActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme">
         </activity>
 
         <activity
@@ -147,7 +161,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="appshc" android:host="checkApp" />
-                <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_app_key"/>
+
                 <data android:scheme="@string/kakao_scheme" android:host="@string/kakaolink_host" />
                 <data android:scheme="@string/kakao_scheme" android:host="@string/kakaolink_host" />
             </intent-filter>
@@ -186,6 +200,10 @@
 
 
             </activity>
+
+        <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_app_key"/>
     </application>
+
+
 
 </manifest>
