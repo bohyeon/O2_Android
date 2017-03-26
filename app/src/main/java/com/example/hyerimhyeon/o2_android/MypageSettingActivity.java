@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -63,13 +64,21 @@ public class MypageSettingActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart(){
+        super.onStart();
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         Log.d("response" , "token : " + token_str);
         profile_image_url = loginPreferences.getString("profile_image_url","");
+
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
 
         if(loginPreferences.getString("member_type","").equals("mentee")){
             setContentView(R.layout.activity_mypage_setting_child);
@@ -186,7 +195,13 @@ public class MypageSettingActivity extends AppCompatActivity
 
 
                     token_str = loginPreferences.getString("token","");
-                    new PutUserInfo().execute(new DBConnector());
+                    if(file == null){
+                        new PutUserInfo().execute(new DBConnector());
+                    }else if(file != null){
+                        Log.d("response" , "file mypage : " + file);
+                        new UploadImage().execute(new DBConnector());
+                    }
+
                //     new UploadImage().execute(new DBConnector());
 
                 }
@@ -195,9 +210,32 @@ public class MypageSettingActivity extends AppCompatActivity
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
+                            Toast.LENGTH_LONG).show();
                     new DeleteLogout().execute(new DBConnector());
                 }
             });
+
+            profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new CameraCropActivity().setListener(new CameraCropActivity.PicturePickListener() {
+                        @Override
+                        public void isSuccess(File files) {
+                            file = files;
+                            String fname = new File(getFilesDir(), file.toString()).getAbsolutePath();
+                            Uri uri = Uri.fromFile(file);
+                            profile_img.setImageURI(uri);
+                        }
+
+                        @Override
+                        public void isFail() {
+                            Log.d("camera" , "fail");
+                        }
+                    }).show(getSupportFragmentManager(), null);
+                }
+            });
+
 
         }else if(loginPreferences.getString("member_type","").equals("mentor")){
 
@@ -216,6 +254,7 @@ public class MypageSettingActivity extends AppCompatActivity
             pw_ck = (EditText) findViewById(R.id.mentor_setting_pw2);
             mento_btn = (Button) findViewById(R.id.mentor_setting_btn);
             logout_btn = (Button) findViewById(R.id.mentor_setting_logout);
+            profile_img = (ImageView) findViewById(R.id.mentor_setting_profile_img);
 
 
             String[] str=getResources().getStringArray(R.array.mSpinnerArr);
@@ -326,9 +365,6 @@ public class MypageSettingActivity extends AppCompatActivity
 
 
 
-
-            profile_img = (ImageView) findViewById(R.id.setting_profile_img);
-
             if(loginPreferences.getString("profile_url","").equals("")|| loginPreferences.getString("profile_url","") == null|| loginPreferences.getString("profile_url","") == " "|| loginPreferences.getString("profile_url","") == "null"|| loginPreferences.getString("profile_url","") == "" || loginPreferences.getString("profile_url","")=="http://" || loginPreferences.getString("profile_url","")=="http://null" || loginPreferences.getString("profile_url","").equals("http://") || loginPreferences.getString("profile_url","").equals("http:/null/")){
 
             }else{
@@ -369,9 +405,36 @@ public class MypageSettingActivity extends AppCompatActivity
 
 
                     token_str = loginPreferences.getString("token","");
-                    new PutUserInfo().execute(new DBConnector());
-                    //     new UploadImage().execute(new DBConnector());
+                   // new PutUserInfo().execute(new DBConnector());
+                    if(file == null){
+                        new PutUserInfo().execute(new DBConnector());
+                    }else if(file != null){
+                        Log.d("response" , "file mypage : " + file);
+                        new UploadImage().execute(new DBConnector());
+                    }
 
+                }
+            });
+
+
+            profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("response" , "mypage img :  ");
+                    new CameraCropActivity().setListener(new CameraCropActivity.PicturePickListener() {
+                        @Override
+                        public void isSuccess(File files) {
+                            file = files;
+                            String fname = new File(getFilesDir(), file.toString()).getAbsolutePath();
+                            Uri uri = Uri.fromFile(file);
+                            profile_img.setImageURI(uri);
+                        }
+
+                        @Override
+                        public void isFail() {
+                            Log.d("camera" , "fail");
+                        }
+                    }).show(getSupportFragmentManager(), null);
                 }
             });
 
@@ -379,6 +442,8 @@ public class MypageSettingActivity extends AppCompatActivity
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
+                            Toast.LENGTH_LONG).show();
                     new DeleteLogout().execute(new DBConnector());
                 }
             });
@@ -398,11 +463,16 @@ public class MypageSettingActivity extends AppCompatActivity
             pw_ck = (EditText) findViewById(R.id.e_setting_pw2);
             mento_btn = (Button) findViewById(R.id.e_setting_btn);
             logout_btn = (Button) findViewById(R.id.e_setting_logout);
+            experience_1 = (EditText) findViewById(R.id.e_setting_experience01);
+            experience_2 = (EditText) findViewById(R.id.e_setting_experience02);
+            experience_3 = (EditText) findViewById(R.id.e_setting_experience03);
 
 
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
+                            Toast.LENGTH_LONG).show();
                     new DeleteLogout().execute(new DBConnector());
                 }
             });
@@ -415,7 +485,7 @@ public class MypageSettingActivity extends AppCompatActivity
 
 
             List<String> strings_expertType = Arrays.asList("종목선택","스포츠 의학","스포츠 심리","스포츠 트레이닝","스포츠 영양","스포츠 재활","스포츠 진로","기타");
-            String expert_type = loginPreferences.getString("region","");
+            String expert_type = loginPreferences.getString("expert_type","");
             int expert_type_int = 0;
             for(int i=0; i<strings_expertType.size(); i++){
                 if(strings_expertType.get(i).equals(expert_type)){
@@ -423,7 +493,7 @@ public class MypageSettingActivity extends AppCompatActivity
                 }
             }
 
-
+            Log.d("response","expert log : " + loginPreferences.getString("company",""));
 
             email.setText(loginPreferences.getString("email",""));
             name.setText(loginPreferences.getString("name",""));
@@ -449,6 +519,26 @@ public class MypageSettingActivity extends AppCompatActivity
                 new DownLoadImageTask_profile(profile_img).execute("http://" + loginPreferences.getString("profile_url",""));
 
             }
+
+            profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new CameraCropActivity().setListener(new CameraCropActivity.PicturePickListener() {
+                        @Override
+                        public void isSuccess(File files) {
+                            file = files;
+                            String fname = new File(getFilesDir(), file.toString()).getAbsolutePath();
+                            Uri uri = Uri.fromFile(file);
+                            profile_img.setImageURI(uri);
+                        }
+
+                        @Override
+                        public void isFail() {
+                            Log.d("camera" , "fail");
+                        }
+                    }).show(getSupportFragmentManager(), null);
+                }
+            });
 
 
             mento_btn.setOnClickListener(new View.OnClickListener() {
@@ -483,8 +573,14 @@ public class MypageSettingActivity extends AppCompatActivity
 
 
                     token_str = loginPreferences.getString("token","");
-                    new PutUserInfo().execute(new DBConnector());
-                    //     new UploadImage().execute(new DBConnector());
+
+                    if(file == null){
+                        new PutUserInfo().execute(new DBConnector());
+                    }else if(file != null){
+                        Log.d("response" , "file mypage : " + file);
+                        new UploadImage().execute(new DBConnector());
+                    }
+
 
                 }
             });
@@ -524,10 +620,16 @@ public class MypageSettingActivity extends AppCompatActivity
             try {
                 profile_image_url = jsonObject.getString("profile_image_url").toString();
 
-               // Log.d("response", "profile_img L " + profile_img_url);
+                Log.d("response", "profile_img u " + jsonObject);
                 if (profile_image_url != "") {
+                    loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+                    loginPrefsEditor = loginPreferences.edit();
+                    String img_url = jsonObject.getString("profile_image_url").replace("\\/","\\");
+                    Log.d("response", "profile_img u " + img_url);
+                    loginPrefsEditor.putString("profile_url",img_url);
 
-                    new PutUserInfo().execute(new DBConnector());
+                    loginPrefsEditor.commit();
+                   new PutUserInfo().execute(new DBConnector());
                  //   new MentoRegisterActivity.MentoResgister().execute(new DBConnector());
                 }
 
@@ -617,10 +719,9 @@ public class MypageSettingActivity extends AppCompatActivity
             loginPrefsEditor.clear();
             loginPrefsEditor.commit();
 
-            Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
-                    Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(MypageSettingActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             finish();
             startActivity(intent);
 
@@ -654,7 +755,7 @@ public class MypageSettingActivity extends AppCompatActivity
     public void settextToAdapter(JSONObject jsonObject) {
 
 //        Log.d("response" , "update user : " + jsonObject.toString());
-
+        Log.d("response" , "check img : " +jsonObject);
         if(jsonObject == null){
 
         }else{
@@ -665,6 +766,8 @@ public class MypageSettingActivity extends AppCompatActivity
 
             try {
                 loginPrefsEditor.putString("name",name_str);
+
+           //     loginPrefsEditor.putString("profile_image_url",jsonObject.getString("profile_url").toString());
                 loginPrefsEditor.putString("phone_number",jsonObject.getString("phone_number").toString());
                 loginPrefsEditor.putString("birthday",jsonObject.getString("birthday").toString());
                 loginPrefsEditor.putString("sport_type",jsonObject.getString("sport_type").toString());

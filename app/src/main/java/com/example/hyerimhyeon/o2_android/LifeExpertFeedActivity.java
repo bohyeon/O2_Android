@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,7 +44,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
     Boolean buttonStateOpen;
     Handler handler;
     DrawerLayout drawer;
-    String token;
+    String token , id;
 
     public SharedPreferences loginPreferences;
     @Override
@@ -70,6 +71,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
+        id = loginPreferences.getString("id", "");
 
 
 
@@ -173,7 +175,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
                     newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
                     newsfeedItem.like_num = jsonObject.getString("like_num");
                     newsfeedItem.comment_num = jsonObject.getString("comment_num");
-                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
                     newsfeedItem.is_like = jsonObject.getBoolean("is_like");
                     newsfeedItem.post_id = jsonObject.getString("id");
                     newsfeedItem.member_type = userJsonObj.getString("member_type");
@@ -181,8 +183,31 @@ public class LifeExpertFeedActivity extends AppCompatActivity
                     newsfeedItem.sport_type = userJsonObj.getString("sport_type");
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                    newsfeedItem.member_id = userJsonObj.getString("id");
+                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
 
 
+                    if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
+                        newsfeedItem.youtube_id = "";
+                    }else{
+                        String str = newsfeedItem.youtube_link;
+                        String video_id = "";
+
+                        if(str.toString().indexOf("youtube.com") != -1) {
+                            if(str.indexOf("&") > 0){
+                                video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
+                            }else{
+                                video_id = str.substring(str.indexOf("=")+1);
+                            }
+                        }else if(str.toString().indexOf("youtu.be") != -1 ){
+                            //   Log.d("response", "youtube_str :  "+ str);
+                            video_id = str.substring(17);
+                            Log.d("response", "youtube_id :  "+ video_id);
+                        }
+
+                        newsfeedItem.youtube_id = video_id;
+
+                    }
 
                     expertfeedAdapterActivity.add(newsfeedItem);
                     expertfeedAdapterActivity.notifyDataSetChanged();
@@ -286,7 +311,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
                             case R.id.write_item:
 
                                 Intent intent2 = new Intent(LifeExpertFeedActivity.this, NewsfeedWriteActivity.class);
-                                intent2.putExtra("post_type", "sport_expert_knowledge_feed");
+                                intent2.putExtra("post_type", "life_expert_knowledge_feed");
 
                                 startActivityForResult(intent2, 300);
 

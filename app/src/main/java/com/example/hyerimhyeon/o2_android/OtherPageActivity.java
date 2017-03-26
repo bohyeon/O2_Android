@@ -2,10 +2,15 @@ package com.example.hyerimhyeon.o2_android;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,7 +22,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -30,25 +35,37 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NoticeActivity extends AppCompatActivity
+import java.io.InputStream;
+import java.net.URL;
+
+public class OtherPageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ListView newsfeedLv;
-    TextView actionbar_title;
-    NoticeActivity noticeActivity;
-    NoticeAdapterActivity noticeAdapterActivity;
-    NewsFeed newsFeed;
-    String token, id;
-    Handler handler;
-    DrawerLayout drawer;
+    ListView mypage_mypost, comment_lv, alarm_lv;
+    FrameLayout container;
+    ImageButton backBtn;
     Boolean buttonStateOpen;
+
+    OtherpagePostAdapterActivity mypageMypostAdapterActivity;
+
+    NewsFeed newsFeed;
+
+    ImageView profile_img;
+    Handler handler;
+    TextView nametv, typetv, companytv;
+    String token;
+    DrawerLayout drawer;
+    private static final int REQUEST_INTERNET = 1;
     public SharedPreferences loginPreferences;
     private static final int REQUEST_EXTERNAL_STORAGE = 2;
+    ImageButton menu_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notice);
+        setContentView(R.layout.activity_mypage_other);
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
@@ -58,7 +75,7 @@ public class NoticeActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(NoticeActivity.this, MainActivity.class);
+                Intent intent = new Intent(OtherPageActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
@@ -66,27 +83,109 @@ public class NoticeActivity extends AppCompatActivity
             }
         });
 
-
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
-        token = loginPreferences.getString("token", "");
-        id = loginPreferences.getString("id", "");
+
+        nametv = (TextView) findViewById(R.id.mypage_name);
+        typetv = (TextView) findViewById(R.id.mypage_type);
+        companytv = (TextView) findViewById(R.id.mypage_company);
+        profile_img = (ImageView) findViewById(R.id.mypage_profile_img);
+
+     //   Log.d("response" , "myname: " + loginPreferences.getString("name" , ""));
+        nametv.setText(loginPreferences.getString("name",""));
+        typetv.setText(loginPreferences.getString("type",""));
+        if(loginPreferences.getString("company","")!=null){
+            companytv.setText(loginPreferences.getString("company",""));
+        }else{
+            companytv.setText("");
+        }
+
+        if(loginPreferences.getString("profile_url","").equals("")|| loginPreferences.getString("profile_url","") == null|| loginPreferences.getString("profile_url","") == " "|| loginPreferences.getString("profile_url","") == "null"|| loginPreferences.getString("profile_url","") == "" || loginPreferences.getString("profile_url","")=="http://" || loginPreferences.getString("profile_url","")=="http://null" || loginPreferences.getString("profile_url","").equals("http://") || loginPreferences.getString("profile_url","").equals("http:/null/")){
+
+        }else{
+            int permissionCamera = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NETWORK_STATE);
+            if(permissionCamera == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
+            } else {
+                new DownLoadImageTask_profile(profile_img).execute("http://" + loginPreferences.getString("profile_url",""));
+
+            }
+            // Log.d("response2", "response img: " + uri);
+            // image.setImageURI(uri);
+        }
+        token = loginPreferences.getString("token","");
+
+        backBtn = (ImageButton) findViewById(R.id.mypage_backBtn);
 
 
-        newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
+        mypage_mypost = (ListView)findViewById(R.id.mypage_mypost);
+
 
         this.newsFeed = NewsFeed.getNewsFeed();
-        this.noticeAdapterActivity = new NoticeAdapterActivity(this, newsFeed, this);
-        this.newsfeedLv.setAdapter(noticeAdapterActivity);
+        this.mypageMypostAdapterActivity = new OtherpagePostAdapterActivity(this, newsFeed, this);
+        this.mypage_mypost.setAdapter(mypageMypostAdapterActivity);
 
-        newsfeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        // open or close when click a menu button
+        buttonStateOpen = false;
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        menu_icon = (ImageButton) findViewById(R.id.mypage_backBtn);
+        menu_icon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(View v) {
 
-                Intent intent = new Intent(NoticeActivity.this, FeedDetailActivity.class);
-                startActivity(intent);
+                if (buttonStateOpen == false) {
+                    drawer.openDrawer(Gravity.LEFT);
+                    buttonStateOpen = true;
+                } else if (buttonStateOpen == true) {
+                    drawer.closeDrawer(Gravity.LEFT);
+                    buttonStateOpen = false;
+                }
+
             }
         });
 
+
+    }
+
+    private class DownLoadImageTask_profile extends AsyncTask<String,Void,Bitmap> {
+        ImageView imageView;
+
+        public DownLoadImageTask_profile(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String... urls) {
+            //String urlOfImage = urls[0];
+            String urlOfImage = urls[0];
+            Log.d("response", "image url : " + urlOfImage);
+            Bitmap logo = null;
+            try {
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            } catch (Exception e) { // Catch the download exception
+                e.printStackTrace();
+                Log.d("response", "image back : " + e.toString());
+            }
+            return logo;
+        }
+
+        /*
+            onPostExecute(Result result)
+                Runs on the UI thread after doInBackground(Params...).
+         */
+        protected void onPostExecute(Bitmap result) {
+
+
+            imageView.setImageBitmap(result);
+        }
     }
 
     @Override
@@ -94,19 +193,18 @@ public class NoticeActivity extends AppCompatActivity
         super.onStart();
 
 
-//        int permissionReadStorage = ContextCompat.checkSelfPermission(noticeActivity, android.Manifest.permission.READ_EXTERNAL_STORAGE);
-//        int permissionWriteStorage = ContextCompat.checkSelfPermission(noticeActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        if(permissionReadStorage == PackageManager.PERMISSION_DENIED || permissionWriteStorage == PackageManager.PERMISSION_DENIED) {
-//            ActivityCompat.requestPermissions(noticeActivity, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
-//        } else {
-
-            new GetPosts().execute(new DBConnector());
-            Log.d("response", "read/write storage  permission authorized");
-    //    }
+        int permissionReadStorage = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NETWORK_STATE);
+        //  int permissionWriteStorage = ContextCompat.checkSelfPermission(mainActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permissionReadStorage == PackageManager.PERMISSION_DENIED ) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_EXTERNAL_STORAGE);
+        } else {
+            new GetMyPost().execute(new DBConnector());
+        }
 
     }
 
-    private class GetPosts extends AsyncTask<DBConnector, Long, JSONArray> {
+
+    private class GetMyPost extends AsyncTask<DBConnector, Long, JSONArray> {
 
 
         @Override
@@ -114,7 +212,7 @@ public class NoticeActivity extends AppCompatActivity
 
             //it is executed on Background thread
 
-            return params[0].GetPost(token, "notice","");
+            return params[0].GetMyPost(token);
 
         }
 
@@ -132,7 +230,7 @@ public class NoticeActivity extends AppCompatActivity
                     // TODO Auto-generated method stub
                     try {
 
-                        noticeAdapterActivity.notifyDataSetChanged();
+                        mypageMypostAdapterActivity.notifyDataSetChanged();
 
                     } catch (Exception e) {
                         // TODO: handle exception
@@ -153,17 +251,16 @@ public class NoticeActivity extends AppCompatActivity
 
 
         if(jsonArray == null){
-            noticeAdapterActivity.clear();
-            noticeAdapterActivity.notifyDataSetChanged();
-            Toast.makeText(getApplicationContext(), "공지사항이 없습니다.",
+            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
                     Toast.LENGTH_LONG).show();
         }else{
 
-            noticeAdapterActivity.clear();
+            mypageMypostAdapterActivity.clear();
 
             for(int i = 0 ; i<jsonArray.length(); i++){
 
                 newsfeedItem = new NewsfeedItem();
+
 
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -178,7 +275,7 @@ public class NoticeActivity extends AppCompatActivity
                     newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
                     newsfeedItem.like_num = jsonObject.getString("like_num");
                     newsfeedItem.comment_num = jsonObject.getString("comment_num");
-                    newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
                     newsfeedItem.is_like = jsonObject.getBoolean("is_like");
                     newsfeedItem.post_id = jsonObject.getString("id");
                     newsfeedItem.member_type = userJsonObj.getString("member_type");
@@ -186,39 +283,30 @@ public class NoticeActivity extends AppCompatActivity
                     newsfeedItem.sport_type = userJsonObj.getString("sport_type");
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
-                    newsfeedItem.member_id = userJsonObj.getString("id");
-                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
 
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
                     }else{
                         String str = newsfeedItem.youtube_link;
                         String video_id = "";
-
-                        if(str.toString().indexOf("youtube.com") != -1) {
-                            if(str.indexOf("&") > 0){
-                                video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
-                            }else{
-                                video_id = str.substring(str.indexOf("=")+1);
-                            }
-                        }else if(str.toString().indexOf("youtu.be") != -1 ){
-                            //   Log.d("response", "youtube_str :  "+ str);
-                            video_id = str.substring(17);
-                            Log.d("response", "youtube_id :  "+ video_id);
+                        if(str.indexOf("&") > 0){
+                            video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
+                        }else{
+                            video_id = str.substring(str.indexOf("=")+1);
                         }
-
                         newsfeedItem.youtube_id = video_id;
-
                     }
-                    noticeAdapterActivity.add(newsfeedItem);
-                    noticeAdapterActivity.notifyDataSetChanged();
+
+                    mypageMypostAdapterActivity.notifyDataSetChanged();
+                    mypageMypostAdapterActivity.add(newsfeedItem);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-
             }
+
+
 
         }
 
@@ -235,9 +323,11 @@ public class NoticeActivity extends AppCompatActivity
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         ActionBar actionBar = getSupportActionBar();
 
         // Custom Actionbar를 사용하기 위해 CustomEnabled을 true 시키고 필요 없는 것은 false 시킨다
@@ -258,65 +348,9 @@ public class NoticeActivity extends AppCompatActivity
         parent.setPadding(0,0,0,0);
         parent.setContentInsetsAbsolute(0,0);
 
-        actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("공지사항");
-
-        buttonStateOpen = false;
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ImageButton menu_icon = (ImageButton) findViewById(R.id.actionbar_menu);
-        menu_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (buttonStateOpen == false) {
-                    drawer.openDrawer(Gravity.LEFT);
-                    buttonStateOpen = true;
-                } else if (buttonStateOpen == true) {
-                    drawer.closeDrawer(Gravity.LEFT);
-                    buttonStateOpen = false;
-                }
-
-            }
-        });
-
-
-        ImageButton search_icon = (ImageButton) findViewById(R.id.actionbar_search);
-        search_icon.setBackgroundResource(0);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-//                findViewById(R.id.bottom_navigation);
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener(
-//                new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                    @Override
-//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.home_item:
-//                                //home is here
-//                                return true;
-//                            case R.id.noty_item:
-//                                Intent intent = new Intent(NoticeActivity.this, MypageActivity.class);
-//                                startActivity(intent);
-//                                return true;
-//                            case R.id.write_item:
-//
-//                                Intent intent2 = new Intent(NoticeActivity.this, NewsfeedWriteActivity.class);
-//                                intent2.putExtra("post_type", "sport_expert_knowledge_feed");
-//
-//                                startActivityForResult(intent2, 300);
-//
-//                                return true;
-////                            case R.id.setting_item:
-////                                Intent intent1 = new Intent(ExpertFeedActivity.this, MypageActivity.class);
-////                                startActivity(intent1);
-////                                return true;
-//                        }
-//                        return true;
-//                    }
-//                });
 
 
         return true;
@@ -379,7 +413,7 @@ public class NoticeActivity extends AppCompatActivity
             finish();
         } else if (id == R.id.nav_send) {
 
-            Intent intent = new Intent(this, MypageActivity.class);
+            Intent intent = new Intent(this, OtherPageActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -401,4 +435,30 @@ public class NoticeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+
+            case REQUEST_EXTERNAL_STORAGE:
+                for (int i = 0; i < permissions.length; i++) {
+                    String permission = permissions[i];
+                    int grantResult = grantResults[i];
+                    if (permission.equals(android.Manifest.permission.ACCESS_NETWORK_STATE)) {
+                        if(grantResult == PackageManager.PERMISSION_GRANTED) {
+                            Log.d("response", "read/write storage  permission authorized2");
+
+                        } else {
+                            Log.d("response", "read/write storage  permission denied2");
+
+                        }
+                        break;
+                    }
+                }
+                break;
+        }
+    }
+
 }

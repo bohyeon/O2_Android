@@ -1,11 +1,14 @@
 package com.example.hyerimhyeon.o2_android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,7 +25,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,8 +35,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.DB.DBConnector;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,14 +61,26 @@ public class FeedDetailActivity extends AppCompatActivity
     int like_int, comment_int;
     Handler handler;
     ImageView image, profile_img;
+    LinearLayout youtube_layout = null;
+    ImageView youtube_img = null;
+    TextView youtube_title = null;
+    String youtube_link , id, email;
+
     private static final int REQUEST_INTERNET = 1;
     private PopupWindow popWindow;
+    public SharedPreferences loginPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newsfeed_detail);
+
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        id = loginPreferences.getString("id", "");
+        email = loginPreferences.getString("email", "");
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 //        drawer.setDrawerListener(toggle);
@@ -97,13 +116,16 @@ public class FeedDetailActivity extends AppCompatActivity
         comment_Et = (EditText) findViewById(R.id.writeComment);
         comment_btn = (TextView) findViewById(R.id.detail_writeComment_completeBtn);
 
-
+        youtube_layout = (LinearLayout) header.findViewById(R.id.youtube_layout);
+        youtube_img = (ImageView) header.findViewById(R.id.youtube_img);
+        youtube_title = (TextView) header.findViewById(R.id.main_youtube_title);
 
         final Intent intent = getIntent();
         //Log.d("response","name : " + name);
         name.setText(intent.getStringExtra("name"));
 
         String type_str = "";
+
             if(intent.getStringExtra("type").equals("mentor")){
                 type_str = "멘토";
             }else if(intent.getStringExtra("type").equals("mentee")){
@@ -113,7 +135,6 @@ public class FeedDetailActivity extends AppCompatActivity
             }
 
             type.setText(type_str);
-        Log.d("response","03203 : " + intent.getStringExtra("type"));
 
        // type.setText(intent.getStringExtra("type"));
         belong.setText(intent.getStringExtra("belong"));
@@ -152,11 +173,80 @@ public class FeedDetailActivity extends AppCompatActivity
             like_btn.setTextColor(Color.parseColor("#555555"));
         }
 
-      //  Log.d("response" , "profile_url_post: " + intent.getStringExtra("post_image_url"));
+        if(intent.getStringExtra("youtube_id") == null ||intent.getStringExtra("youtube_id").equals("")){
+
+            // viewHolder.youtube_layout.setBackground(null);
+            int width = 0;
+            int height = 0;
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+            youtube_img.setLayoutParams(parms);
+            //       viewHolder.youtube_title.setLayoutParams(parms);
+            youtube_layout.setBackground(null);
+            youtube_img.setImageBitmap(null);
+            youtube_title.setText(null);
+
+
+        }else{
+            if(!intent.getStringExtra("youtube_id").equals("") ){
+                youtube_layout.setBackground(null);
+                Log.d("response", "youtube ㅅㅂ : " + intent.getStringExtra("youtube_id"));
+                youtube_link = intent.getStringExtra("youtube_link");
+                //   new GetYoutube().execute(new DBConnector());
+                // new DownLoadImageTask_youtube(viewHolder.youtube_img).execute("http://img.youtube.com/vi/"+newfeedItemPosition.youtube_id+"/1.jpg");
+
+
+                WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+                Display display = wm.getDefaultDisplay();
+                DisplayMetrics metrics = new DisplayMetrics();
+                display.getMetrics(metrics);
+                int width = metrics.widthPixels/3;
+                int height = 230;
+
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,width);
+                //  viewHolder.youtube_title.setLayoutParams(parms);
+                Log.d("response","youtube titllej : " + intent.getStringExtra("youtube_title"));
+                youtube_title.setText(intent.getStringExtra("youtube_title"));
+                youtube_img.setLayoutParams(parms);
+                youtube_layout.setBackgroundResource(R.drawable.table_border);
+                Picasso.with(feedDetailActivity)
+                        .load("http://img.youtube.com/vi/"+intent.getStringExtra("youtube_id")+"/1.jpg")
+                        .resize(width,width)
+                        .placeholder(R.drawable.blankimg)
+                        .error(R.drawable.blankimg)
+                        .into(youtube_img);
+
+            }else{
+                int width = 0;
+                int height = 0;
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+                youtube_img.setLayoutParams(parms);
+                //       viewHolder.youtube_title.setLayoutParams(parms);
+                youtube_layout.setBackground(null);
+                youtube_img.setImageBitmap(null);
+                youtube_title.setText(null);
+
+            }
+
+        }
+
+        youtube_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtube_link.toString()));
+                startActivity(browserIntent);
+            }
+        });
+
+        youtube_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(youtube_link.toString()));
+                startActivity(browserIntent);
+            }
+        });
 
         if(intent.getStringExtra("post_image_url").equals("")|| intent.getStringExtra("post_image_url") == null|| intent.getStringExtra("post_image_url") == " "|| intent.getStringExtra("post_image_url") == "null"|| intent.getStringExtra("post_image_url") == "" || intent.getStringExtra("post_image_url")=="http://" || intent.getStringExtra("post_image_url")=="http://null" || intent.getStringExtra("post_image_url").equals("http://") || intent.getStringExtra("post_image_url").equals("http:/null/")){
 
-            Log.d("response" , "profile_url_post 3: " + intent.getStringExtra("post_image_url"));
             int width = 0;
             int height = 0;
             LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
@@ -164,26 +254,38 @@ public class FeedDetailActivity extends AppCompatActivity
 
 
         }else{
-            Log.d("response" , "profile_url_post 4: " + intent.getStringExtra("post_image_url"));
-                new DownLoadImageTask(image).execute("http://"+intent.getStringExtra("post_image_url"));
+               // new DownLoadImageTask(image).execute("http://"+intent.getStringExtra("post_image_url"));
+            int width =  ViewGroup.LayoutParams.MATCH_PARENT;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+            image.setLayoutParams(parms);
+
+
+            Picasso.with(feedDetailActivity)
+                    .load("http://"+intent.getStringExtra("post_image_url"))
+                    .placeholder(R.drawable.blankimg)
+                    .error(R.drawable.blankimg)
+                    .into(image);
+
+
 
         }
 
 
         if(intent.getStringExtra("profile_url").equals("")|| intent.getStringExtra("profile_url") == null|| intent.getStringExtra("profile_url") == " "|| intent.getStringExtra("profile_url") == "null"|| intent.getStringExtra("profile_url") == "" || intent.getStringExtra("profile_url")=="http://" || intent.getStringExtra("profile_url")=="http://null" || intent.getStringExtra("profile_url").equals("http://") || intent.getStringExtra("profile_url").equals("http:/null/")){
-
+            profile_img.setBackgroundResource(0);
 
         }else{
-//            int permissionCamera = ContextCompat.checkSelfPermission(feedDetailActivity, android.Manifest.permission.ACCESS_NETWORK_STATE);
-//            if(permissionCamera == PackageManager.PERMISSION_DENIED) {
-//                ActivityCompat.requestPermissions(feedDetailActivity, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
-//            } else {
-                new DownLoadImageTask_profile(profile_img).execute("http://"+intent.getStringExtra("profile_url"));
-                Log.d( "response", "internet permission authorized" );
+            profile_img.setBackgroundResource(0);
 
-                // }
-                // Log.d("response2", "response img: " + uri);
-            //   profile_img.setImageURI(uri);
+            Picasso.with(feedDetailActivity)
+                    .load("http://"+intent.getStringExtra("profile_url"))
+                    .resize(250,200)
+                    .placeholder(R.drawable.blankimg)
+                    .error(R.drawable.blankimg)
+                    .into(profile_img);
+
+            // new DownLoadImageTask_profile(profile_img).execute("http://"+intent.getStringExtra("profile_url"));
             }
 //
 
@@ -224,12 +326,20 @@ public class FeedDetailActivity extends AppCompatActivity
 
                 comment = comment_Et.getText().toString();
 
-                if(comment == null){
-
+                if(comment == null || comment.equals("")){
+                    Toast.makeText(getApplicationContext(), "내용을 입력해주세요!",
+                            Toast.LENGTH_LONG).show();
                 }else{
 
                     new Comment().execute(new DBConnector());
                     comment_Et.setText("");
+
+                    InputMethodManager inputManager = (InputMethodManager)
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+
 
                     //get comments by post id
                     new GetComments().execute(new DBConnector());
@@ -243,6 +353,20 @@ public class FeedDetailActivity extends AppCompatActivity
 
     }
 
+    public void GetCommentToAdapter(){
+        new GetComments().execute(new DBConnector());
+        int comment_num2 = comment_int-1;
+
+        like.setText("좋아요 " + like_int + "개  댓글 " + comment_num2 + "개");
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
 
 
     @Override
@@ -403,7 +527,7 @@ public class FeedDetailActivity extends AppCompatActivity
         if(jsonArray == null){
 
         }else{
-             //Log.d("response" , "getcomment : " + jsonArray.toString());
+         //    Log.d("response" , "getcomment : " + jsonArray.toString());
             feedCommentAdapterActivity.clear();
 
             for(int i = 0 ; i<jsonArray.length(); i++){
@@ -424,8 +548,9 @@ public class FeedDetailActivity extends AppCompatActivity
 //                    newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
 //                    newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                     newsfeedItem.content = jsonObject.getString("content");
-                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
                     newsfeedItem.belong = userJsonObj.getString("sport_type");
+                    newsfeedItem.id = jsonObject.getString("id");
 
                     feedCommentAdapterActivity.add(newsfeedItem);
 
@@ -480,7 +605,11 @@ public class FeedDetailActivity extends AppCompatActivity
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
         actionbar_title.setText("댓글 달기");
         ImageButton searchBtn = (ImageButton) findViewById(R.id.actionbar_search);
+        ImageButton menu_icon = (ImageButton) findViewById(R.id.actionbar_menu);
+
         searchBtn.setBackgroundResource(0);
+        menu_icon.setBackgroundResource(0);
+
 
         return true;
     }

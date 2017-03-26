@@ -33,17 +33,26 @@
         android:label="O2 Sport"
         android:theme="@style/CustomTheme"
         android:supportsRtl="true"
+        android:hardwareAccelerated="false"
         android:largeHeap="true">
         <activity
             android:name=".MainActivity"
             android:label="O2 Sport"
-            android:theme="@style/CustomTheme">
+            android:theme="@style/CustomTheme"
+            android:hardwareAccelerated="false">
 
 
         </activity>
 
         <activity
             android:name=".NewsfeedWriteActivity"
+            android:label="O2 Sport"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:hardwareAccelerated="false">
+        </activity>
+
+        <activity
+            android:name=".OtherPageActivity"
             android:label="O2 Sport"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
@@ -182,7 +191,6 @@
             android:theme="@style/CustomTheme">
 
         </activity>
-
 
         <activity
             android:name=".SplashActivity"

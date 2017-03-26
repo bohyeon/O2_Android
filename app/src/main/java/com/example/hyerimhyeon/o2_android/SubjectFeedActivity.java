@@ -195,14 +195,7 @@ public class SubjectFeedActivity extends AppCompatActivity
         });
 
         ImageButton search_icon = (ImageButton) findViewById(R.id.actionbar_search);
-        search_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SubjectFeedActivity.this, SearchActivity.class);
-                intent.putExtra("type","sport");
-                startActivityForResult(intent,1);
-            }
-        });
+        search_icon.setBackgroundResource(0);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

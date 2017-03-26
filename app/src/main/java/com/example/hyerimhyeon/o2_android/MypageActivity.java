@@ -13,12 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +34,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 
 public class MypageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,17 +48,19 @@ public class MypageActivity extends AppCompatActivity
 
     MypageMypostAdapterActivity mypageMypostAdapterActivity;
     MypageAlarmAdapterActivity mypageAlarmAdapterActivity;
-    NewsFeed newsFeed;
-
+    MypageCommentAdapterActivity mypageCommentAdapterActivity;
+    NewsFeed newsFeed , newsFeed2;
+    NewsFeed_Comment newsFeed3;
     ImageView profile_img;
     Handler handler;
     TextView nametv, typetv, companytv;
-    String token;
+    String token, id;
     DrawerLayout drawer;
     private static final int REQUEST_INTERNET = 1;
     public SharedPreferences loginPreferences;
     private static final int REQUEST_EXTERNAL_STORAGE = 2;
     ImageButton menu_icon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,10 @@ public class MypageActivity extends AppCompatActivity
         });
 
          loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        id = loginPreferences.getString("id","");
+        token = loginPreferences.getString("token","");
+      //  Log.d("response" , "user id : " + id);
+
 
         nametv = (TextView) findViewById(R.id.mypage_name);
         typetv = (TextView) findViewById(R.id.mypage_type);
@@ -92,7 +97,16 @@ public class MypageActivity extends AppCompatActivity
         profile_img = (ImageView) findViewById(R.id.mypage_profile_img);
 
      //   Log.d("response" , "myname: " + loginPreferences.getString("name" , ""));
-        nametv.setText(loginPreferences.getString("name",""));
+
+        String name_encode = "";
+        try {
+            name_encode = URLDecoder.decode(loginPreferences.getString("name",""),"UTF-8");
+            Log.d("name_encode : ","" + name_encode);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Log.d("name_encode e :","" + e.toString());
+        }
+        nametv.setText(name_encode);
         typetv.setText(loginPreferences.getString("type",""));
         if(loginPreferences.getString("company","")!=null){
             companytv.setText(loginPreferences.getString("company",""));
@@ -145,6 +159,7 @@ public class MypageActivity extends AppCompatActivity
         host1.addTab(spec);
 
 
+
         mypage_mypost = (ListView)findViewById(R.id.mypage_mypost);
         alarm_lv = (ListView)findViewById(R.id.mypage_alarm);
         comment_lv = (ListView)findViewById(R.id.mypage_comment);
@@ -154,13 +169,17 @@ public class MypageActivity extends AppCompatActivity
         this.mypageMypostAdapterActivity = new MypageMypostAdapterActivity(this, newsFeed, this);
         this.mypage_mypost.setAdapter(mypageMypostAdapterActivity);
 
-        this.newsFeed = NewsFeed.getNewsFeed();
-        this.mypageAlarmAdapterActivity = new MypageAlarmAdapterActivity(this, newsFeed, this);
+        this.newsFeed2 = NewsFeed.getNewsFeed();
+        this.mypageAlarmAdapterActivity = new MypageAlarmAdapterActivity(this, newsFeed2, this);
         this.alarm_lv.setAdapter(mypageAlarmAdapterActivity);
 
-        this.newsFeed = NewsFeed.getNewsFeed();
-        this.mypageMypostAdapterActivity = new MypageMypostAdapterActivity(this, newsFeed, this);
-        this.comment_lv.setAdapter(mypageMypostAdapterActivity);
+        this.newsFeed3 = NewsFeed_Comment.getNewsFeed();
+        this.mypageCommentAdapterActivity = new MypageCommentAdapterActivity(this, newsFeed3, this);
+        this.comment_lv.setAdapter(mypageCommentAdapterActivity);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         // open or close when click a menu button
         buttonStateOpen = false;
@@ -236,6 +255,7 @@ public class MypageActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_EXTERNAL_STORAGE);
         } else {
             new GetMyPost().execute(new DBConnector());
+            new GetMyCommentPost().execute(new DBConnector());
         }
 
     }
@@ -312,7 +332,7 @@ public class MypageActivity extends AppCompatActivity
                     newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
                     newsfeedItem.like_num = jsonObject.getString("like_num");
                     newsfeedItem.comment_num = jsonObject.getString("comment_num");
-                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
                     newsfeedItem.is_like = jsonObject.getBoolean("is_like");
                     newsfeedItem.post_id = jsonObject.getString("id");
                     newsfeedItem.member_type = userJsonObj.getString("member_type");
@@ -320,9 +340,156 @@ public class MypageActivity extends AppCompatActivity
                     newsfeedItem.sport_type = userJsonObj.getString("sport_type");
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                    newsfeedItem.member_id = userJsonObj.getString("id");
+                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
 
-                    mypageMypostAdapterActivity.notifyDataSetChanged();
+                    if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
+                        newsfeedItem.youtube_id = "";
+                    }else{
+                        String str = newsfeedItem.youtube_link;
+                        String video_id = "";
+
+                        if(str.toString().indexOf("youtube.com") != -1) {
+                            if(str.indexOf("&") > 0){
+                                video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
+                            }else{
+                                video_id = str.substring(str.indexOf("=")+1);
+                            }
+                        }else if(str.toString().indexOf("youtu.be") != -1 ){
+                            //   Log.d("response", "youtube_str :  "+ str);
+                            video_id = str.substring(17);
+                            Log.d("response", "youtube_id :  "+ video_id);
+                        }
+
+                        newsfeedItem.youtube_id = video_id;
+
+                    }
+
+
                     mypageMypostAdapterActivity.add(newsfeedItem);
+                    mypageMypostAdapterActivity.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+    }
+
+
+
+
+    private class GetMyCommentPost extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].GetMyCommentPost(token, id);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter_comment(jsonArray);
+
+            handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    try {
+
+                        mypageCommentAdapterActivity.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }, 100);
+
+
+        }
+    }
+
+    public void settextToAdapter_comment(JSONArray jsonArray) {
+
+          Log.d("response" , "comment post : " + jsonArray);
+
+        // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
+        NewsfeedItem_comment newsfeedItem;
+
+
+        if(jsonArray == null){
+//            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
+//                    Toast.LENGTH_LONG).show();
+        }else{
+
+            mypageCommentAdapterActivity.clear();
+
+            for(int i = 0 ; i<jsonArray.length(); i++){
+
+                newsfeedItem = new NewsfeedItem_comment();
+
+
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject userJsonObj = jsonObject.getJSONObject("user");
+
+                    newsfeedItem.name = userJsonObj.getString("name");
+                    newsfeedItem.email = userJsonObj.getString("email");
+                    newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+
+                    newsfeedItem.content = jsonObject.getString("content");
+                    newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
+                    newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
+                    newsfeedItem.like_num = jsonObject.getString("like_num");
+                    newsfeedItem.comment_num = jsonObject.getString("comment_num");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
+                    newsfeedItem.is_like = jsonObject.getBoolean("is_like");
+                    newsfeedItem.post_id = jsonObject.getString("id");
+                    newsfeedItem.member_type = userJsonObj.getString("member_type");
+                    newsfeedItem.company = userJsonObj.getString("company");
+                    newsfeedItem.sport_type = userJsonObj.getString("sport_type");
+                    newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
+                    newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                    newsfeedItem.member_id = userJsonObj.getString("id");
+                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
+
+                    if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
+                        newsfeedItem.youtube_id = "";
+                    }else{
+                        String str = newsfeedItem.youtube_link;
+                        String video_id = "";
+
+                        if(str.toString().indexOf("youtube.com") != -1) {
+                            if(str.indexOf("&") > 0){
+                                video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
+                            }else{
+                                video_id = str.substring(str.indexOf("=")+1);
+                            }
+                        }else if(str.toString().indexOf("youtu.be") != -1 ){
+                            //   Log.d("response", "youtube_str :  "+ str);
+                            video_id = str.substring(17);
+                            Log.d("response", "youtube_id :  "+ video_id);
+                        }
+
+                        newsfeedItem.youtube_id = video_id;
+
+                    }
+
+
+                    mypageCommentAdapterActivity.add(newsfeedItem);
+                    mypageCommentAdapterActivity.notifyDataSetChanged();
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -335,6 +502,8 @@ public class MypageActivity extends AppCompatActivity
         }
 
     }
+
+
 
 
     @Override
@@ -351,30 +520,6 @@ public class MypageActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
-        ActionBar actionBar = getSupportActionBar();
-
-        // Custom Actionbar를 사용하기 위해 CustomEnabled을 true 시키고 필요 없는 것은 false 시킨다
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);            //액션바 아이콘을 업 네비게이션 형태로 표시합니다.
-        actionBar.setDisplayShowTitleEnabled(false);        //액션바에 표시되는 제목의 표시유무를 설정합니다.
-        actionBar.setDisplayShowHomeEnabled(false);            //홈 아이콘을 숨김처리합니다.
-
-
-        //layout을 가지고 와서 actionbar에 포팅을 시킵니다.
-        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-        View actionbar = inflater.inflate(R.layout.custom_action_bar, null);
-
-        actionBar.setCustomView(actionbar);
-
-        //액션바 양쪽 공백 없애기
-        Toolbar parent = (Toolbar)actionbar.getParent();
-        parent.setPadding(0,0,0,0);
-        parent.setContentInsetsAbsolute(0,0);
-
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
 
         return true;

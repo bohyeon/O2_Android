@@ -115,11 +115,19 @@ public class ChildRegisterActivity extends AppCompatActivity
 
                                                     if (!school_level.equals("학력선택")) {
 
-                                                        new UploadImage().execute(new DBConnector());
+                                                        if (password.equals(password_ck)) {
+
+                                                            new UploadImage().execute(new DBConnector());
+
+
+                                                        } else {
+                                                            Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.",
+                                                                    Toast.LENGTH_LONG).show();
+                                                        }
 
 
                                                     } else {
-                                                        Toast.makeText(getApplicationContext(), "학력을 선택해주세요..",
+                                                        Toast.makeText(getApplicationContext(), "학력을 선택해주세요.",
                                                                 Toast.LENGTH_LONG).show();
                                                     }
 
@@ -295,6 +303,7 @@ public class ChildRegisterActivity extends AppCompatActivity
 //                loginPrefsEditor.putString("school_name",jsonObject.getString("sport_type").toString());
 //                loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
                 loginPrefsEditor.putString("email",email);
+                loginPrefsEditor.putString("id",jsonObject.getString("id"));
                 loginPrefsEditor.putString("name",name_str);
                 loginPrefsEditor.putString("password",password);
                 loginPrefsEditor.putString("profile_url",profile_img_url);
@@ -310,17 +319,32 @@ public class ChildRegisterActivity extends AppCompatActivity
 
                 loginPrefsEditor.commit();
 
+
+                Intent intent = new Intent(ChildRegisterActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
                 Toast.makeText(getApplicationContext(), name_str+"님 환영합니다.",
                         Toast.LENGTH_LONG).show();
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                if(jsonObject.toString().indexOf("{\"birthday\":[\"Date has wrong format. Use one of these formats instead: YYYY[-MM[-DD]].\"]}") != -1){
+                    Toast.makeText(getApplicationContext(), "생년월일 형식을 맞춰서 작성해주세요!",
+                            Toast.LENGTH_LONG).show();
+                }else if(jsonObject.toString().indexOf("{\"email\":[\"This user has already registered.\"]}") != -1) {
+                    Toast.makeText(getApplicationContext(), "이미 가입된 이메일입니다!",
+                            Toast.LENGTH_LONG).show();
+                }else if(jsonObject.toString().indexOf("{\"email\":[\"Enter a valid email address.\"]}") != -1) {
+                    Toast.makeText(getApplicationContext(), "이메일 형식을 맞춰서 작성해주세요!",
+                            Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), jsonObject.toString(),
+                            Toast.LENGTH_LONG).show();
+                }
             }
 
 
-            Intent intent = new Intent(ChildRegisterActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
         }
     }
 

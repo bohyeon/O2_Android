@@ -37,9 +37,9 @@ public class ExpertRegisterActivity extends AppCompatActivity
     Spinner type, location, school;
     private File file = null;
     ImageView profile_img;
-    EditText mail, pw, pw_ck, name, phone, birth, type_name, location_name, belong_name, shcool_name, school_type, experience_1Et, experience_2Et, experience_3Et;
+    EditText mail, pw, pw_ck, name, phone, birth, type_name, location_name, belong_name, shcool_name, school_type, experience_1Et, experience_2Et, experience_3Et, company_et;
     String email, password, name_str, password_ck, profile_img_url, phone_str, birth_str, sport_type, region,  expert_type, company, experience_1, experience_2, experience_3, invite_code;
-    String phone_open, birth_open;
+    String phone_open, birth_open, id;
 
     public SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
@@ -56,7 +56,7 @@ public class ExpertRegisterActivity extends AppCompatActivity
         name = (EditText) findViewById(R.id.e_register_name);
         phone = (EditText) findViewById(R.id.e_register_phone);
         birth = (EditText) findViewById(R.id.e_register_birth);
-        belong_name = (EditText) findViewById(R.id.e_register_belong);
+        company_et = (EditText) findViewById(R.id.e_register_belong);
         experience_1Et = (EditText) findViewById(R.id.e_register_experience01);
         experience_2Et = (EditText) findViewById(R.id.e_register_experience02);
         experience_3Et = (EditText) findViewById(R.id.e_register_experience03);
@@ -82,6 +82,7 @@ public class ExpertRegisterActivity extends AppCompatActivity
                 phone_str = phone.getText().toString();
                 birth_str = birth.getText().toString();
                 expert_type = type.getSelectedItem().toString();
+                company = company_et.getText().toString();
                // region = location.getSelectedItem().toString();
                 experience_1 = experience_1Et.getText().toString();
                 experience_2 = experience_2Et.getText().toString();
@@ -113,7 +114,25 @@ public class ExpertRegisterActivity extends AppCompatActivity
 
                                                         if (experience_3 != null) {
 
-                                                            new UploadImage().execute(new DBConnector());
+                                                            if (company != null) {
+
+                                                                if (password.equals(password_ck)) {
+
+                                                                    new UploadImage().execute(new DBConnector());
+
+
+                                                                }else{
+                                                                    Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.",
+                                                                            Toast.LENGTH_LONG).show();
+                                                                }
+
+
+
+
+                                                            }else{
+                                                                Toast.makeText(getApplicationContext(), "소속을 입력해주세요.",
+                                                                        Toast.LENGTH_LONG).show();
+                                                            }
 
 
                                                         }else{
@@ -249,7 +268,7 @@ public class ExpertRegisterActivity extends AppCompatActivity
 
             //it is executed on Background thread
 
-            return params[0].ExpertResgister(email, name_str, password,password_ck, profile_img_url, phone_str, phone_open, birth_str, birth_open, expert_type, experience_1,experience_2 ,experience_3, invite_code);
+            return params[0].ExpertResgister(email, name_str, password,password_ck, profile_img_url, phone_str, phone_open, birth_str, birth_open, expert_type, experience_1,experience_2 ,experience_3, invite_code, company);
 
         }
 
@@ -263,8 +282,9 @@ public class ExpertRegisterActivity extends AppCompatActivity
 
     public void settextToAdapter2(JSONObject jsonObject) {
 
-       // Log.d("response ", "user : " + jsonObject.toString());
+        Log.d("response ", "user : " + jsonObject.toString());
 
+        Boolean ok = false;
         if(jsonObject == null){
 
         }else{
@@ -284,39 +304,60 @@ public class ExpertRegisterActivity extends AppCompatActivity
 //                loginPrefsEditor.putString("school_name",jsonObject.getString("sport_type").toString());
 //                loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
 
-                loginPrefsEditor.putString("email",email);
-                loginPrefsEditor.putString("name",name_str);
-                loginPrefsEditor.putString("password",password);
-                loginPrefsEditor.putString("profile_url",profile_img_url);
-                loginPrefsEditor.putString("phone_number",phone_str);
-                loginPrefsEditor.putString("birthday",birth_str);
-                loginPrefsEditor.putString("sport_type",sport_type);
-                loginPrefsEditor.putString("region",region);
-                loginPrefsEditor.putString("expert_type",expert_type);
-                loginPrefsEditor.putString("experience_1",experience_1);
-                loginPrefsEditor.putString("experience_2",experience_2);
-                loginPrefsEditor.putString("experience_3",experience_3);
-                loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
-                loginPrefsEditor.putString("member_type","expert");
-                loginPrefsEditor.putBoolean("saveLogin", true);
-                loginPrefsEditor.commit();
+                        Log.d("response","register token2 : " + jsonObject.getString("token"));
+                        loginPrefsEditor.putString("email",email);
+                        loginPrefsEditor.putString("id",jsonObject.getString("id"));
+                        loginPrefsEditor.putString("name",name_str);
+                        loginPrefsEditor.putString("password",password);
+                        loginPrefsEditor.putString("profile_url",profile_img_url);
+                        loginPrefsEditor.putString("phone_number",phone_str);
+                        loginPrefsEditor.putString("birthday",birth_str);
+                        loginPrefsEditor.putString("sport_type",sport_type);
+                        loginPrefsEditor.putString("region",region);
+                        loginPrefsEditor.putString("expert_type",expert_type);
+                        loginPrefsEditor.putString("experience_1",experience_1);
+                        loginPrefsEditor.putString("experience_2",experience_2);
+                        loginPrefsEditor.putString("experience_3",experience_3);
+                        loginPrefsEditor.putString("company",company);
+                        loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
+                        loginPrefsEditor.putString("member_type","expert");
+                        loginPrefsEditor.putBoolean("saveLogin", true);
+                        loginPrefsEditor.commit();
 
-                Toast.makeText(getApplicationContext(), name_str + "님 환영합니다.",
-                        Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), name_str + "님 환영합니다.",
+                                Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(ExpertRegisterActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                         startActivity(intent);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
+
+                if(jsonObject.toString().indexOf("{\"birthday\":[\"Date has wrong format. Use one of these formats instead: YYYY[-MM[-DD]].\"]}") != -1){
+                    Toast.makeText(getApplicationContext(), "생년월일 형식을 맞춰서 작성해주세요!",
+                            Toast.LENGTH_LONG).show();
+                }else if(jsonObject.toString().indexOf("{\"email\":[\"This user has already registered.\"]}") != -1) {
+                    Toast.makeText(getApplicationContext(), "이미 가입된 이메일입니다!",
+                            Toast.LENGTH_LONG).show();
+                }else if(jsonObject.toString().indexOf("{\"email\":[\"Enter a valid email address.\"]}") != -1) {
+                    Toast.makeText(getApplicationContext(), "이메일 형식을 맞춰서 작성해주세요!",
+                            Toast.LENGTH_LONG).show();
+                }else{
+                        Toast.makeText(getApplicationContext(), jsonObject.toString(),
+                                Toast.LENGTH_LONG).show();
+                }
             }
 
+        }
 
-            Intent intent = new Intent(ExpertRegisterActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+
+
 
 
         }
 
-    }
+
     @Override
     public void onBackPressed() {
      finish();

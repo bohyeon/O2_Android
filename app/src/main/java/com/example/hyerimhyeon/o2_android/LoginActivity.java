@@ -131,6 +131,7 @@ public class LoginActivity extends AppCompatActivity
                Log.d("response" , "token : " + jsonObject.getString("token"));
                loginPrefsEditor.putString("email", jsonObject.getString("email").toString());
                loginPrefsEditor.putString("name", jsonObject.getString("name").toString());
+               loginPrefsEditor.putString("id", jsonObject.getString("id").toString());
                loginPrefsEditor.putString("password",pw_str);
                loginPrefsEditor.putString("token", jsonObject.getString("token").toString());
                loginPrefsEditor.putString("phone_number", jsonObject.getString("phone_number").toString());

@@ -29,6 +29,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/main_expertCnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
@@ -38,39 +39,40 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/main_childCnt"
+                    android:id="@+id/main_expert_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1000+"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="18dp"
-                    android:layout_gravity="center"
                     android:layout_marginBottom="3dp"
-                    android:gravity="center"/>
+                    android:layout_gravity="center"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="꿈나무"
-                    android:background="@drawable/child_rounded"
+                    android:text="전문가"
+                    android:background="@drawable/expert_rounded"
                     android:textSize="9dp"
                     android:textColor="@color/white"/>
+
 
             </LinearLayout>
 
 
             <LinearLayout
+                android:id="@+id/main_mentoCnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_centerInParent="true">
 
                 <TextView
-                    android:id="@+id/main_mentoCnt"
+                    android:id="@+id/main_mentor_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="574"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="18dp"
@@ -88,6 +90,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/main_childCnt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -95,22 +98,24 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
+
                 <TextView
-                    android:id="@+id/main_expertCnt"
+                    android:id="@+id/main_mentee_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="48"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:textSize="18dp"
+                    android:layout_gravity="center"
                     android:layout_marginBottom="3dp"
-                    android:layout_gravity="center"/>
+                    android:gravity="center"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="전문가"
-                    android:background="@drawable/expert_rounded"
+                    android:text="꿈나무"
+                    android:background="@drawable/child_rounded"
                     android:textSize="9dp"
                     android:textColor="@color/white"/>
 

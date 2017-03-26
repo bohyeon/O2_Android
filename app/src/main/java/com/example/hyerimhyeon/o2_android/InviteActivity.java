@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -54,6 +58,7 @@ public class InviteActivity extends AppCompatActivity
     Boolean buttonStateOpen;
     ImageButton kakaoBtn, smsBtn;
     String token, number;
+    ImageView invite_img;
 
     private PopupWindow popWindow;
     private KakaoLink kakaoLink;
@@ -71,6 +76,9 @@ public class InviteActivity extends AppCompatActivity
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
         ImageView logo = (ImageView) headerView.findViewById(R.id.nav_header_logo);
 
@@ -96,7 +104,14 @@ public class InviteActivity extends AppCompatActivity
 
         kakaoBtn = (ImageButton) findViewById(R.id.invite_kakaoBtn);
         smsBtn = (ImageButton) findViewById(R.id.invite_smsBtn);
+        invite_img = (ImageView) findViewById(R.id.invite_main_img);
 
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 2;
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.invite_img3, options);
+
+        invite_img.setImageBitmap(bitmap);
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
@@ -115,8 +130,35 @@ public class InviteActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recycleView(findViewById(R.id.invite_main_img));
 
-    private void sendMessage(String invite_code){
+    }
+
+    private void recycleView(View view) {
+
+        if(view != null) {
+
+            Drawable bg = view.getBackground();
+
+            if(bg != null) {
+
+                bg.setCallback(null);
+
+                ((BitmapDrawable)bg).getBitmap().recycle();
+
+                view.setBackgroundDrawable(null);
+
+            }
+
+        }
+
+    }
+
+
+  private void sendMessage(String invite_code){
 
         String invite_code_kakao = invite_code;
         try {
@@ -336,14 +378,7 @@ public class InviteActivity extends AppCompatActivity
         });
 
         ImageButton search_icon = (ImageButton) findViewById(R.id.actionbar_search);
-        search_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(InviteActivity.this, SearchActivity.class);
-                intent.putExtra("type","sport");
-                startActivityForResult(intent,1);
-            }
-        });
+        search_icon.setBackgroundResource(0);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

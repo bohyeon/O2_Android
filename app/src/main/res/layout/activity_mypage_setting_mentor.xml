@@ -46,10 +46,9 @@
                     android:layout_marginTop="10dp"></LinearLayout>
 
                 <ImageView
-                    android:id="@+id/setting_profile_img"
+                    android:id="@+id/mentor_setting_profile_img"
                     android:layout_width="100dp"
                     android:layout_height="90dp"
-                    android:background="@drawable/main_top_pic"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp" />
 
@@ -355,7 +354,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/belong_hint"
-                        android:inputType="date"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
                         />
 

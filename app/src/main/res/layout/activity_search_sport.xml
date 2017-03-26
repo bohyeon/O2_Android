@@ -23,8 +23,8 @@
 
             <ImageButton
                 android:id="@+id/search_back_icon"
-                android:layout_width="20dp"
-                android:layout_height="18dp"
+                android:layout_width="22dp"
+                android:layout_height="20dp"
                 android:background="@drawable/arrow_icon"
                 android:layout_alignParentLeft="true"/>
 
@@ -56,8 +56,8 @@
 
             <ImageButton
                 android:id="@+id/search_sport_btn"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:background="@drawable/search_icon"/>
 
         </LinearLayout>
@@ -96,97 +96,97 @@
 
 
 
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnCount="2"
-        android:rowCount="2"
-        android:padding="5dp"
-        android:background="#eeeeee">
+    <!--<GridLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:columnCount="2"-->
+        <!--android:rowCount="2"-->
+        <!--android:padding="5dp"-->
+        <!--android:background="#eeeeee">-->
 
-        <TextView
-            android:id="@+id/sport_box_01"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="스포츠 의학"
-            android:background="@color/white"
-            android:textColor="@color/gray2"
-            android:layout_margin="5dp"
-            android:textSize="11dp"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/sport_box_01"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_gravity="fill_horizontal"-->
+            <!--android:layout_columnWeight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:text="스포츠 의학"-->
+            <!--android:background="@color/white"-->
+            <!--android:textColor="@color/gray2"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:textSize="11dp"-->
+            <!--/>-->
 
-        <TextView
-            android:id="@+id/sport_box_02"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="스포츠 영양"
-            android:background="@color/white"
-            android:layout_margin="5dp"
-            android:textColor="@color/gray2"
-            android:textSize="11dp"/>
+        <!--<TextView-->
+            <!--android:id="@+id/sport_box_02"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_gravity="fill_horizontal"-->
+            <!--android:layout_columnWeight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:text="스포츠 영양"-->
+            <!--android:background="@color/white"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:textColor="@color/gray2"-->
+            <!--android:textSize="11dp"/>-->
 
 
-        <TextView
-            android:id="@+id/sport_box_03"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="스포츠 의학"
-            android:background="@color/white"
-            android:textColor="@color/gray2"
-            android:layout_margin="5dp"
-            android:textSize="11dp"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/sport_box_03"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_gravity="fill_horizontal"-->
+            <!--android:layout_columnWeight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:text="스포츠 의학"-->
+            <!--android:background="@color/white"-->
+            <!--android:textColor="@color/gray2"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:textSize="11dp"-->
+            <!--/>-->
 
-        <TextView
-            android:id="@+id/sport_box_04"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="스포츠 영양"
-            android:background="@color/white"
-            android:layout_margin="5dp"
-            android:textColor="@color/gray2"
-            android:textSize="11dp"/>
+        <!--<TextView-->
+            <!--android:id="@+id/sport_box_04"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_gravity="fill_horizontal"-->
+            <!--android:layout_columnWeight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:text="스포츠 영양"-->
+            <!--android:background="@color/white"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:textColor="@color/gray2"-->
+            <!--android:textSize="11dp"/>-->
 
-        <TextView
-            android:id="@+id/sport_box_05"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="스포츠 재활"
-            android:background="@color/white"
-            android:textColor="@color/gray2"
-            android:layout_margin="5dp"
-            android:textSize="11dp"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/sport_box_05"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_gravity="fill_horizontal"-->
+            <!--android:layout_columnWeight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:text="스포츠 재활"-->
+            <!--android:background="@color/white"-->
+            <!--android:textColor="@color/gray2"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:textSize="11dp"-->
+            <!--/>-->
 
-        <TextView
-            android:id="@+id/sport_box_06"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="fill_horizontal"
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="스포츠 진로"
-            android:background="@color/white"
-            android:layout_margin="5dp"
-            android:textColor="@color/gray2"
-            android:textSize="11dp"/>
+        <!--<TextView-->
+            <!--android:id="@+id/sport_box_06"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_gravity="fill_horizontal"-->
+            <!--android:layout_columnWeight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:text="스포츠 진로"-->
+            <!--android:background="@color/white"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:textColor="@color/gray2"-->
+            <!--android:textSize="11dp"/>-->
 
-    </GridLayout>
+    <!--</GridLayout>-->
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="60dp"-->

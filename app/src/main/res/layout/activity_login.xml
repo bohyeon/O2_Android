@@ -14,7 +14,7 @@
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="80dp"
         android:orientation="horizontal"
         android:padding="20dp"
@@ -28,13 +28,13 @@
             android:textColor="@color/white"
             android:layout_centerHorizontal="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="x"
-            android:textSize="30dp"
-            android:paddingRight="20dp"
-            android:layout_alignParentRight="true" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="x"-->
+            <!--android:textSize="30dp"-->
+            <!--android:paddingRight="20dp"-->
+            <!--android:layout_alignParentRight="true" />-->
     </RelativeLayout>
 
     <LinearLayout

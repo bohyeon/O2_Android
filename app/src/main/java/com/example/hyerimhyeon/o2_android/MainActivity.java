@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -40,13 +41,19 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ListView newsfeedLv;
-    TextView actionbar_title, childCnt, mentoCnt, expertCnt;
+    TextView actionbar_title;
+    LinearLayout childCnt, mentoCnt, expertCnt;
     NewsfeedAdapterActivity newsfeedAdapterActivity;
     NewsFeed newsFeed;
     Boolean buttonStateOpen;
     Handler handler;
     DrawerLayout drawer;
-    String token;
+    String token, id;
+    String member_type;
+    TextView expert_tv, mentee_tv, mentor_tv;
+    int child_int = 1;
+    int mento_int = 1;
+    int expert_int = 1;
     MainActivity mainActivity = this;
     private PopupWindow popWindow;
     private static final int REQUEST_EXTERNAL_STORAGE = 2;
@@ -77,8 +84,10 @@ public class MainActivity extends AppCompatActivity
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
+        id = loginPreferences.getString("id", "");
 
-    //    Log.d("response" , "main token : " + token);
+
+        //    Log.d("response" , "main token : " + token);
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
 
@@ -86,17 +95,21 @@ public class MainActivity extends AppCompatActivity
         View header = getLayoutInflater().inflate(R.layout.main_header, null, false);
         this.newsfeedLv.addHeaderView(header);
 
-        childCnt = (TextView) header.findViewById(R.id.main_childCnt);
-        mentoCnt = (TextView) header.findViewById(R.id.main_mentoCnt);
-        expertCnt = (TextView) header.findViewById(R.id.main_expertCnt);
+        childCnt = (LinearLayout) header.findViewById(R.id.main_childCnt);
+        mentoCnt = (LinearLayout) header.findViewById(R.id.main_mentoCnt);
+        expertCnt = (LinearLayout) header.findViewById(R.id.main_expertCnt);
+        mentee_tv = (TextView) header.findViewById(R.id.main_mentee_tv);
+        mentor_tv = (TextView) header.findViewById(R.id.main_mentor_tv);
+        expert_tv = (TextView) header.findViewById(R.id.main_expert_tv);
 
 
         childCnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MemberActivity.class);
-                startActivity(intent);
-                finish();
+                intent.putExtra("member_type","mentee");
+                startActivityForResult(intent,100);
+             //   finish();
             }
         });
 
@@ -104,8 +117,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MemberActivity.class);
-                startActivity(intent);
-                finish();
+                intent.putExtra("member_type","mentor");
+                startActivityForResult(intent,100);
+                //finish();
             }
         });
 
@@ -113,8 +127,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MemberActivity.class);
-                startActivity(intent);
-                finish();
+                intent.putExtra("member_type","expert");
+                startActivityForResult(intent,100);
+                //finish();
             }
         });
 
@@ -185,10 +200,109 @@ public class MainActivity extends AppCompatActivity
         } else {
 
             new GetPosts().execute(new DBConnector());
-            Log.d("response", "read/write storage  permission authorized");
+            new GetUser().execute(new DBConnector());
+            new GetMentorUser().execute(new DBConnector());
+            new GetMenteeUser().execute(new DBConnector());
         }
 
     }
+
+    private class GetUser extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].GetUser(token, "" , "expert");
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter_expert(jsonArray);
+
+        }
+    }
+
+
+    public void settextToAdapter_expert(JSONArray jsonArray) {
+
+        if(jsonArray == null){
+
+        }else{
+            expert_tv.setText(jsonArray.length()+"");
+           // Log.d("response" , "expert user : " + jsonArray.length());
+        }
+
+    }
+
+    private class GetMentorUser extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].GetUser(token, "" , "mentor");
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter_mentor(jsonArray);
+
+        }
+    }
+
+
+    public void settextToAdapter_mentor(JSONArray jsonArray) {
+
+        if(jsonArray == null){
+
+        }else{
+            mentor_tv.setText(jsonArray.length()+"");
+           // Log.d("response" , "mentor user : " + jsonArray.length());
+        }
+
+    }
+
+    private class GetMenteeUser extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].GetUser(token, "" , "mentee");
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter_mentee(jsonArray);
+
+        }
+    }
+
+
+    public void settextToAdapter_mentee(JSONArray jsonArray) {
+
+        if(jsonArray == null){
+
+        }else{
+            mentee_tv.setText(jsonArray.length()+"");
+          //  Log.d("response" , "mentee user : " + jsonArray.length());
+        }
+
+    }
+
 
     private class GetPosts extends AsyncTask<DBConnector, Long, JSONArray> {
 
@@ -234,7 +348,7 @@ public class MainActivity extends AppCompatActivity
         // 아이템을 추가하는 동안 중복 요청을 방지하기 위해 락을 걸어둡니다.
         mLockListView = true;
 
-
+        Log.d("response" , "youtube : " + jsonArray);
         Runnable run = new Runnable()
         {
             @Override
@@ -267,7 +381,7 @@ public class MainActivity extends AppCompatActivity
                             newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
                             newsfeedItem.like_num = jsonObject.getString("like_num");
                             newsfeedItem.comment_num = jsonObject.getString("comment_num");
-                            newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                            newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
                             newsfeedItem.is_like = jsonObject.getBoolean("is_like");
                             newsfeedItem.post_id = jsonObject.getString("id");
                             newsfeedItem.member_type = userJsonObj.getString("member_type");
@@ -275,7 +389,31 @@ public class MainActivity extends AppCompatActivity
                             newsfeedItem.sport_type = userJsonObj.getString("sport_type");
                             newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                             newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                            newsfeedItem.member_id = userJsonObj.getString("id");
+                            newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
 
+                            if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
+                               newsfeedItem.youtube_id = "";
+                            }else{
+                              //  newsfeedItem.youtube_tite = userJsonObj.getString("youtube_title");
+                                String str = newsfeedItem.youtube_link;
+                                String video_id = "";
+
+                                if(str.toString().indexOf("youtube.com") != -1) {
+                                    if(str.indexOf("&") > 0){
+                                        video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
+                                    }else{
+                                        video_id = str.substring(str.indexOf("=")+1);
+                                    }
+                                }else if(str.toString().indexOf("youtu.be") != -1 ){
+                                 //   Log.d("response", "youtube_str :  "+ str);
+                                    video_id = str.substring(17);
+                                    Log.d("response", "youtube_id :  "+ video_id);
+                                }
+
+                                newsfeedItem.youtube_id = video_id;
+
+                            }
 
                             newsfeedAdapterActivity.add(newsfeedItem);
                             newsfeedAdapterActivity.notifyDataSetChanged();
@@ -399,7 +537,7 @@ public class MainActivity extends AppCompatActivity
                             case R.id.noty_item:
                                 Intent intent = new Intent(MainActivity.this, MypageActivity.class);
                                 startActivity(intent);
-                                finish();
+                             //   finish();
                                 return true;
                             case R.id.write_item:
 
@@ -448,53 +586,53 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish();
+           // finish();
 
         } else if (id == R.id.nav_gallery) {
 
             Intent intent = new Intent(MainActivity.this, SubjectFeedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish();
+           // finish();
 
         } else if (id == R.id.nav_slideshow) {
 
             Intent intent = new Intent(MainActivity.this, ExpertFeedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+          //  finish();
 
         } else if (id == R.id.nav_manage) {
 
             Intent intent = new Intent(MainActivity.this, InviteActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+           // finish();
 
         } else if (id == R.id.nav_share) {
 
             Intent intent = new Intent(MainActivity.this, NoticeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+          //  finish();
         } else if (id == R.id.nav_send) {
 
             Intent intent = new Intent(MainActivity.this, MypageActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+        //    finish();
         } else if (id == R.id.people) {
 
             Intent intent = new Intent(MainActivity.this, MemberActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+          //  finish();
         }else if (id == R.id.nav_lifesport) {
 
             Intent intent = new Intent(MainActivity.this, LifeExpertFeedActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+          //  finish();
         }else if(id == R.id.nav_header_logo){
 
             Intent intent = new Intent(MainActivity.this, LifeExpertFeedActivity.class);
@@ -533,5 +671,6 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
 
 }

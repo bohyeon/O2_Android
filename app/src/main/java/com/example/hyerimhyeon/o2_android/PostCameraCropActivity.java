@@ -34,15 +34,15 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
-public class CameraCropActivity extends android.support.v4.app.DialogFragment implements OnClickListener
+public class PostCameraCropActivity extends android.support.v4.app.DialogFragment implements OnClickListener
 {
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_CAMERA = 2;
 
-    private CameraCropActivity.PicturePickListener listener;
+    private PostCameraCropActivity.PicturePickListener listener;
 
-    private CameraCropActivity cameraCropActivity = this;
+    private PostCameraCropActivity cameraCropActivity = this;
 
     private Uri mImageCaptureUri;
     private ImageView mPhotoImageView;
@@ -88,7 +88,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
     private View bindView() {
 
         View view = LayoutInflater.from( getActivity() ).inflate( R.layout.dialog_picture_pick, null );
-        view.findViewById( R.id.view_camera ).setOnClickListener( new View.OnClickListener() {
+        view.findViewById( R.id.view_camera ).setOnClickListener( new OnClickListener() {
 
             @Override
             public void onClick( View v ) {
@@ -98,7 +98,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
             }
         } );
 
-        view.findViewById( R.id.view_gallery ).setOnClickListener( new View.OnClickListener() {
+        view.findViewById( R.id.view_gallery ).setOnClickListener( new OnClickListener() {
 
             @Override
             public void onClick( View v ) {
@@ -106,7 +106,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
                 doTakeAlbumAction();
             }
         } );
-        view.findViewById( R.id.view_x ).setOnClickListener( new View.OnClickListener() {
+        view.findViewById( R.id.view_x ).setOnClickListener( new OnClickListener() {
 
             @Override
             public void onClick( View v ) {
@@ -153,7 +153,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
         String url = "tmp_" + String.valueOf( System.currentTimeMillis() ) + ".jpg";
         mImageCaptureUri = Uri.fromFile( new File( Environment.getExternalStorageDirectory(), url ) );
 
-        intent.putExtra( android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri );
+        intent.putExtra( MediaStore.EXTRA_OUTPUT, mImageCaptureUri );
         // 특정기기에서 사진을 저장못하는 문제가 있어 다음을 주석처리 합니다.
         intent.putExtra( "return-data", true );
 
@@ -213,8 +213,8 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
 
         // 앨범 호출
         Log.d( "ALBUM", "GO" );
-        Intent intent = new Intent( Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI );
-        intent.setType( android.provider.MediaStore.Images.Media.CONTENT_TYPE );
+        Intent intent = new Intent( Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI );
+        intent.setType( MediaStore.Images.Media.CONTENT_TYPE );
         startActivityForResult( intent, PICK_FROM_ALBUM );
     }
 
@@ -330,10 +330,6 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
                 intent.setDataAndType( mImageCaptureUri, "image/*" );
                 intent.putExtra( "output", mImageCaptureUri );
                 intent.putExtra( "crop", "true" );
-                intent.putExtra( "outputX", 1024 );
-                intent.putExtra( "outputY", 1024 );
-                intent.putExtra( "aspectX", 1 );
-                intent.putExtra( "aspectY", 1 );
                 intent.putExtra( "scale", true );
                 intent.putExtra( "return-data", true );
                 startActivityForResult( intent, CROP_FROM_CAMERA );
@@ -434,7 +430,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
         }
     }
 
-    public CameraCropActivity setListener(CameraCropActivity.PicturePickListener  listener ) {
+    public PostCameraCropActivity setListener(PostCameraCropActivity.PicturePickListener  listener ) {
 
         this.listener = listener;
         return this;
@@ -448,7 +444,7 @@ public class CameraCropActivity extends android.support.v4.app.DialogFragment im
 
     public interface PicturePickListener {
 
-        void isSuccess( File file );
+        void isSuccess(File file);
 
         void isFail();
     }

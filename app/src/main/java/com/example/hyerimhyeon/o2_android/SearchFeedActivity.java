@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -74,7 +76,7 @@ public class SearchFeedActivity extends AppCompatActivity
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
-
+ //       Log.d("response", "search token : " + token);
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
 
@@ -108,13 +110,12 @@ public class SearchFeedActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         post_type = intent.getStringExtra("post_type");
-        mentor_type = intent.getStringExtra("mentor_type");
-        expert_type = intent.getStringExtra("expert_type");
         content_query = intent.getStringExtra("content_query");
-        school_level = intent.getStringExtra("school_level");
         sport_type = intent.getStringExtra("sport_type");
 
-        if(post_type.equals("") && mentor_type.equals("") && expert_type.equals("") && content_query.equals("") && school_level.equals("") && sport_type.equals("종목선택")){
+
+        if(content_query.equals("")){
+        //    Log.d("response" , "query :  " + content_query);
             Toast.makeText(getApplicationContext(), "검색결과가 없습니다.",
                     Toast.LENGTH_LONG).show();
             finish();
@@ -136,25 +137,18 @@ public class SearchFeedActivity extends AppCompatActivity
 
             String url = "http://o-two-sport.com/api/posts/?";
 
-            if(!sport_type.equals("종목선택")){
-                if(!sport_type.equals("")){
-                    url = url + "&sport_type="+sport_type;
-                }
 
-            }
-            if(!mentor_type.equals("")){
-                url = url + "&mentor_type="+mentor_type;
-            }
-            if(!school_level.equals("")){
-                url = url + "&school_level="+school_level;
-            }
-            if(!expert_type.equals("")){
-                url = url + "&expert_type="+expert_type;
-            }
             if(!content_query.equals("")){
                 url = url + "&content_query="+content_query;
             }
 
+            if(!post_type.equals("")){
+                url = url + "&post_type="+post_type;
+            }
+
+            if(!sport_type.equals("")){
+                url = url + "&sport_type="+sport_type;
+            }
 
             return params[0].GetSearch(token, url);
 
@@ -243,7 +237,31 @@ public class SearchFeedActivity extends AppCompatActivity
                             newsfeedItem.sport_type = userJsonObj.getString("sport_type");
                             newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                             newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                            newsfeedItem.member_id = userJsonObj.getString("id");
 
+
+                            if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
+                                newsfeedItem.youtube_id = "";
+                            }else{
+                                String str = newsfeedItem.youtube_link;
+                                String video_id = "";
+
+                                if(str.toString().indexOf("youtube.com") != -1) {
+                                    if(str.indexOf("&") > 0){
+                                        video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
+                                    }else{
+                                        video_id = str.substring(str.indexOf("=")+1);
+                                    }
+                                }else if(str.toString().indexOf("youtu.be") != -1 ){
+                                    //   Log.d("response", "youtube_str :  "+ str);
+                                    video_id = str.substring(17);
+                                    Log.d("response", "youtube_id :  "+ video_id);
+                                }
+
+                                newsfeedItem.youtube_id = video_id;
+
+                            }
+                          //  Log.d("response", "youtube_id :  "+ newsfeedItem.youtube_id);
 
                             searchfeedAdapterActivity.add(newsfeedItem);
                             searchfeedAdapterActivity.notifyDataSetChanged();
@@ -326,21 +344,14 @@ public class SearchFeedActivity extends AppCompatActivity
         });
 
         ImageButton search_icon = (ImageButton) findViewById(R.id.actionbar_search);
-        search_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SearchFeedActivity.this, SearchActivity.class);
-                intent.putExtra("type","sport");
-                startActivityForResult(intent,1);
-            }
-        });
+        search_icon.setBackgroundResource(0);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-//                findViewById(R.id.bottom_navigation);
-//
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+        bottomNavigationView.removeAllViews();
 //        bottomNavigationView.setOnNavigationItemSelectedListener(
 //                new BottomNavigationView.OnNavigationItemSelectedListener() {
 //                    @Override

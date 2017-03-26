@@ -3,14 +3,13 @@ package com.example.hyerimhyeon.o2_android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -25,9 +24,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.DB.DBConnector;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
@@ -48,6 +49,7 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     LinearLayout content_layout;
     String token, post_id;
     String select_pods_id;
+    String youtube_link, id;
     Boolean is_like;
     private static final int REQUEST_INTERNET = 1;
 
@@ -66,17 +68,22 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
     static class ViewHolder{
+        LinearLayout youtube_layout = null;
+        ImageView youtube_img = null;
+        TextView youtube_title = null;
         LinearLayout content_layout;
         ImageView image, profile_img;
         TextView like_btn, like;
         TextView name, type, belong, regist_date, content, comment_btn;
     }
 
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         View itemView;
         token = expertFeedActivity.token;
+        id = expertFeedActivity.id;
         final NewsfeedAdapterActivity.ViewHolder viewHolder;
         // RecyclerView.ViewHolder viewHolder;
 
@@ -96,48 +103,122 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.image = (ImageView) itemView.findViewById(R.id.main_newsfeed_lv_img);
             viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.main_profile_img);
             viewHolder.comment_btn = (TextView) itemView.findViewById(R.id.main_comment_btn);
+            viewHolder.youtube_layout = (LinearLayout) itemView.findViewById(R.id.youtube_layout);
+            viewHolder.youtube_img = (ImageView) itemView.findViewById(R.id.youtube_img);
+            viewHolder.youtube_title = (TextView) itemView.findViewById(R.id.main_youtube_title);
+
 
 
             final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
 
-            Log.d( "response", "is url ? " +newfeedItemPosition.post_image_url );
+            if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
+
+                // viewHolder.youtube_layout.setBackground(null);
+                int width = 0;
+                int height = 0;
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+                viewHolder.youtube_img.setLayoutParams(parms);
+                //       viewHolder.youtube_title.setLayoutParams(parms);
+                viewHolder.youtube_layout.setBackground(null);
+                viewHolder.youtube_img.setImageBitmap(null);
+                viewHolder.youtube_title.setText(null);
+
+            }else{
+                if(!newfeedItemPosition.youtube_id.equals("") ){
+                    viewHolder.youtube_layout.setBackground(null);
+                    Log.d("response", "youtube ㅅㅂ : " + newfeedItemPosition.youtube_id);
+                    youtube_link = newfeedItemPosition.youtube_link;
+                    //   new GetYoutube().execute(new DBConnector());
+                    // new DownLoadImageTask_youtube(viewHolder.youtube_img).execute("http://img.youtube.com/vi/"+newfeedItemPosition.youtube_id+"/1.jpg");
+
+
+                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    Display display = wm.getDefaultDisplay();
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    display.getMetrics(metrics);
+                    int width = metrics.widthPixels/3;
+                    int height = 230;
+
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,width);
+                    //  viewHolder.youtube_title.setLayoutParams(parms);
+                    viewHolder.youtube_title.setText(newfeedItemPosition.youtube_tite);
+                    viewHolder.youtube_img.setLayoutParams(parms);
+                    viewHolder.youtube_layout.setBackgroundResource(R.drawable.table_border);
+                    Picasso.with(context)
+                            .load("http://img.youtube.com/vi/"+newfeedItemPosition.youtube_id+"/1.jpg")
+                            .resize(width,width)
+                            .placeholder(R.drawable.blankimg)
+                            .error(R.drawable.blankimg)
+                            .into(viewHolder.youtube_img);
+
+                }else{
+                    int width = 0;
+                    int height = 0;
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+                    viewHolder.youtube_img.setLayoutParams(parms);
+                    viewHolder.youtube_title.setLayoutParams(parms);
+                    viewHolder.youtube_layout.setBackground(null);
+                    viewHolder.youtube_img.setImageBitmap(null);
+                    viewHolder.youtube_title.setText(null);
+                }
+
+            }
+
 
             if(newfeedItemPosition.post_image_url.equals("")|| newfeedItemPosition.post_image_url == null||newfeedItemPosition.post_image_url == " "||newfeedItemPosition.post_image_url == "null"|| newfeedItemPosition.post_image_url == "" || newfeedItemPosition.post_image_url=="http://" || newfeedItemPosition.post_image_url=="http://null" || newfeedItemPosition.post_image_url.equals("http://") || newfeedItemPosition.post_image_url.equals("http:/null/")){
 
                 int width = 0;
                 int height = 0;
-                Log.d("response" , "screen : " + width + " " + height);
+                // Log.d("response" , "screen : " + width + " " + height);
+                LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+                viewHolder.image.setLayoutParams(parms);
+                //viewHolder.image.setBackgroundResource(0);
+
+            }else{
+
+                int width =  ViewGroup.LayoutParams.FILL_PARENT;
+                int height = ViewGroup.LayoutParams.MATCH_PARENT;
                 LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
                 viewHolder.image.setLayoutParams(parms);
 
 
-            }else{
-                int permissionCamera = ContextCompat.checkSelfPermission(expertFeedActivity, android.Manifest.permission.ACCESS_NETWORK_STATE);
-                if(permissionCamera == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(expertFeedActivity, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
-                } else {
-                    new DownLoadImageTask(viewHolder.image).execute("http://"+newfeedItemPosition.post_image_url);
-                    Log.d( "response", "internet permission authorized" );
+                Picasso.with(context)
+                        .load("http://"+newfeedItemPosition.post_image_url)
+                        .placeholder(R.drawable.blankimg)
+                        .error(R.drawable.blankimg)
+                        .into(viewHolder.image);
 
-                }
-                // Log.d("response2", "response img: " + uri);
-                // image.setImageURI(uri);
+
+
+//                Picasso
+//                        .with(context)
+//                        .load("http://"+newfeedItemPosition.post_image_url)
+//                        .placeholder(R.drawable.blankimg)
+//                        .error(R.drawable.blankimg)
+//                        .transform(new ExifTransformation(context, Uri.parse("http://"+newfeedItemPosition.post_image_url)))
+//                        .into(viewHolder.image);
+
+                // new DownLoadImageTask(viewHolder.image).execute("http://"+newfeedItemPosition.post_image_url);
             }
 
             if(newfeedItemPosition.profile_url.equals("")|| newfeedItemPosition.profile_url == null||newfeedItemPosition.profile_url == " "||newfeedItemPosition.profile_url == "null"|| newfeedItemPosition.profile_url == "" || newfeedItemPosition.profile_url=="http://" || newfeedItemPosition.profile_url=="http://null" || newfeedItemPosition.profile_url.equals("http://") || newfeedItemPosition.profile_url.equals("http:/null/")){
 
+                viewHolder.profile_img.setBackgroundResource(0);
 
             }else{
-                int permissionCamera = ContextCompat.checkSelfPermission(expertFeedActivity, android.Manifest.permission.ACCESS_NETWORK_STATE);
-                if(permissionCamera == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(expertFeedActivity, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
-                } else {
-                    new DownLoadImageTask_profile(viewHolder.profile_img).execute("http://"+newfeedItemPosition.profile_url);
-                    Log.d( "response", "internet permission authorized" );
+                viewHolder.profile_img.setBackgroundResource(0);
 
-                }
-                // Log.d("response2", "response img: " + uri);
-                // image.setImageURI(uri);
+
+                Picasso.with(context)
+                        .load("http://"+newfeedItemPosition.profile_url)
+                        .resize(200,200)
+                        .placeholder(R.drawable.blankimg)
+                        .error(R.drawable.blankimg)
+                        .into(viewHolder.profile_img);
+
+                // new DownLoadImageTask_profile(viewHolder.profile_img).execute("http://"+newfeedItemPosition.profile_url);
+                // String youtube_title = getTitleQuietly(newfeedItemPosition.youtube_link);
+                // Log.d("response" , "title : " + youtube_title);
             }
 
             viewHolder.name.setText(newfeedItemPosition.name);
@@ -153,13 +234,18 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 }
 
                 viewHolder.type.setText(type_str);
-            }
 
-            if(!newfeedItemPosition.member_type.equals("mentee")){
-                viewHolder.belong.setText(newfeedItemPosition.company);
+                if(!newfeedItemPosition.member_type.equals("mentee")){
+                    viewHolder.belong.setText(newfeedItemPosition.company);
+                }else{
+                    viewHolder.belong.setText("");
+                }
             }else{
+                viewHolder.type.setText("");
                 viewHolder.belong.setText("");
             }
+
+
 
             viewHolder.regist_date.setText(newfeedItemPosition.regist_date);
             viewHolder.content.setText(newfeedItemPosition.content);
@@ -173,6 +259,30 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             }else{
                 viewHolder.like_btn.setTextColor(Color.parseColor("#555555"));
             }
+
+            viewHolder.youtube_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newfeedItemPosition.youtube_link.toString()));
+                    ((Activity) getContext()).startActivity(browserIntent);
+                }
+            });
+
+            viewHolder.youtube_title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newfeedItemPosition.youtube_link.toString()));
+                    ((Activity) getContext()).startActivity(browserIntent);
+                }
+            });
+
+            viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                    ((Activity) getContext()).startActivity(intent);
+                }
+            });
 
             viewHolder.content_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -196,6 +306,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
                         Log.d("response","0320 : " + newfeedItemPosition2.member_type);
                         Log.d("response", "name2 : " + newfeedItemPosition2.member_type);
@@ -225,6 +338,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
                         //Log.d("response", "name2 : " + newfeedItemPosition2.name);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -252,6 +368,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
                         //Log.d("response", "name2 : " + newfeedItemPosition2.name);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -281,6 +400,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
                         //Log.d("response", "name2 : " + newfeedItemPosition2.name);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -344,72 +466,149 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.image = (ImageView) itemView.findViewById(R.id.main_newsfeed_lv_img);
             viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.main_profile_img);
             viewHolder.comment_btn = (TextView) itemView.findViewById(R.id.main_comment_btn);
+            viewHolder.youtube_layout = (LinearLayout) itemView.findViewById(R.id.youtube_layout);
+            viewHolder.youtube_img = (ImageView) itemView.findViewById(R.id.youtube_img);
+            viewHolder.youtube_title = (TextView) itemView.findViewById(R.id.main_youtube_title);
 
+//
+//            YouTubePlayerView youTubeView = (YouTubePlayerView) itemView.findViewById(R.id.youtube_view);
+//            youTubeView.initialize("AIzaSyBTzYl1ZiZSMPSBSC-9Wdw_b4km0dRzI38", this);
 
             if(newsFeed.newsfeedItem.size() != 0){
 
                 final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
 
-                Log.d( "response", "is url ? " +newfeedItemPosition.post_image_url );
+                if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
+
+                    /// viewHolder.youtube_layout.setBackground(null);
+                    int width = 0;
+                    int height = 0;
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+                    viewHolder.youtube_img.setLayoutParams(parms);
+
+                    viewHolder.youtube_layout.setBackground(null);
+                    viewHolder.youtube_img.setImageBitmap(null);
+                    viewHolder.youtube_title.setText(null);
+                    //viewHolder.youtube_title.setLayoutParams(parms);
+                }else{
+                    if(!newfeedItemPosition.youtube_id.equals("") ){
+
+                        viewHolder.youtube_layout.setBackground(null);
+                        youtube_link = newfeedItemPosition.youtube_link;
+
+                        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                        Display display = wm.getDefaultDisplay();
+                        DisplayMetrics metrics = new DisplayMetrics();
+                        display.getMetrics(metrics);
+                        int width = metrics.widthPixels/3;
+                        int width2 = metrics.widthPixels;
+
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,width);
+                        viewHolder.youtube_img.setLayoutParams(parms);
+
+                        viewHolder.youtube_title.setText(newfeedItemPosition.youtube_tite);
+                        viewHolder.youtube_layout.setBackgroundResource(R.drawable.table_border);
+                        Picasso.with(context)
+                                .load("http://img.youtube.com/vi/"+newfeedItemPosition.youtube_id+"/1.jpg")
+                                .resize(width,width)
+                                .placeholder(R.drawable.blankimg)
+                                .error(R.drawable.blankimg)
+                                .into(viewHolder.youtube_img);
+
+
+                    }else{
+                        int width = 0;
+                        int height = 0;
+                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+                        viewHolder.youtube_img.setLayoutParams(parms);
+                        viewHolder.youtube_title.setLayoutParams(parms);
+                        viewHolder.youtube_layout.setBackground(null);
+                        viewHolder.youtube_img.setImageBitmap(null);
+                        viewHolder.youtube_title.setText(null);
+                    }
+
+                }
 
                 if(newfeedItemPosition.post_image_url.equals("")|| newfeedItemPosition.post_image_url == null||newfeedItemPosition.post_image_url == " "||newfeedItemPosition.post_image_url == "null"|| newfeedItemPosition.post_image_url == "" || newfeedItemPosition.post_image_url=="http://" || newfeedItemPosition.post_image_url=="http://null" || newfeedItemPosition.post_image_url.equals("http://") || newfeedItemPosition.post_image_url.equals("http:/null/")){
 
                     int width = 0;
                     int height = 0;
-                    Log.d("response" , "screen : " + width + " " + height);
+                    // Log.d("response" , "screen : " + width + " " + height);
+                    LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+                    viewHolder.image.setLayoutParams(parms);
+                    // viewHolder.image.setBackgroundResource(0);
+
+                }else{
+
+                    int width =  ViewGroup.LayoutParams.FILL_PARENT;
+                    int height = ViewGroup.LayoutParams.MATCH_PARENT;
                     LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
                     viewHolder.image.setLayoutParams(parms);
 
+//                    Glide.with(context).load("http://"+newfeedItemPosition.post_image_url).into(viewHolder.image);
 
-                }else{
-                    int permissionCamera = ContextCompat.checkSelfPermission(expertFeedActivity, android.Manifest.permission.ACCESS_NETWORK_STATE);
-                    if(permissionCamera == PackageManager.PERMISSION_DENIED) {
-                        ActivityCompat.requestPermissions(expertFeedActivity, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
-                    } else {
-                        new DownLoadImageTask(viewHolder.image).execute("http://"+newfeedItemPosition.post_image_url);
+                    Picasso.with(context)
+                            .load("http://"+newfeedItemPosition.post_image_url)
+                            .placeholder(R.drawable.blankimg)
+                            .error(R.drawable.blankimg)
+                            .into(viewHolder.image);
 
-                    }
-
+//                    Picasso
+//                            .with(context)
+//                            .load("http://"+newfeedItemPosition.post_image_url)
+//                            .placeholder(R.drawable.blankimg)
+//                            .error(R.drawable.blankimg)
+//                            .transform(new ExifTransformation(context, Uri.parse("http://"+newfeedItemPosition.post_image_url)))
+//                            .into(viewHolder.image);
                 }
 
 
                 if(newfeedItemPosition.profile_url.equals("")|| newfeedItemPosition.profile_url == null||newfeedItemPosition.profile_url == " "||newfeedItemPosition.profile_url == "null"|| newfeedItemPosition.profile_url == "" || newfeedItemPosition.profile_url=="http://" || newfeedItemPosition.profile_url=="http://null" || newfeedItemPosition.profile_url.equals("http://") || newfeedItemPosition.profile_url.equals("http:/null/")){
-
-
+                    viewHolder.profile_img.setBackgroundResource(0);
                 }else{
-                    int permissionCamera = ContextCompat.checkSelfPermission(expertFeedActivity, android.Manifest.permission.ACCESS_NETWORK_STATE);
-                    if(permissionCamera == PackageManager.PERMISSION_DENIED) {
-                        ActivityCompat.requestPermissions(expertFeedActivity, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
-                    } else {
-                        new DownLoadImageTask_profile(viewHolder.profile_img).execute("http://"+newfeedItemPosition.profile_url);
-                        Log.d( "response", "internet permission authorized" );
+                    viewHolder.profile_img.setBackgroundResource(0);
 
-                    }
-                    // Log.d("response2", "response img: " + uri);
-                    // image.setImageURI(uri);
+                    Picasso.with(context)
+                            .load("http://"+newfeedItemPosition.profile_url)
+                            .resize(250,200)
+                            .placeholder(R.drawable.blankimg)
+                            .error(R.drawable.blankimg)
+                            .into(viewHolder.profile_img);
+                    // new DownLoadImageTask_profile(viewHolder.profile_img).execute("http://"+newfeedItemPosition.profile_url);
+
                 }
 
 
                 viewHolder.name.setText(newfeedItemPosition.name);
 
                 String type_str = "";
-                if(newfeedItemPosition.member_type.equals("mentor")){
-                    type_str = "멘토";
-                }else if(newfeedItemPosition.member_type.equals("mentee")){
-                    type_str = "꿈나무";
-                }else if(newfeedItemPosition.member_type.equals("expert")){
-                    type_str = "전문가";
-                }else{
-                    type_str = " ";
-                }
 
-                viewHolder.type.setText(type_str);
+                if(newfeedItemPosition.member_type != null){
+                    if(newfeedItemPosition.member_type.equals("mentor")){
+                        type_str = "멘토";
+                    }else if(newfeedItemPosition.member_type.equals("mentee")){
+                        type_str = "꿈나무";
+                    }else if(newfeedItemPosition.member_type.equals("expert")){
+                        type_str = "전문가";
+                    }else{
+                        type_str = " ";
+                    }
+                    viewHolder.type.setText(type_str);
 
-                if(!newfeedItemPosition.member_type.equals("mentee")){
-                    viewHolder.belong.setText(newfeedItemPosition.company);
+                    if(!newfeedItemPosition.member_type.equals("mentee")){
+                        viewHolder.belong.setText(newfeedItemPosition.company);
+                    }else{
+                        viewHolder.belong.setText("");
+                    }
+
                 }else{
+                    viewHolder.type.setText("");
                     viewHolder.belong.setText("");
                 }
+
+
+
+
 
                 viewHolder.regist_date.setText(newfeedItemPosition.regist_date);
                 viewHolder.content.setText(newfeedItemPosition.content);
@@ -423,7 +622,32 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 }else{
                     viewHolder.like_btn.setTextColor(Color.parseColor("#555555"));
                 }
+                viewHolder.youtube_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newfeedItemPosition.youtube_link.toString()));
+                        ((Activity) getContext()).startActivity(browserIntent);
+                    }
+                });
+
+                viewHolder.youtube_title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(newfeedItemPosition.youtube_link.toString()));
+                        ((Activity) getContext()).startActivity(browserIntent);
+                    }
+                });
+
             }
+
+            viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                    ((Activity) getContext()).startActivity(intent);
+                }
+            });
+
 
 
             viewHolder.content_layout.setOnClickListener(new View.OnClickListener() {
@@ -447,6 +671,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
 
 
@@ -478,6 +705,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
 
 
@@ -509,6 +739,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
 
 
@@ -542,6 +775,9 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.putExtra("is_like", newfeedItemPosition2.is_like);
                         intent.putExtra("post_image_url",newfeedItemPosition2.post_image_url);
                         intent.putExtra("profile_url", newfeedItemPosition2.profile_url);
+                        intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
+                        intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+                        intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("token", token);
 
 
@@ -591,6 +827,8 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
     }
+
+
 
     public boolean isInternetAvailable(String url) {
         try {
@@ -670,6 +908,37 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
     }
 
+    private class GetYoutube extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+            //Log.d("response22 " , "delete" + token + "  " + select_pods_id);
+            return params[0].GetYoutube(youtube_link);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter_youtube(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter_youtube(JSONObject jsonObject) {
+
+        if(jsonObject == null){
+
+        }else{
+            Log.d("response" , "youtube json : " + jsonObject);
+        }
+
+    }
+
+
     // call this method when required to show popup
     public void onShowPopup(View v){
 
@@ -688,10 +957,10 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
         // fill the data to the list items
-        setSimpleList(listView);
+ //       setSimpleList(listView);
 
 
-//        // set height depends on the device size
+        // set height depends on the device size
 //        popWindow = new PopupWindow(inflatedView, size.x - 50,size.y - 250, true );
 //        // set a background drawable with rounders corners
 //        popWindow.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.comment_rounded));
@@ -759,10 +1028,61 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             DisplayMetrics metrics = new DisplayMetrics();
             display.getMetrics(metrics);
             int width = metrics.widthPixels;
-            int height = metrics.heightPixels/2 + 50;
+            int height = metrics.heightPixels/2;
             Log.d("response" , "screen : " + width + " " + height);
             LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
             imageView.setLayoutParams(parms);
+
+            imageView.setImageBitmap(result);
+        }
+
+
+
+
+    }
+
+
+    private class DownLoadImageTask_youtube extends AsyncTask<String,Void,Bitmap>{
+        ImageView imageView;
+
+        public DownLoadImageTask_youtube(ImageView imageView){
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            //String urlOfImage = urls[0];
+            String urlOfImage = urls[0];
+            Log.d("response" , "image url : " + urlOfImage);
+            Bitmap logo = null;
+            try{
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+                Log.d("response" ,"image back : " + e.toString());
+            }
+            return logo;
+        }
+
+        /*
+            onPostExecute(Result result)
+                Runs on the UI thread after doInBackground(Params...).
+         */
+        protected void onPostExecute(Bitmap result){
+
+            int width = 250;
+            int height = 200;
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+            imageView.setLayoutParams(parms);
+
 
             imageView.setImageBitmap(result);
         }
@@ -812,6 +1132,71 @@ public class ExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
             imageView.setImageBitmap(result);
         }
+    }
+
+//    public static String getTitleQuietly(String youtubeUrl) {
+//        try {
+//            if (youtubeUrl != null) {
+//                URL embededURL = new URL("http://www.youtube.com/oembed?url=" +
+//                        youtubeUrl + "&format=json"
+//                );
+//
+//                return new JSONObject(IOUtils.toString(embededURL)).getString("title");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    private static int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
+    }
+
+    public synchronized static int GetExifOrientation(String filepath)
+    {
+        int degree = 0;
+        ExifInterface exif = null;
+
+        try
+        {
+            exif = new ExifInterface(filepath);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        if (exif != null)
+        {
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
+
+            if (orientation != -1)
+            {
+                // We only recognize a subset of orientation tag values.
+                switch(orientation)
+                {
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        degree = 90;
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        degree = 180;
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        degree = 270;
+                        break;
+                }
+
+            }
+        }
+
+        return degree;
     }
 }
 

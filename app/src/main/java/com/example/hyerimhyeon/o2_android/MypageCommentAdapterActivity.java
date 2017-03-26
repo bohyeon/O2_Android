@@ -36,15 +36,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
+public class MypageCommentAdapterActivity extends ArrayAdapter<NewsfeedItem_comment> {
 
     LayoutInflater layoutInflater;
-    NewsFeed newsFeed;
+    NewsFeed_Comment newsFeed;
     MypageActivity mypageActivity;
     Context context;
-    NewsfeedItem newsfeedItem;
+    NewsfeedItem_comment newsfeedItem;
 
-    MypageMypostAdapterActivity newsfeedAdapterActivity;
+    MypageCommentAdapterActivity newsfeedAdapterActivity;
 
  //   TextView name, type, belong, regist_date;
     ImageView profile_img;
@@ -56,7 +56,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     private static final int REQUEST_INTERNET = 1;
 
 
-    public MypageMypostAdapterActivity(Context context, NewsFeed newsFeed, MypageActivity mypageActivity) {
+    public MypageCommentAdapterActivity(Context context, NewsFeed_Comment newsFeed, MypageActivity mypageActivity) {
 
         super(context, R.layout.activity_main_newsfeed, newsFeed.newsfeedItem);
 
@@ -85,7 +85,6 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
         TextView youtube_title = null;
         YouTubePlayerView youTubePlayerView = null;
     }
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -117,7 +116,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
 
-            final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+            final NewsfeedItem_comment newfeedItemPosition = newsFeed.newsfeedItem.get(position);
 
             if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
 
@@ -299,7 +298,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                     if(newsFeed.newsfeedItem.size() != 0) {
 
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -331,7 +330,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 @Override
                 public void onClick(View v) {
                     if(newsFeed.newsfeedItem.size() != 0) {
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -361,7 +360,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 @Override
                 public void onClick(View v) {
                     if(newsFeed.newsfeedItem.size() != 0) {
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -393,7 +392,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 public void onClick(View v) {
 
                     if(newsFeed.newsfeedItem.size() != 0) {
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -430,7 +429,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     Log.d("response" , "like btn : " + position);
 
                     int position_like = position;
-                    final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                    final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
                     select_pods_id = newfeedItemPosition2.post_id;
 
                     if(newfeedItemPosition2.is_like == true){
@@ -484,7 +483,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
             if(newsFeed.newsfeedItem.size() != 0){
 
-                final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+                final NewsfeedItem_comment newfeedItemPosition = newsFeed.newsfeedItem.get(position);
 
                 if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
 
@@ -664,7 +663,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                     if(newsFeed.newsfeedItem.size() != 0) {
 
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -698,7 +697,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 public void onClick(View v) {
                     if(newsFeed.newsfeedItem.size() != 0) {
 
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -732,7 +731,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 public void onClick(View v) {
                     if(newsFeed.newsfeedItem.size() != 0) {
 
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -768,7 +767,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                     if(newsFeed.newsfeedItem.size() != 0) {
 
-                        final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                        final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
 
                         Intent intent = new Intent( context.getApplicationContext(), FeedDetailActivity.class);
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
@@ -804,7 +803,7 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     Log.d("response" , "like btn : " + position);
 
                     int position_like = position;
-                    final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
+                    final NewsfeedItem_comment newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
                     select_pods_id = newfeedItemPosition2.post_id;
 
                     if(newfeedItemPosition2.is_like == true){

@@ -1,6 +1,6 @@
 package com.example.hyerimhyeon.o2_android;
 
-public class NewsfeedItem extends Object {
+public class NewsfeedItem_comment extends Object {
 
     String name = "";
     String email = "";
@@ -26,7 +26,7 @@ public class NewsfeedItem extends Object {
     String youtube_tite;
     String id = "";
 
-    public NewsfeedItem(){
+    public NewsfeedItem_comment(){
 
 
     }

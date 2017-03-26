@@ -171,7 +171,35 @@ public class MemberActivity extends AppCompatActivity
     public void onStart(){
         super.onStart();
 
+        Intent intent = getIntent();
+        String member_type_str = "expert";
+
+        if(intent.getStringExtra("member_type") == null){
+
+        } else{
+            member_type_str = intent.getStringExtra("member_type");
+        }
+
+
+        if(member_type_str.equals("expert")){
             new GetUser().execute(new DBConnector());
+        }else if(member_type_str.equals("mentor")){
+
+            newsFeed = NewsFeed.getNewsFeed();
+            mentorMemberAdapterActivity = new MentorMemberAdapterActivity(getApplicationContext(), newsFeed, memberActivity);
+            expertLv.setAdapter(mentorMemberAdapterActivity);
+            member_type = "mentor";
+            new GetMentorUser().execute(new DBConnector());
+
+        }else if(member_type_str.equals("mentee")){
+
+            newsFeed = NewsFeed.getNewsFeed();
+            menteeMemberAdapterActivity = new MenteeMemberAdapterActivity(getApplicationContext(), newsFeed, memberActivity);
+            expertLv.setAdapter(menteeMemberAdapterActivity);
+            member_type = "mentee";
+            new GetMenteeUser().execute(new DBConnector());
+
+        }
 
     }
 

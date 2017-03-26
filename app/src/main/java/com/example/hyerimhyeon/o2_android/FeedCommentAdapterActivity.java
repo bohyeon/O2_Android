@@ -1,6 +1,7 @@
 package com.example.hyerimhyeon.o2_android;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -10,8 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.example.DB.DBConnector;
+
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -19,15 +25,18 @@ import java.net.URL;
 public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
     LayoutInflater layoutInflater;
+    LinearLayout comment_box;
     NewsFeed newsFeed;
     FeedDetailActivity feedDetailActivity;
     Context context;
     NewsfeedItem newsfeedItem;
 
     FeedCommentAdapterActivity newsfeedAdapterActivity;
+    public SharedPreferences loginPreferences;
 
-    TextView name, type, belong, regist_date, content, like, like_btn, comment_btn;
+    TextView name, type, belong, regist_date, content, like, like_btn, comment_btn, comment_change, comment_remove;
     ImageView profile_img;
+    String comment_id, token;
 
     private PopupWindow popWindow;
 
@@ -48,6 +57,8 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
         View itemView;
 
+        token = feedDetailActivity.token;
+
         if (convertView == null) {
             itemView = layoutInflater.inflate(R.layout.fb_comments_list_item, parent, false);
 
@@ -56,6 +67,9 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             belong = (TextView) itemView.findViewById(R.id.comment_newsfeed_lv_belong);
             content = (TextView) itemView.findViewById(R.id.comment_newsfeed_lv_content);
             profile_img = (ImageView) itemView.findViewById(R.id.comment_profile_img);
+            comment_change = (TextView) itemView.findViewById(R.id.comment_change);
+            comment_remove = (TextView) itemView.findViewById(R.id.comment_remove);
+            comment_box = (LinearLayout) itemView.findViewById(R.id.detail_comment_layout);
 
             final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
             name.setText(newfeedItemPosition.name);
@@ -86,6 +100,23 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 new DownLoadImageTask_profile(profile_img).execute("http://"+newfeedItemPosition.profile_url);
 
             }
+            Log.d("response" , "id : " + feedDetailActivity.email + " id2 : " + newfeedItemPosition.email);
+            if(feedDetailActivity.email.equals(newfeedItemPosition.email)){
+                comment_box.setVisibility(LinearLayout.VISIBLE);
+                comment_remove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        comment_id = newfeedItemPosition.id;
+                        new DeleteComment().execute(new DBConnector());
+                    }
+                });
+
+            }else{
+                comment_box.setVisibility(LinearLayout.GONE);
+            }
+
+
 
             return itemView;
 
@@ -99,6 +130,9 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
        //     regist_date = (TextView) itemView.findViewById(R.id.comment_newsfeed_lv_registDate);
             content = (TextView) itemView.findViewById(R.id.comment_newsfeed_lv_content);
             profile_img = (ImageView) itemView.findViewById(R.id.comment_profile_img);
+            comment_change = (TextView) itemView.findViewById(R.id.comment_change);
+            comment_remove = (TextView) itemView.findViewById(R.id.comment_remove);
+            comment_box = (LinearLayout) itemView.findViewById(R.id.detail_comment_layout);
 
             if(newsFeed.newsfeedItem.size() != 0){
 
@@ -133,6 +167,22 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                 }
 
+                Log.d("response" , "id : " + feedDetailActivity.email + " id2 : " + newfeedItemPosition.email);
+                if(feedDetailActivity.email.equals(newfeedItemPosition.email)){
+                    comment_box.setVisibility(LinearLayout.VISIBLE);
+                    comment_remove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            comment_id = newfeedItemPosition.id;
+                            new DeleteComment().execute(new DBConnector());
+                        }
+                    });
+
+                }else{
+                    comment_box.setVisibility(LinearLayout.GONE);
+                }
+
 
             }
 
@@ -142,6 +192,47 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
         }
+
+
+    private class DeleteComment extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            Log.d("response" , "comment id  : " + comment_id + token);
+            return params[0].DeleteComment(token, comment_id);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonArray) {
+
+            settextToAdapter(jsonArray);
+
+
+        }
+    }
+
+    public void settextToAdapter(JSONObject jsonArray) {
+
+        //  Log.d("response" , "post : " + jsonArray.toString());
+
+        // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
+        NewsfeedItem newsfeedItem;
+
+
+        if(jsonArray == null){
+           feedDetailActivity.GetCommentToAdapter();
+        }else{
+
+
+        }
+
+    }
+
 
     private class DownLoadImageTask_profile extends AsyncTask<String,Void,Bitmap> {
         ImageView imageView;

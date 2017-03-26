@@ -2,7 +2,6 @@ package com.example.hyerimhyeon.o2_android;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -27,7 +25,7 @@ import org.json.JSONArray;
 public class SearchActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ImageButton back_icon, sport_btn, life_btn, common_btn;
+    ImageButton back_icon, sport_btn, life_btn, common_btn, back_btn;
 
     TextView life01, life02, life03, life04, life05, life06;
     TextView sport01, sport02, sport03, sport04, sport05, sport06;
@@ -35,29 +33,6 @@ public class SearchActivity extends AppCompatActivity
     TextView mentor01, mentor02, mentor03, mentor04;
 
     EditText search_box;
-
-    Boolean life_b01 = false;
-    Boolean life_b02 = false;
-    Boolean life_b03 = false;
-    Boolean life_b04 = false;
-    Boolean life_b05 = false;
-    Boolean life_b06 = false;
-
-    Boolean sport_b01 = false;
-    Boolean sport_b02 = false;
-    Boolean sport_b03 = false;
-    Boolean sport_b04 = false;
-    Boolean sport_b05 = false;
-    Boolean sport_b06 = false;
-
-    Boolean mentee_01 = false;
-    Boolean mentee_02 = false;
-    Boolean mentee_03 = false;
-
-    Boolean mentor_01 = false;
-    Boolean mentor_02 = false;
-    Boolean mentor_03 = false;
-    Boolean mentor_04 = false;
 
 
     Spinner type2;
@@ -86,33 +61,37 @@ public class SearchActivity extends AppCompatActivity
         String type = "";
         type = intent.getStringExtra("type");
 
+        if(intent.getStringExtra("sport_type") != null){
+          sport_type = intent.getStringExtra("sport_type");
+        }else{
+            sport_type = "";
+        }
 
 
         if (type.equals("common")) {
             setContentView(R.layout.activity_search);
-            String[] str = getResources().getStringArray(R.array.mSpinnerArr);
-            ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, str);
-            type2 = (Spinner) findViewById(R.id.search_type);
-            type2.setAdapter(adapter);
 
             sport_btn = (ImageButton) findViewById(R.id.search_common);
             search_box = (EditText) findViewById(R.id.search_edit);
+            back_btn = (ImageButton) findViewById(R.id.search_back_icon);
+
+            back_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
 
             sport_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     content_query = search_box.getText().toString();
-                    sport_type = type2.getSelectedItem().toString();
-
+                    post_type = "sport_knowledge_feed";
                     Intent intent1 = new Intent(SearchActivity.this, SearchFeedActivity.class);
-                    intent1.putExtra("post_type",post_type);
-                    intent1.putExtra("mentor_type",mentor_type);
-                    intent1.putExtra("expert_type",expert_type);
                     intent1.putExtra("content_query",content_query);
+                    intent1.putExtra("post_type",post_type);
                     intent1.putExtra("sport_type",sport_type);
-                    intent1.putExtra("school_level",school_level);
-
                     startActivityForResult(intent1,10);
                 }
             });
@@ -121,21 +100,26 @@ public class SearchActivity extends AppCompatActivity
             setContentView(R.layout.activity_search_sport);
             sport_btn = (ImageButton) findViewById(R.id.search_sport_btn);
             search_box = (EditText) findViewById(R.id.search_edit);
+            back_btn = (ImageButton) findViewById(R.id.search_back_icon);
+
+            back_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
 
             sport_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     content_query = search_box.getText().toString();
-                    sport_type = "";
-
+                    post_type = "sport_expert_knowledge_feed";
                     Intent intent1 = new Intent(SearchActivity.this, SearchFeedActivity.class);
-                    intent1.putExtra("post_type",post_type);
-                    intent1.putExtra("mentor_type",mentor_type);
-                    intent1.putExtra("expert_type",expert_type);
                     intent1.putExtra("content_query",content_query);
+                    intent1.putExtra("post_type",post_type);
                     intent1.putExtra("sport_type",sport_type);
-                    intent1.putExtra("school_level",school_level);
+
 
                     startActivityForResult(intent1,10);
                 }
@@ -146,22 +130,24 @@ public class SearchActivity extends AppCompatActivity
             setContentView(R.layout.activity_search_life);
             sport_btn = (ImageButton) findViewById(R.id.search_life_btn);
             search_box = (EditText) findViewById(R.id.search_edit);
+            back_btn = (ImageButton) findViewById(R.id.search_back_icon);
 
+            back_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
             sport_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     content_query = search_box.getText().toString();
-                    sport_type = "";
-
+                    post_type = "life_expert_knowledge_feed";
                     Intent intent1 = new Intent(SearchActivity.this, SearchFeedActivity.class);
-                    intent1.putExtra("post_type",post_type);
-                    intent1.putExtra("mentor_type",mentor_type);
-                    intent1.putExtra("expert_type",expert_type);
                     intent1.putExtra("content_query",content_query);
+                    intent1.putExtra("post_type",post_type);
                     intent1.putExtra("sport_type",sport_type);
-                    intent1.putExtra("school_level",school_level);
-
                     startActivityForResult(intent1,10);
                 }
             });
@@ -179,427 +165,6 @@ public class SearchActivity extends AppCompatActivity
                 finish();
             }
         });
-
-        mentee01 = (TextView) findViewById(R.id.main_box_01);
-        mentee02 = (TextView) findViewById(R.id.main_box_02);
-        mentee03 = (TextView) findViewById(R.id.main_box_03);
-
-        mentor01 = (TextView) findViewById(R.id.main_box_04);
-        mentor02 = (TextView) findViewById(R.id.main_box_05);
-        mentor03 = (TextView) findViewById(R.id.main_box_06);
-        mentor04 = (TextView) findViewById(R.id.main_box_07);
-
-
-        life01 = (TextView) findViewById(R.id.life_box_01);
-        life02 = (TextView) findViewById(R.id.life_box_02);
-        life03 = (TextView) findViewById(R.id.life_box_03);
-        life04 = (TextView) findViewById(R.id.life_box_04);
-        life05 = (TextView) findViewById(R.id.life_box_05);
-        life06 = (TextView) findViewById(R.id.life_box_06);
-
-        sport01 = (TextView) findViewById(R.id.sport_box_01);
-        sport02 = (TextView) findViewById(R.id.sport_box_02);
-        sport03 = (TextView) findViewById(R.id.sport_box_03);
-        sport04 = (TextView) findViewById(R.id.sport_box_04);
-        sport05 = (TextView) findViewById(R.id.sport_box_05);
-        sport06 = (TextView) findViewById(R.id.sport_box_06);
-
-        if(type.equals("common")){
-
-            mentee01.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mentee_01==false){
-                        mentee01.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        mentee01.setTextColor(getResources().getColor(R.color.mainBlue));
-                        mentee02.setTextColor(getResources().getColor(R.color.black));
-                        mentee03.setTextColor(getResources().getColor(R.color.black));
-                        mentee_01 = true;
-                        school_level = "초등학교";
-                    }else{
-                        mentee01.setBackgroundColor(Color.rgb(255,255,255));
-                        mentee01.setTextColor(getResources().getColor(R.color.black));
-                        mentee_01 = false;
-                        school_level = "";
-                    }
-                }
-            });
-
-            mentee02.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mentee_02==false){
-                        mentee02.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        mentee02.setTextColor(getResources().getColor(R.color.mainBlue));
-                        mentee01.setBackgroundColor(Color.rgb(255,255,255));
-                        mentee03.setBackgroundColor(Color.rgb(255,255,255));
-                        mentee_02 = true;
-                        school_level = "중학교";
-                    }else{
-                        mentee02.setBackgroundColor(Color.rgb(255,255,255));
-                        mentee02.setTextColor(getResources().getColor(R.color.black));
-                        mentee_02 = false;
-                        school_level = "";
-                    }
-                }
-            });
-
-            mentee03.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mentee_03==false){
-                        mentee03.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        mentee03.setTextColor(getResources().getColor(R.color.mainBlue));
-                        mentee01.setBackgroundColor(Color.rgb(255,255,255));
-                        mentee02.setBackgroundColor(Color.rgb(255,255,255));
-                        mentee_03 = true;
-                        school_level = "초등학교";
-                    }else{
-                        mentee03.setBackgroundColor(Color.rgb(255,255,255));
-                        mentee03.setTextColor(getResources().getColor(R.color.black));
-                        mentee_03 = false;
-                        school_level = "";
-                    }
-                }
-            });
-
-            mentor01.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mentor_01==false){
-                        mentor01.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        mentor01.setTextColor(getResources().getColor(R.color.mainBlue));
-                        mentor02.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor03.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor04.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor_01 = true;
-                        mentor_type = "감독";
-                    }else{
-                        mentor01.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor01.setTextColor(getResources().getColor(R.color.black));
-                        mentor_01 = false;
-                        mentor_type = " ";
-                    }
-                }
-            });
-
-            mentor02.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mentor_02==false){
-                        mentor02.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        mentor02.setTextColor(getResources().getColor(R.color.mainBlue));
-                        mentor01.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor03.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor04.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor_02 = true;
-                        mentor_type = "코치";
-                    }else{
-                        mentor02.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor02.setTextColor(getResources().getColor(R.color.black));
-                        mentor_02 = false;
-                        mentor_type = " ";
-                    }
-                }
-            });
-
-            mentor03.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mentor_03==false){
-                        mentor03.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        mentor03.setTextColor(getResources().getColor(R.color.mainBlue));
-                        mentor01.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor02.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor04.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor_03 = true;
-                        mentor_type = "현역선수";
-                    }else{
-                        mentor03.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor03.setTextColor(getResources().getColor(R.color.black));
-                        mentor_03 = false;
-                        mentor_type = " ";
-                    }
-                }
-            });
-
-            mentor04.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(mentor_04==false){
-                        mentor04.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        mentor04.setTextColor(getResources().getColor(R.color.mainBlue));
-                        mentor01.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor02.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor03.setBackgroundColor(Color.rgb(255,255,255));;
-                        mentor_04 = true;
-                        mentor_type = "은퇴선수";
-                    }else{
-                        mentor04.setBackgroundColor(Color.rgb(255,255,255));
-                        mentor04.setTextColor(getResources().getColor(R.color.black));
-                        mentor_04 = false;
-                        mentor_type = " ";
-                    }
-                }
-            });
-
-        }else if(type.equals("life")){
-
-            post_type = "life_expert_knowledge_feed";
-
-            life01.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(life_b01 == false){
-                        life01.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        life01.setTextColor(getResources().getColor(R.color.mainBlue));
-                        life_b01 = true;
-                        expert_type = "법률 전문가";
-                    }else{
-                        life01.setBackgroundColor(Color.rgb(255,255,255));
-                        life01.setTextColor(getResources().getColor(R.color.black));
-                        life_b01 = false;
-                        expert_type = "";
-                    }
-
-
-                }
-            });
-            life02.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(life_b02 == false){
-
-                        life02.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        life02.setTextColor(getResources().getColor(R.color.mainBlue));
-                        life_b02 = true;
-                        expert_type = "세무,회계 전문가";
-                    }else{
-                        life02.setBackgroundColor(Color.rgb(255,255,255));
-                        life02.setTextColor(getResources().getColor(R.color.black));
-                        life_b02 = false;
-                        expert_type = "";
-                    }
-
-
-                }
-            });
-            life03.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(life_b03 == false){
-
-                        life03.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        life03.setTextColor(getResources().getColor(R.color.mainBlue));
-                        life_b03 = true;
-                        expert_type = "부동산 전문가";
-                    }else{
-                        life03.setBackgroundColor(Color.rgb(255,255,255));
-                        life03.setTextColor(getResources().getColor(R.color.black));
-                        life_b03 = false;
-                        expert_type = "";
-                    }
-
-
-                }
-            });
-            life04.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(life_b04 == false){
-
-                        life04.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        life04.setTextColor(getResources().getColor(R.color.mainBlue));
-                        life_b04 = true;
-                        expert_type = "손해 사정인";
-                    }else{
-                        life04.setBackgroundColor(Color.rgb(255,255,255));
-                        life04.setTextColor(getResources().getColor(R.color.black));
-                        life_b04 = false;
-                        expert_type = "";
-                    }
-
-
-
-                }
-            });
-
-            life05.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    if(life_b05 == false){
-
-                        life05.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        life05.setTextColor(getResources().getColor(R.color.mainBlue));
-                        life_b05 = true;
-                        expert_type = "증권,투자 전문가";
-                    }else{
-                        life05.setBackgroundColor(Color.rgb(255,255,255));
-                        life05.setTextColor(getResources().getColor(R.color.black));
-                        life_b05 = false;
-                        expert_type = "";
-                    }
-
-
-                }
-            });
-            life06.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(life_b06 == false){
-
-                        life06.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        life06.setTextColor(getResources().getColor(R.color.mainBlue));
-                        life_b06 = true;
-                        expert_type = "보험 전문가";
-                    }else{
-                        life06.setBackgroundColor(Color.rgb(255,255,255));
-                        life06.setTextColor(getResources().getColor(R.color.black));
-                        life_b06 = false;
-                        expert_type = "";
-                    }
-
-
-
-                }
-            });
-        }else if(type.equals("sport")){
-
-            post_type = "sport_expert_knowledge_feed";
-
-            sport01.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(sport_b01 == false){
-
-                        sport01.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        sport01.setTextColor(getResources().getColor(R.color.mainBlue));
-                        sport_b01 = true;
-                        expert_type = "스포츠 의학";
-
-                    }else{
-                        sport01.setBackgroundColor(Color.rgb(255,255,255));
-                        sport01.setTextColor(getResources().getColor(R.color.black));
-                        sport_b01 = false;
-                        expert_type = "";
-                    }
-
-
-
-                }
-            });
-            sport02.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(sport_b02 == false){
-
-                        sport02.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        sport02.setTextColor(getResources().getColor(R.color.mainBlue));
-                        sport_b02 = true;
-                        expert_type = "스포츠 영양";
-                    }else{
-                        sport02.setBackgroundColor(Color.rgb(255,255,255));
-                        sport02.setTextColor(getResources().getColor(R.color.black));
-                        sport_b02 = false;
-                        expert_type = "";
-                    }
-
-                }
-            });
-
-            sport03.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(sport_b03 == false){
-
-                        sport03.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        sport03.setTextColor(getResources().getColor(R.color.mainBlue));
-                        sport_b03 = true;
-                        expert_type = "스포츠 의학";
-                    }else{
-                        sport03.setBackgroundColor(Color.rgb(255,255,255));
-                        sport03.setTextColor(getResources().getColor(R.color.black));
-                        sport_b03 = false;
-                        expert_type = "";
-                    }
-                }
-            });
-            sport04.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(sport_b04 == false){
-
-                        sport04.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        sport04.setTextColor(getResources().getColor(R.color.mainBlue));
-                        sport_b04 = true;
-                        expert_type = "스포츠 영양";
-                    }else{
-                        sport04.setBackgroundColor(Color.rgb(255,255,255));
-                        sport04.setTextColor(getResources().getColor(R.color.black));
-                        sport_b04 = false;
-                        expert_type = "";
-                    }
-
-                }
-            });
-
-            sport05.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(sport_b05 == false){
-
-                        sport05.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        sport05.setTextColor(getResources().getColor(R.color.mainBlue));
-                        sport_b05 = true;
-                        expert_type = "스포츠 재활";
-                    }else{
-                        sport05.setBackgroundColor(Color.rgb(255,255,255));
-                        sport05.setTextColor(getResources().getColor(R.color.black));
-                        sport_b05 = false;
-                        expert_type = "";
-                    }
-
-                }
-            });
-            sport06.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(sport_b06 == false){
-
-                        sport06.setBackground(getResources().getDrawable(R.drawable.filter_border));
-                        sport06.setTextColor(getResources().getColor(R.color.mainBlue));
-                        sport_b06 = true;
-                        expert_type = "스포츠 진로";
-                    }else{
-                        sport06.setBackgroundColor(Color.rgb(255,255,255));
-                        sport06.setTextColor(getResources().getColor(R.color.black));
-                        sport_b06 = false;
-                        expert_type = "";
-                    }
-                }
-            });
-
-        }
 
 
     }
