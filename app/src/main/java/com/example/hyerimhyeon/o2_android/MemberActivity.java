@@ -171,6 +171,8 @@ public class MemberActivity extends AppCompatActivity
     public void onStart(){
         super.onStart();
 
+
+
         Intent intent = getIntent();
         String member_type_str = "expert";
 
@@ -179,7 +181,7 @@ public class MemberActivity extends AppCompatActivity
         } else{
             member_type_str = intent.getStringExtra("member_type");
         }
-
+        Log.d("response" , "member start : " + member_type_str);
 
         if(member_type_str.equals("expert")){
             new GetUser().execute(new DBConnector());
@@ -265,6 +267,9 @@ public class MemberActivity extends AppCompatActivity
                     newsfeedItem.profile_url = jsonObject.getString("profile_url");
                     newsfeedItem.member_type = jsonObject.getString("member_type");
                     newsfeedItem.company = jsonObject.getString("company");
+                    newsfeedItem.sport_type = jsonObject.getString("sport_type");
+                    newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
+                    newsfeedItem.member_id = jsonObject.getString("id");
 
                     memberSearchAdapterActivity.add(newsfeedItem);
                     memberSearchAdapterActivity.notifyDataSetChanged();
@@ -319,7 +324,7 @@ public class MemberActivity extends AppCompatActivity
 
     public void settextToAdapter(JSONArray jsonArray) {
 
-//          Log.d("response" , "user : " + jsonArray.toString());
+          Log.d("response" , "expert user : " + jsonArray.toString());
 
         // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
         NewsfeedItem newsfeedItem;
@@ -339,16 +344,26 @@ public class MemberActivity extends AppCompatActivity
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
+
                     newsfeedItem.name = jsonObject.getString("name");
                     newsfeedItem.profile_url = jsonObject.getString("profile_url");
                     newsfeedItem.member_type = jsonObject.getString("member_type");
-                    newsfeedItem.company = jsonObject.getString("company");
+                    newsfeedItem.sport_type = jsonObject.getString("sport_type");
+                    newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
+                    newsfeedItem.company = jsonObject.getString("expert_type");
+                    newsfeedItem.member_id = jsonObject.getString("id");
+                    if(jsonObject.getString("expert_type").equals("life")){
+                        newsfeedItem.company = "생활체육";
+                    }
+
+                    Log.d("response", "expert url : " +  newsfeedItem.name + newsfeedItem.profile_url);
 
                     memberAdapterActivity.add(newsfeedItem);
                     memberAdapterActivity.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.d("response", "expert url e: " + e.toString());
                 }
 
             }
@@ -417,16 +432,25 @@ public class MemberActivity extends AppCompatActivity
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                    newsfeedItem.name = jsonObject.getString("name");
-                    newsfeedItem.profile_url = jsonObject.getString("profile_url");
-                    newsfeedItem.member_type = jsonObject.getString("member_type");
-                    newsfeedItem.company = jsonObject.getString("company");
+                    if(!jsonObject.getString("id").equals("26")){
+                        newsfeedItem.name = jsonObject.getString("name");
+                        newsfeedItem.profile_url = jsonObject.getString("profile_url");
+                        newsfeedItem.member_type = jsonObject.getString("member_type");
+                        newsfeedItem.company = jsonObject.getString("company");
+                        newsfeedItem.sport_type = jsonObject.getString("sport_type");
+                        newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
+                        newsfeedItem.member_id = jsonObject.getString("id");
 
-                    mentorMemberAdapterActivity.add(newsfeedItem);
-                    mentorMemberAdapterActivity.notifyDataSetChanged();
+                        Log.d("response", "mentor url : " +  newsfeedItem.member_id + newsfeedItem.profile_url);
+
+                        mentorMemberAdapterActivity.add(newsfeedItem);
+                        mentorMemberAdapterActivity.notifyDataSetChanged();
+                    }
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.d("response", "member url e: " + e.toString());
                 }
 
 
@@ -501,13 +525,18 @@ public class MemberActivity extends AppCompatActivity
                     newsfeedItem.name = jsonObject.getString("name");
                     newsfeedItem.profile_url = jsonObject.getString("profile_url");
                     newsfeedItem.member_type = jsonObject.getString("member_type");
-
+                    newsfeedItem.company = jsonObject.getString("company");
+                    newsfeedItem.sport_type = jsonObject.getString("sport_type");
+                    newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
+                    newsfeedItem.member_id = jsonObject.getString("id");
+                    Log.d("response", "mentee url : " + newsfeedItem.name + newsfeedItem.profile_url);
 
                     menteeMemberAdapterActivity.add(newsfeedItem);
                     menteeMemberAdapterActivity.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.d("response", "mentee url e : " + e.toString());
                 }
 
 

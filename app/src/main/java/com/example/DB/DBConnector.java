@@ -379,6 +379,8 @@ public class DBConnector {
         return  jsonObject;
     }
 
+
+
     public static JSONObject UploadImage(File image, String token) {
 
         JSONObject jsonObject = null;
@@ -698,6 +700,38 @@ public class DBConnector {
         return jsonArray;
     }
 
+    public  JSONArray GetPost_User(String token, String user_id){
+
+        // Log.d("response","res toekn : " + token);
+        JSONArray jsonArray = null;
+        //   Log.d("response","getPost token : " + token.toString());
+
+        try {
+            URL url = new URL("http://o-two-sport.com/api/posts/?user_id="+user_id);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Authorization","Token " +token);
+            conn.connect();
+
+            InputStream is = conn.getInputStream();
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+
+            //      Log.d("response","post reponse : " + responseStrBuilder.toString());
+            jsonArray = new JSONArray(responseStrBuilder.toString());
+
+        } catch (IOException | JSONException e) {
+
+            e.printStackTrace();
+            //    Log.d("response","post reponse2 : " + e.toString());
+        }
+
+        return jsonArray;
+    }
+
     public  JSONArray GetPost_sport(String token, String sport_type){
 
         // Log.d("response","res toekn : " + token);
@@ -996,6 +1030,47 @@ public class DBConnector {
         } catch (ClientProtocolException e) {
             e.printStackTrace();
         //      Log.d("response2", "response2 : " + e.toString());
+            // TODO Auto-generated catch block
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            // TODO Auto-generated catch block
+        }
+
+        return  jsonObject;
+    }
+
+
+    public static JSONObject PutComment(String token, String comment_id, String content){
+
+
+        JSONObject jsonObject = null;
+
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPut httppost = new HttpPut("http://o-two-sport.com/api/comments/"+comment_id+"/");
+        httppost.addHeader("Authorization","Token " +token);
+
+        try {
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+            nameValuePairs.add(new BasicNameValuePair("content",content));
+
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+            String bobo = EntityUtils.toString(response.getEntity());
+
+
+            jsonObject = new JSONObject(bobo.toString());
+
+                    //Log.d("response2", "response1 : " + jsonObject.toString());
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+                  //Log.d("response2", "response2 : " + e.toString());
             // TODO Auto-generated catch block
         } catch (IOException | JSONException e) {
             e.printStackTrace();

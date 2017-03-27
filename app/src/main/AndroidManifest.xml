@@ -36,7 +36,7 @@
         android:hardwareAccelerated="false"
         android:largeHeap="true">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.hyerimhyeon.o2_android.MainActivity"
             android:label="O2 Sport"
             android:theme="@style/CustomTheme"
             android:hardwareAccelerated="false">

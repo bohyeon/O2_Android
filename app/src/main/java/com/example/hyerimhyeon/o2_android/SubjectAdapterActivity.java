@@ -2,7 +2,6 @@ package com.example.hyerimhyeon.o2_android;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,12 +58,12 @@ public class SubjectAdapterActivity extends ArrayAdapter<String> {
             convertView.setTag(vh);
 
             //mBackgroundColors.add(R.drawable.basketball);
-            Log.d("response" , "mbackground size : " + mBackgroundColors.size());
+          //  Log.d("response" , "mbackground size : " + mBackgroundColors.size());
             if (position < mBackgroundColors.size()){
                 convertView.setBackgroundResource(mBackgroundColors.get(position));
 
 
-                Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
+//                Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
 
                 vh.txtLineOne.setHeightRatio(1);
                 vh.txtLineOne.setText(getItem(position) + position);
@@ -77,12 +76,12 @@ public class SubjectAdapterActivity extends ArrayAdapter<String> {
             //mBackgroundColors.add(R.drawable.basketball);
 
             //mBackgroundColors.add(R.drawable.basketball);
-            Log.d("response" , "mbackground size : " + mBackgroundColors.size());
+           // Log.d("response" , "mbackground size : " + mBackgroundColors.size());
             if (position < mBackgroundColors.size()){
                 convertView.setBackgroundResource(mBackgroundColors.get(position));
 
 
-                Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
+              //  Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
 
                 vh.txtLineOne.setHeightRatio(1);
                 vh.txtLineOne.setText(getItem(position) + position);
@@ -108,7 +107,7 @@ public class SubjectAdapterActivity extends ArrayAdapter<String> {
         if (ratio == 0) {
             ratio = getRandomHeightRatio();
             sPositionHeightRatios.append(position, ratio);
-            Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
+           // Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
         }
         return 1;
     }

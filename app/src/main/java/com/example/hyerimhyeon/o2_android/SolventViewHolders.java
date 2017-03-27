@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +37,7 @@ public class SolventViewHolders extends RecyclerView.ViewHolder implements View.
     @Override
     public void onClick(View view) {
 
-        Toast.makeText(view.getContext(), "Clicked Position = " + getPosition(), Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(view.getContext(), "Clicked Position = " + getPosition(), Toast.LENGTH_SHORT).show();
 
         String str = strings.get(getPosition());
         Intent intent = new Intent(view.getContext() , SubjectFeedActivity2.class);

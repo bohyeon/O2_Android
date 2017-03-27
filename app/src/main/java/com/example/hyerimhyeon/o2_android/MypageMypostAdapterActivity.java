@@ -284,13 +284,6 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 }
             });
 
-            viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
-                    ((Activity) getContext()).startActivity(intent);
-                }
-            });
 
             viewHolder.content_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -647,15 +640,6 @@ public class MypageMypostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 });
 
             }
-
-            viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
-                    ((Activity) getContext()).startActivity(intent);
-                }
-            });
-
 
 
             viewHolder.content_layout.setOnClickListener(new View.OnClickListener() {

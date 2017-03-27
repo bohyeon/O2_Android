@@ -109,7 +109,7 @@ public class InviteActivity extends AppCompatActivity
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.invite_img3, options);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.invite_img2, options);
 
         invite_img.setImageBitmap(bitmap);
 

@@ -129,7 +129,7 @@ public class SearchfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             }else{
                 if(!newfeedItemPosition.youtube_id.equals("") ){
                     viewHolder.youtube_layout.setBackground(null);
-                    Log.d("response", "youtube ㅅㅂ : " + newfeedItemPosition.youtube_id);
+                  //  Log.d("response", "youtube ㅅㅂ : " + newfeedItemPosition.youtube_id);
                     youtube_link = newfeedItemPosition.youtube_link;
                     //   new GetYoutube().execute(new DBConnector());
                     // new DownLoadImageTask_youtube(viewHolder.youtube_img).execute("http://img.youtube.com/vi/"+newfeedItemPosition.youtube_id+"/1.jpg");

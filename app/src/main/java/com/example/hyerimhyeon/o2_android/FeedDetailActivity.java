@@ -126,6 +126,9 @@ public class FeedDetailActivity extends AppCompatActivity
 
         String type_str = "";
 
+        if(intent.getStringExtra("type") == null){
+
+        }else{
             if(intent.getStringExtra("type").equals("mentor")){
                 type_str = "멘토";
             }else if(intent.getStringExtra("type").equals("mentee")){
@@ -136,8 +139,10 @@ public class FeedDetailActivity extends AppCompatActivity
 
             type.setText(type_str);
 
-       // type.setText(intent.getStringExtra("type"));
-        belong.setText(intent.getStringExtra("belong"));
+            // type.setText(intent.getStringExtra("type"));
+            belong.setText(intent.getStringExtra("belong"));
+        }
+
 
 
         if(!intent.getStringExtra("type").equals("mentee")){

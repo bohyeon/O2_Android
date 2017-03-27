@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,7 +52,7 @@ public class OtherPageActivity extends AppCompatActivity
     ImageView profile_img;
     Handler handler;
     TextView nametv, typetv, companytv;
-    String token;
+    String token, id, member_id;
     DrawerLayout drawer;
     private static final int REQUEST_INTERNET = 1;
     public SharedPreferences loginPreferences;
@@ -85,34 +84,49 @@ public class OtherPageActivity extends AppCompatActivity
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
 
+
+
         nametv = (TextView) findViewById(R.id.mypage_name);
         typetv = (TextView) findViewById(R.id.mypage_type);
         companytv = (TextView) findViewById(R.id.mypage_company);
         profile_img = (ImageView) findViewById(R.id.mypage_profile_img);
 
-     //   Log.d("response" , "myname: " + loginPreferences.getString("name" , ""));
-        nametv.setText(loginPreferences.getString("name",""));
-        typetv.setText(loginPreferences.getString("type",""));
-        if(loginPreferences.getString("company","")!=null){
-            companytv.setText(loginPreferences.getString("company",""));
+        Intent intent = getIntent();
+        //   Log.d("response" , "myname: " + loginPreferences.getString("name" , ""));
+        nametv.setText(intent.getStringExtra("name"));
+        if(intent.getStringExtra("member_type").equals("expert")){
+            typetv.setText("전문가");
+            companytv.setText(intent.getStringExtra("expert_type"));
+        }else if(intent.getStringExtra("member_type").equals("mentor")){
+            typetv.setText("멘토");
+            companytv.setText(intent.getStringExtra("company"));
         }else{
-            companytv.setText("");
+            typetv.setText("꿈나무");
+            companytv.setText(intent.getStringExtra("sport_type"));
         }
 
-        if(loginPreferences.getString("profile_url","").equals("")|| loginPreferences.getString("profile_url","") == null|| loginPreferences.getString("profile_url","") == " "|| loginPreferences.getString("profile_url","") == "null"|| loginPreferences.getString("profile_url","") == "" || loginPreferences.getString("profile_url","")=="http://" || loginPreferences.getString("profile_url","")=="http://null" || loginPreferences.getString("profile_url","").equals("http://") || loginPreferences.getString("profile_url","").equals("http:/null/")){
+//        if(loginPreferences.getString("company","")!=null){
+//            companytv.setText(loginPreferences.getString("company",""));
+//        }else{
+//            companytv.setText("");
+//        }
+        member_id = intent.getStringExtra("member_id");
+
+        if(  intent.getStringExtra("profile_url").equals("")||   intent.getStringExtra("profile_url") == null||   intent.getStringExtra("profile_url") == " "||   intent.getStringExtra("profile_url") == "null"||   intent.getStringExtra("profile_url") == "" ||   intent.getStringExtra("profile_url")=="http://" ||   intent.getStringExtra("profile_url")=="http://null" ||   intent.getStringExtra("profile_url").equals("http://") ||   intent.getStringExtra("profile_url").equals("http:/null/")){
 
         }else{
             int permissionCamera = ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NETWORK_STATE);
             if(permissionCamera == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_INTERNET);
             } else {
-                new DownLoadImageTask_profile(profile_img).execute("http://" + loginPreferences.getString("profile_url",""));
+                new DownLoadImageTask_profile(profile_img).execute("http://" + intent.getStringExtra("profile_url"));
 
             }
             // Log.d("response2", "response img: " + uri);
             // image.setImageURI(uri);
         }
         token = loginPreferences.getString("token","");
+        id = loginPreferences.getString("id","");
 
         backBtn = (ImageButton) findViewById(R.id.mypage_backBtn);
 
@@ -129,21 +143,7 @@ public class OtherPageActivity extends AppCompatActivity
         buttonStateOpen = false;
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         menu_icon = (ImageButton) findViewById(R.id.mypage_backBtn);
-        menu_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (buttonStateOpen == false) {
-                    drawer.openDrawer(Gravity.LEFT);
-                    buttonStateOpen = true;
-                } else if (buttonStateOpen == true) {
-                    drawer.closeDrawer(Gravity.LEFT);
-                    buttonStateOpen = false;
-                }
-
-            }
-        });
-
+        menu_icon.setBackgroundResource(0);
 
     }
 
@@ -198,13 +198,13 @@ public class OtherPageActivity extends AppCompatActivity
         if(permissionReadStorage == PackageManager.PERMISSION_DENIED ) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_EXTERNAL_STORAGE);
         } else {
-            new GetMyPost().execute(new DBConnector());
+            new GetPost_User().execute(new DBConnector());
         }
 
     }
 
 
-    private class GetMyPost extends AsyncTask<DBConnector, Long, JSONArray> {
+    private class GetPost_User extends AsyncTask<DBConnector, Long, JSONArray> {
 
 
         @Override
@@ -212,7 +212,7 @@ public class OtherPageActivity extends AppCompatActivity
 
             //it is executed on Background thread
 
-            return params[0].GetMyPost(token);
+            return params[0].GetPost_User(token, member_id);
 
         }
 
@@ -251,7 +251,9 @@ public class OtherPageActivity extends AppCompatActivity
 
 
         if(jsonArray == null){
-            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
+            mypageMypostAdapterActivity.clear();
+            mypageMypostAdapterActivity.notifyDataSetChanged();
+            Toast.makeText(getApplicationContext(), "포스트가 없습니다.",
                     Toast.LENGTH_LONG).show();
         }else{
 
@@ -260,7 +262,6 @@ public class OtherPageActivity extends AppCompatActivity
             for(int i = 0 ; i<jsonArray.length(); i++){
 
                 newsfeedItem = new NewsfeedItem();
-
 
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -275,7 +276,7 @@ public class OtherPageActivity extends AppCompatActivity
                     newsfeedItem.youtube_link = jsonObject.getString("youtube_link");
                     newsfeedItem.like_num = jsonObject.getString("like_num");
                     newsfeedItem.comment_num = jsonObject.getString("comment_num");
-                    newsfeedItem.regist_date = jsonObject.getString("timestamp");
+                    newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
                     newsfeedItem.is_like = jsonObject.getBoolean("is_like");
                     newsfeedItem.post_id = jsonObject.getString("id");
                     newsfeedItem.member_type = userJsonObj.getString("member_type");
@@ -283,30 +284,39 @@ public class OtherPageActivity extends AppCompatActivity
                     newsfeedItem.sport_type = userJsonObj.getString("sport_type");
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                    newsfeedItem.member_id = userJsonObj.getString("id");
+                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
 
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
                     }else{
                         String str = newsfeedItem.youtube_link;
                         String video_id = "";
-                        if(str.indexOf("&") > 0){
-                            video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
-                        }else{
-                            video_id = str.substring(str.indexOf("=")+1);
-                        }
-                        newsfeedItem.youtube_id = video_id;
-                    }
 
-                    mypageMypostAdapterActivity.notifyDataSetChanged();
+                        if(str.toString().indexOf("youtube.com") != -1) {
+                            if(str.indexOf("&") > 0){
+                                video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
+                            }else{
+                                video_id = str.substring(str.indexOf("=")+1);
+                            }
+                        }else if(str.toString().indexOf("youtu.be") != -1 ){
+                            //   Log.d("response", "youtube_str :  "+ str);
+                            video_id = str.substring(17);
+                          //  Log.d("response", "youtube_id :  "+ video_id);
+                        }
+
+                        newsfeedItem.youtube_id = video_id;
+
+                    }
                     mypageMypostAdapterActivity.add(newsfeedItem);
+                    mypageMypostAdapterActivity.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+
             }
-
-
 
         }
 

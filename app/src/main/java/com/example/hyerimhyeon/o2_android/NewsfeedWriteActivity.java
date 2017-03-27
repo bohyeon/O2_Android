@@ -62,6 +62,7 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
     String post_img_url = "";
     String youtube_link = "";
     String youtube_title = "";
+    String sport_type;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 2;
     private static final int REQUEST_CAMERA = 1;
@@ -95,6 +96,13 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
         // post_type 받아오기
         Intent intent = getIntent();
         post_type = intent.getStringExtra("post_type");
+
+        if(intent.getStringExtra("sport_type")==null){
+
+        }else{
+            sport_type = intent.getStringExtra("sport_type");
+            Log.d("response" , "sport_type :" + sport_type);
+        }
 //
 //        galleryBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override

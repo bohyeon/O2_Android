@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -328,20 +327,7 @@ public class SearchFeedActivity extends AppCompatActivity
         buttonStateOpen = false;
 
         ImageButton menu_icon = (ImageButton) findViewById(R.id.actionbar_menu);
-        menu_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                if (buttonStateOpen == false) {
-                    drawer.openDrawer(Gravity.LEFT);
-                    buttonStateOpen = true;
-                } else if (buttonStateOpen == true) {
-                    drawer.closeDrawer(Gravity.LEFT);
-                    buttonStateOpen = false;
-                }
-
-            }
-        });
+        menu_icon.setBackgroundResource(0);
 
         ImageButton search_icon = (ImageButton) findViewById(R.id.actionbar_search);
         search_icon.setBackgroundResource(0);

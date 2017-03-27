@@ -91,7 +91,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:text="삼성생명 축구팀"
-                android:layout_marginTop="3dp"/>
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="10dp"/>
 
         </LinearLayout>
 

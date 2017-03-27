@@ -17,7 +17,7 @@
             android:id="@+id/comment_profile_img"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:background="@drawable/main_top_pic"/>
+            android:background="@drawable/blankimg"/>
 
     </LinearLayout>
 

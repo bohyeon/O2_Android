@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -187,7 +187,7 @@ public class SubjectFeedActivity2 extends AppCompatActivity
                         }else if(str.toString().indexOf("youtu.be") != -1 ){
                             //   Log.d("response", "youtube_str :  "+ str);
                             video_id = str.substring(17);
-                            Log.d("response", "youtube_id :  "+ video_id);
+                        //    Log.d("response", "youtube_id :  "+ video_id);
                         }
 
                         newsfeedItem.youtube_id = video_id;
@@ -260,6 +260,40 @@ public class SubjectFeedActivity2 extends AppCompatActivity
         ImageButton menu_icon = (ImageButton) findViewById(R.id.actionbar_menu);
         menu_icon.setBackgroundResource(0);
 
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+        bottomNavigationView.removeAllViews();
+//        bottomNavigationView.setOnNavigationItemSelectedListener(
+//                new BottomNavigationView.OnNavigationItemSelectedListener() {
+//                    @Override
+//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                        switch (item.getItemId()) {
+//                            case R.id.home_item:
+//                                Intent intent3 = new Intent(SubjectFeedActivity2.this, MainActivity.class);
+//                                startActivity(intent3);
+//                                finish();
+//                                return true;
+//                            case R.id.noty_item:
+//                                Intent intent = new Intent(SubjectFeedActivity2.this, MypageActivity.class);
+//                                startActivity(intent);
+//                                finish();
+//                                return true;
+//                            case R.id.write_item:
+//
+//                                Intent intent2 = new Intent(SubjectFeedActivity2.this, NewsfeedWriteActivity.class);
+//                                intent2.putExtra("post_type", "sport_knowledge_feed");
+//                                intent2.putExtra("sport_type", sport_type);
+//                                startActivityForResult(intent2, 300);
+//
+//                                return true;
+////                            case R.id.setting_item:
+////                                Intent intent1 = new Intent(ExpertFeedActivity.this, MypageActivity.class);
+////                                startActivity(intent1);
+////                                return true;
+//                        }
+//                        return true;
+//                    }
+//                });
 
         return true;
     }

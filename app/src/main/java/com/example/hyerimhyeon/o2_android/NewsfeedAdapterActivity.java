@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
@@ -33,7 +32,6 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
@@ -485,9 +483,17 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                    intent.putExtra("name",newfeedItemPosition.name);
+                    intent.putExtra("company",newfeedItemPosition.company);
+                    intent.putExtra("member_type",newfeedItemPosition.member_type);
+                    intent.putExtra("expert_type",newfeedItemPosition.expert_type);
+                    intent.putExtra("sport_type",newfeedItemPosition.sport_type);
+                    intent.putExtra("member_id",newfeedItemPosition.member_id);
+                    intent.putExtra("profile_url",newfeedItemPosition.profile_url);
                     ((Activity) getContext()).startActivity(intent);
                 }
             });
+
 
             viewHolder.content_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -843,15 +849,22 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                     }
                 });
 
+                viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                        intent.putExtra("name",newfeedItemPosition.name);
+                        intent.putExtra("company",newfeedItemPosition.company);
+                        intent.putExtra("member_type",newfeedItemPosition.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition.sport_type);
+                        intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                        ((Activity) getContext()).startActivity(intent);
+                    }
+                });
             }
 
-            viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
-                    ((Activity) getContext()).startActivity(intent);
-                }
-            });
 
 
 
@@ -1339,70 +1352,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
         }
     }
 
-//    public static String getTitleQuietly(String youtubeUrl) {
-//        try {
-//            if (youtubeUrl != null) {
-//                URL embededURL = new URL("http://www.youtube.com/oembed?url=" +
-//                        youtubeUrl + "&format=json"
-//                );
-//
-//                return new JSONObject(IOUtils.toString(embededURL)).getString("title");
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 
-    private static int exifToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
-        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
-        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
-        return 0;
-    }
-
-    public synchronized static int GetExifOrientation(String filepath)
-    {
-        int degree = 0;
-        ExifInterface exif = null;
-
-        try
-        {
-            exif = new ExifInterface(filepath);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        if (exif != null)
-        {
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
-
-            if (orientation != -1)
-            {
-                // We only recognize a subset of orientation tag values.
-                switch(orientation)
-                {
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        degree = 90;
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        degree = 180;
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        degree = 270;
-                        break;
-                }
-
-            }
-        }
-
-        return degree;
-    }
 }
 
 

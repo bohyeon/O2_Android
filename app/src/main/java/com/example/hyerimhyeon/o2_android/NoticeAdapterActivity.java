@@ -285,6 +285,13 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                    intent.putExtra("name",newfeedItemPosition.name);
+                    intent.putExtra("company",newfeedItemPosition.company);
+                    intent.putExtra("member_type",newfeedItemPosition.member_type);
+                    intent.putExtra("expert_type",newfeedItemPosition.expert_type);
+                    intent.putExtra("sport_type",newfeedItemPosition.sport_type);
+                    intent.putExtra("member_id",newfeedItemPosition.member_id);
+                    intent.putExtra("profile_url",newfeedItemPosition.profile_url);
                     ((Activity) getContext()).startActivity(intent);
                 }
             });
@@ -643,15 +650,24 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     }
                 });
 
+                viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                        intent.putExtra("name",newfeedItemPosition.name);
+                        intent.putExtra("company",newfeedItemPosition.company);
+                        intent.putExtra("member_type",newfeedItemPosition.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition.sport_type);
+                        intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                        ((Activity) getContext()).startActivity(intent);
+                    }
+                });
+
             }
 
-            viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
-                    ((Activity) getContext()).startActivity(intent);
-                }
-            });
+
 
 
 
