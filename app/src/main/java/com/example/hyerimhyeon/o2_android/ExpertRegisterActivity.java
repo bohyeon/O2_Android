@@ -319,8 +319,9 @@ public class ExpertRegisterActivity extends AppCompatActivity
                         loginPrefsEditor.putString("experience_2",experience_2);
                         loginPrefsEditor.putString("experience_3",experience_3);
                         loginPrefsEditor.putString("company",company);
-                        loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
+                        loginPrefsEditor.putString("token",jsonObject.getString("token"));
                         loginPrefsEditor.putString("member_type","expert");
+                        loginPrefsEditor.putString("is_receive_push","true");
                         loginPrefsEditor.putBoolean("saveLogin", true);
                         loginPrefsEditor.commit();
 
@@ -344,7 +345,7 @@ public class ExpertRegisterActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "이메일 형식을 맞춰서 작성해주세요!",
                             Toast.LENGTH_LONG).show();
                 }else{
-                        Toast.makeText(getApplicationContext(), jsonObject.toString(),
+                        Toast.makeText(getApplicationContext(), e.toString(),
                                 Toast.LENGTH_LONG).show();
                 }
             }

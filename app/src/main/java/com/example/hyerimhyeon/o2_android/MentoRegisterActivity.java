@@ -362,6 +362,7 @@ public class MentoRegisterActivity extends AppCompatActivity
                 loginPrefsEditor.putString("region",region);
                 loginPrefsEditor.putString("mentor_type",mentor_type);
                 loginPrefsEditor.putString("member_type","mentor");
+                loginPrefsEditor.putString("is_receive_push", "true");
                 loginPrefsEditor.putString("company",company);
 
                 //loginPrefsEditor.putString("school_name",schcool_name_str);

@@ -313,8 +313,9 @@ public class ChildRegisterActivity extends AppCompatActivity
                 loginPrefsEditor.putString("region",region);
                 loginPrefsEditor.putString("school_level",school_level);
                 loginPrefsEditor.putString("school_name",schcool_name_str);
-                loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
+                loginPrefsEditor.putString("token",jsonObject.getString("token"));
                 loginPrefsEditor.putString("member_type","mentee");
+                loginPrefsEditor.putString("is_receive_push","true");
                 loginPrefsEditor.putBoolean("saveLogin", true);
 
                 loginPrefsEditor.commit();

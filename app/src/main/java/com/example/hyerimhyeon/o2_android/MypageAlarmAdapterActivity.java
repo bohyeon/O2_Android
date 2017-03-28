@@ -7,19 +7,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class MypageAlarmAdapterActivity extends ArrayAdapter<NewsfeedItem> {
+public class MypageAlarmAdapterActivity extends ArrayAdapter<NewsfeedItem_Noti> {
 
     LayoutInflater layoutInflater;
-    NewsFeed newsFeed;
+    NewsFeed_Noti newsFeed;
     MypageActivity mypageActivity;
     Context context;
-    NewsfeedItem newsfeedItem;
+    NewsfeedItem_Noti newsfeedItem;
 
     MypageAlarmAdapterActivity newsfeedAdapterActivity;
 
     TextView content, date;
 
-    public MypageAlarmAdapterActivity(Context context, NewsFeed newsFeed, MypageActivity mypageActivity) {
+    public MypageAlarmAdapterActivity(Context context, NewsFeed_Noti newsFeed, MypageActivity mypageActivity) {
 
         super(context, R.layout.activity_alarm_item, newsFeed.newsfeedItem);
 
@@ -42,7 +42,7 @@ public class MypageAlarmAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             content = (TextView) itemView.findViewById(R.id.alarm_content);
             date = (TextView) itemView.findViewById(R.id.alarm_date);
 
-            final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+            final NewsfeedItem_Noti newfeedItemPosition = newsFeed.newsfeedItem.get(position);
             content.setText("김진흥님이 댓글을 달았습니다.");
             date.setText(newfeedItemPosition.regist_date);
 
@@ -57,7 +57,7 @@ public class MypageAlarmAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
             if(newsFeed.newsfeedItem.size() != 0){
 
-                final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+                final NewsfeedItem_Noti newfeedItemPosition = newsFeed.newsfeedItem.get(position);
                 content.setText("김진흥님이 댓글을 달았습니다.");
                 date.setText(newfeedItemPosition.regist_date);
 

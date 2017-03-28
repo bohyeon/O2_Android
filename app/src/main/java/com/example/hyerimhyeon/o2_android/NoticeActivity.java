@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -233,6 +235,10 @@ public class NoticeActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
     }
 
     @Override
@@ -286,37 +292,37 @@ public class NoticeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-//                findViewById(R.id.bottom_navigation);
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener(
-//                new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                    @Override
-//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.home_item:
-//                                //home is here
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.home_item:
+                                //home is here
+                                return true;
+                            case R.id.noty_item:
+                                Intent intent = new Intent(NoticeActivity.this, MypageActivity.class);
+                                startActivity(intent);
+                                return true;
+                            case R.id.write_item:
+
+                                Intent intent2 = new Intent(NoticeActivity.this, NewsfeedWriteActivity.class);
+                                intent2.putExtra("post_type", "notice");
+
+                                startActivityForResult(intent2, 300);
+
+                                return true;
+//                            case R.id.setting_item:
+//                                Intent intent1 = new Intent(ExpertFeedActivity.this, MypageActivity.class);
+//                                startActivity(intent1);
 //                                return true;
-//                            case R.id.noty_item:
-//                                Intent intent = new Intent(NoticeActivity.this, MypageActivity.class);
-//                                startActivity(intent);
-//                                return true;
-//                            case R.id.write_item:
-//
-//                                Intent intent2 = new Intent(NoticeActivity.this, NewsfeedWriteActivity.class);
-//                                intent2.putExtra("post_type", "sport_expert_knowledge_feed");
-//
-//                                startActivityForResult(intent2, 300);
-//
-//                                return true;
-////                            case R.id.setting_item:
-////                                Intent intent1 = new Intent(ExpertFeedActivity.this, MypageActivity.class);
-////                                startActivity(intent1);
-////                                return true;
-//                        }
-//                        return true;
-//                    }
-//                });
+                        }
+                        return true;
+                    }
+                });
 
 
         return true;

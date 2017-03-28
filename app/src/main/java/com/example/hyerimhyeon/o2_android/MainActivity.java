@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         id = loginPreferences.getString("id", "");
 
 
-        //    Log.d("response" , "main token : " + token);
+            Log.d("response" , "response main token : " + token);
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
 
@@ -138,53 +138,6 @@ public class MainActivity extends AppCompatActivity
         this.newsFeed = NewsFeed.getNewsFeed();
         this.newsfeedAdapterActivity = new NewsfeedAdapterActivity(this, newsFeed, this);
         this.newsfeedLv.setAdapter(newsfeedAdapterActivity);
-
-//        newsfeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-////                Intent intent = new Intent(MainActivity.this, FeedDetailActivity.class);
-////                startActivity(intent);
-//            }
-//        });
-
-//        newsfeedLv.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            private int currentVisibleItemCount;
-//            private int currentScrollState;
-//            private int currentFirstVisibleItem;
-//            private int totalItem;
-//            private LinearLayout lBelow;
-//
-//
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                // TODO Auto-generated method stub
-//                this.currentScrollState = scrollState;
-//                this.isScrollCompleted();
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem,
-//                                 int visibleItemCount, int totalItemCount) {
-//                // TODO Auto-generated method stub
-//                this.currentFirstVisibleItem = firstVisibleItem;
-//                this.currentVisibleItemCount = visibleItemCount;
-//                this.totalItem = totalItemCount;
-//
-//
-//            }
-//
-//            private void isScrollCompleted() {
-//                if (totalItem - currentFirstVisibleItem == currentVisibleItemCount
-//                        && this.currentScrollState == SCROLL_STATE_IDLE) {
-//                    /** To do code here*/
-//
-//                    Log.d("response" , "scrollllll");
-//
-//                }
-//            }
-//        });
-
 
 
     }
@@ -453,6 +406,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+
     }
 
     @Override

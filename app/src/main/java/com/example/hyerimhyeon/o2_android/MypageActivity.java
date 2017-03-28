@@ -49,7 +49,8 @@ public class MypageActivity extends AppCompatActivity
     MypageMypostAdapterActivity mypageMypostAdapterActivity;
     MypageAlarmAdapterActivity mypageAlarmAdapterActivity;
     MypageCommentAdapterActivity mypageCommentAdapterActivity;
-    NewsFeed newsFeed , newsFeed2;
+    NewsFeed newsFeed;
+    NewsFeed_Noti newsFeed2;
     NewsFeed_Comment newsFeed3;
     ImageView profile_img;
     Handler handler;
@@ -88,7 +89,6 @@ public class MypageActivity extends AppCompatActivity
          loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         id = loginPreferences.getString("id","");
         token = loginPreferences.getString("token","");
-      //  Log.d("response" , "user id : " + id);
 
 
         nametv = (TextView) findViewById(R.id.mypage_name);
@@ -96,15 +96,12 @@ public class MypageActivity extends AppCompatActivity
         companytv = (TextView) findViewById(R.id.mypage_company);
         profile_img = (ImageView) findViewById(R.id.mypage_profile_img);
 
-     //   Log.d("response" , "myname: " + loginPreferences.getString("name" , ""));
 
         String name_encode = "";
         try {
             name_encode = URLDecoder.decode(loginPreferences.getString("name",""),"UTF-8");
-            Log.d("name_encode : ","" + name_encode);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            Log.d("name_encode e :","" + e.toString());
         }
         nametv.setText(name_encode);
         typetv.setText(loginPreferences.getString("type",""));
@@ -124,8 +121,6 @@ public class MypageActivity extends AppCompatActivity
                 new DownLoadImageTask_profile(profile_img).execute("http://" + loginPreferences.getString("profile_url",""));
 
             }
-            // Log.d("response2", "response img: " + uri);
-            // image.setImageURI(uri);
         }
         token = loginPreferences.getString("token","");
 
@@ -169,7 +164,7 @@ public class MypageActivity extends AppCompatActivity
         this.mypageMypostAdapterActivity = new MypageMypostAdapterActivity(this, newsFeed, this);
         this.mypage_mypost.setAdapter(mypageMypostAdapterActivity);
 
-        this.newsFeed2 = NewsFeed.getNewsFeed();
+        this.newsFeed2 = NewsFeed_Noti.getNewsFeed();
         this.mypageAlarmAdapterActivity = new MypageAlarmAdapterActivity(this, newsFeed2, this);
         this.alarm_lv.setAdapter(mypageAlarmAdapterActivity);
 
@@ -256,6 +251,7 @@ public class MypageActivity extends AppCompatActivity
         } else {
             new GetMyPost().execute(new DBConnector());
             new GetMyCommentPost().execute(new DBConnector());
+            new GetNoti().execute(new DBConnector());
         }
 
     }
@@ -379,6 +375,86 @@ public class MypageActivity extends AppCompatActivity
 
     }
 
+    private class GetNoti extends AsyncTask<DBConnector, Long, JSONArray> {
+
+
+        @Override
+        protected JSONArray doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+
+            return params[0].GetNoti(token);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONArray jsonArray) {
+
+            settextToAdapter_noti(jsonArray);
+
+            handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    try {
+
+                        mypageAlarmAdapterActivity.notifyDataSetChanged();
+
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }, 100);
+
+
+        }
+    }
+
+    public void settextToAdapter_noti(JSONArray jsonArray) {
+
+        Log.d("response" , "comment post : " + jsonArray);
+
+        // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
+        NewsfeedItem_Noti newsfeedItem;
+
+
+        if(jsonArray == null){
+//            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
+//                    Toast.LENGTH_LONG).show();
+        }else{
+
+            mypageAlarmAdapterActivity.clear();
+
+            for(int i = 0 ; i<jsonArray.length(); i++){
+
+                newsfeedItem = new NewsfeedItem_Noti();
+
+
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject userJsonObj = jsonObject.getJSONObject("user");
+
+                    newsfeedItem.name = userJsonObj.getString("name");
+
+
+                    mypageAlarmAdapterActivity.add(newsfeedItem);
+                    mypageAlarmAdapterActivity.notifyDataSetChanged();
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+
+        }
+
+    }
 
 
 
@@ -514,6 +590,10 @@ public class MypageActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
     }
 
 

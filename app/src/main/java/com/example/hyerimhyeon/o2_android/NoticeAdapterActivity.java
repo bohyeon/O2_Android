@@ -240,11 +240,17 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                 viewHolder.type.setText(type_str);
 
-                if(!newfeedItemPosition.member_type.equals("mentee")){
+
+                if(newfeedItemPosition.member_type.equals("mentor")){
                     viewHolder.belong.setText(newfeedItemPosition.company);
+                }else if(newfeedItemPosition.member_type.equals("expert")){
+                    // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
+                    viewHolder.belong.setText(newfeedItemPosition.expert_type);
                 }else{
-                    viewHolder.belong.setText("");
+                    viewHolder.belong.setText(" ");
                 }
+
+
             }else{
                 viewHolder.type.setText("");
                 viewHolder.belong.setText("");
@@ -607,10 +613,14 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     }
                     viewHolder.type.setText(type_str);
 
-                    if(!newfeedItemPosition.member_type.equals("mentee")){
+
+                    if(newfeedItemPosition.member_type.equals("mentor")){
                         viewHolder.belong.setText(newfeedItemPosition.company);
+                    }else if(newfeedItemPosition.member_type.equals("expert")){
+                        // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
+                        viewHolder.belong.setText(newfeedItemPosition.expert_type);
                     }else{
-                        viewHolder.belong.setText("");
+                        viewHolder.belong.setText(" ");
                     }
 
                 }else{

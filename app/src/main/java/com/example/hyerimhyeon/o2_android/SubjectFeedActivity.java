@@ -146,6 +146,10 @@ public class SubjectFeedActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
     }
 
     @Override

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -55,6 +56,8 @@ public class MypageSettingActivity extends AppCompatActivity
     EditText email, pw, pw_ck, name, phone, birth, sport_type, region, school_level, school_name, company, experience_1, experience_2, experience_3;
     RadioButton radio01, radio02, radio03, radio04;
     String token_str, name_str, password_str, profile_image_url, phone_number_str, is_phone_number_public, birthday, is_birthday_public, sport_type_str, expert_type_str, region_str, school_level_str2, school_name_str, company_str, experience_1_str, experience_2_str, experience_3_str, mentor_type_str;
+    CheckBox noti_ck;
+    String noti_bool = "true";
 
     private PopupWindow popWindow;
     private File file = null;
@@ -93,6 +96,7 @@ public class MypageSettingActivity extends AppCompatActivity
             pw = (EditText) findViewById(R.id.c_setting_pw);
             pw_ck = (EditText) findViewById(R.id.c_setting_pw2);
             logout_btn = (Button) findViewById(R.id.c_setting_logout);
+            noti_ck = (CheckBox) findViewById(R.id.c_setting_noti);
             //email = (EditText) findViewById(R.id.c_setting_mail);
 
 
@@ -146,6 +150,13 @@ public class MypageSettingActivity extends AppCompatActivity
             birth.setText(loginPreferences.getString("birthday",""));
             school_name.setText(loginPreferences.getString("school_name",""));
 
+            if(loginPreferences.getString("is_receive_push","").equals("true")){
+                noti_ck.setChecked(true);
+            }else{
+                noti_ck.setChecked(false);
+            }
+
+
             sport_type_sp.setSelection(sport_type_int);
             school_level_sp.setSelection(school_level_int);
             location.setSelection(location_int);
@@ -193,6 +204,11 @@ public class MypageSettingActivity extends AppCompatActivity
                             experience_2_str = "";
                             experience_3_str = "";
 
+                            if(noti_ck.isChecked()){
+                                noti_bool = "true";
+                            }else{
+                                noti_bool = "false";
+                            }
 
                     token_str = loginPreferences.getString("token","");
                     if(file == null){
@@ -210,8 +226,8 @@ public class MypageSettingActivity extends AppCompatActivity
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
-                            Toast.LENGTH_LONG).show();
+                  //  Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
+                   //         Toast.LENGTH_LONG).show();
                     new DeleteLogout().execute(new DBConnector());
                 }
             });
@@ -255,6 +271,7 @@ public class MypageSettingActivity extends AppCompatActivity
             mento_btn = (Button) findViewById(R.id.mentor_setting_btn);
             logout_btn = (Button) findViewById(R.id.mentor_setting_logout);
             profile_img = (ImageView) findViewById(R.id.mentor_setting_profile_img);
+            noti_ck = (CheckBox) findViewById(R.id.mentor_setting_noti);
 
 
             String[] str=getResources().getStringArray(R.array.mSpinnerArr);
@@ -286,6 +303,12 @@ public class MypageSettingActivity extends AppCompatActivity
                 if(strings_location.get(i).equals(location_str)){
                     location_int = i;
                 }
+            }
+
+            if(loginPreferences.getString("is_receive_push","").equals("true")){
+                noti_ck.setChecked(true);
+            }else{
+                noti_ck.setChecked(false);
             }
 
             String mento_type = loginPreferences.getString("mentor_type","");
@@ -403,6 +426,11 @@ public class MypageSettingActivity extends AppCompatActivity
                     experience_2_str = "";
                     experience_3_str = "";
 
+                    if(noti_ck.isChecked()){
+                        noti_bool = "true";
+                    }else{
+                        noti_bool = "false";
+                    }
 
                     token_str = loginPreferences.getString("token","");
                    // new PutUserInfo().execute(new DBConnector());
@@ -466,6 +494,7 @@ public class MypageSettingActivity extends AppCompatActivity
             experience_1 = (EditText) findViewById(R.id.e_setting_experience01);
             experience_2 = (EditText) findViewById(R.id.e_setting_experience02);
             experience_3 = (EditText) findViewById(R.id.e_setting_experience03);
+            noti_ck = (CheckBox) findViewById(R.id.mentor_setting_noti);
 
 
             logout_btn.setOnClickListener(new View.OnClickListener() {
@@ -508,6 +537,12 @@ public class MypageSettingActivity extends AppCompatActivity
             //  phone.setText(loginPreferences.getString("phone_number",""));
 
 
+
+            if(loginPreferences.getString("is_receive_push","").equals("true")){
+                noti_ck.setChecked(true);
+            }else{
+                noti_ck.setChecked(false);
+            }
 
 
             profile_img = (ImageView) findViewById(R.id.setting_profile_img);
@@ -571,13 +606,18 @@ public class MypageSettingActivity extends AppCompatActivity
                     experience_2_str = experience_2.getText().toString();
                     experience_3_str = experience_3.getText().toString();
 
+                    if(noti_ck.isChecked()){
+                        noti_bool = "true";
+                    }else{
+                        noti_bool = "false";
+                    }
 
                     token_str = loginPreferences.getString("token","");
 
                     if(file == null){
                         new PutUserInfo().execute(new DBConnector());
                     }else if(file != null){
-                        Log.d("response" , "file mypage : " + file);
+                      //  Log.d("response" , "file mypage : " + file);
                         new UploadImage().execute(new DBConnector());
                     }
 
@@ -658,7 +698,7 @@ public class MypageSettingActivity extends AppCompatActivity
         protected Bitmap doInBackground(String... urls) {
             //String urlOfImage = urls[0];
             String urlOfImage = urls[0];
-            Log.d("response", "image url : " + urlOfImage);
+         //   Log.d("response", "image url : " + urlOfImage);
             Bitmap logo = null;
             try {
                 InputStream is = new URL(urlOfImage).openStream();
@@ -669,7 +709,7 @@ public class MypageSettingActivity extends AppCompatActivity
                 logo = BitmapFactory.decodeStream(is);
             } catch (Exception e) { // Catch the download exception
                 e.printStackTrace();
-                Log.d("response", "image back : " + e.toString());
+         //       Log.d("response", "image back : " + e.toString());
             }
             return logo;
         }
@@ -740,7 +780,7 @@ public class MypageSettingActivity extends AppCompatActivity
 
             //it is executed on Background thread
            // Log.d("response" , "update user token: " + token_str.toString());
-            return params[0].PutUserInfo(token_str, name_str , password_str,profile_image_url,phone_number_str, is_phone_number_public, birthday, is_birthday_public, sport_type_str, mentor_type_str, expert_type_str, region_str, school_level_str2, school_name_str, company_str, experience_1_str, experience_2_str, experience_3_str);
+            return params[0].PutUserInfo(token_str, name_str , password_str,profile_image_url,phone_number_str, is_phone_number_public, birthday, is_birthday_public, sport_type_str, mentor_type_str, expert_type_str, region_str, school_level_str2, school_name_str, company_str, experience_1_str, experience_2_str, experience_3_str, noti_bool);
 
         }
 
@@ -755,7 +795,7 @@ public class MypageSettingActivity extends AppCompatActivity
     public void settextToAdapter(JSONObject jsonObject) {
 
 //        Log.d("response" , "update user : " + jsonObject.toString());
-        Log.d("response" , "check img : " +jsonObject);
+       // Log.d("response" , "check img : " +jsonObject);
         if(jsonObject == null){
 
         }else{
@@ -781,6 +821,7 @@ public class MypageSettingActivity extends AppCompatActivity
                 loginPrefsEditor.putString("experience_1",jsonObject.getString("experience_1").toString());
                 loginPrefsEditor.putString("experience_2",jsonObject.getString("experience_2").toString());
                 loginPrefsEditor.putString("experience_3",jsonObject.getString("experience_3").toString());
+                loginPrefsEditor.putString("is_receive_push",jsonObject.getString("is_receive_push").toString());
 
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1023778304053",
+    "firebase_url": "https://o2sport-162311.firebaseio.com",
+    "project_id": "o2sport-162311",
+    "storage_bucket": "o2sport-162311.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023778304053:android:0c1a78d5965aed8f",
+        "android_client_info": {
+          "package_name": "com.example.hyerimhyeon.o2_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023778304053-68b1dma2bo1tqdu9pqkktnqshb4dd1vc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hyerimhyeon.o2_android",
+            "certificate_hash": "8326e463c2e8341f5294c26c8f55a529708a0f6a"
+          }
+        },
+        {
+          "client_id": "1023778304053-88tlbdcha98117t0612pos7s20s1q1tu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrhSWOznPYdwj1injvH4T2l2hiJFE49LM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023778304053-88tlbdcha98117t0612pos7s20s1q1tu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

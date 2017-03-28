@@ -1,7 +1,6 @@
 package com.example.hyerimhyeon.o2_android;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,9 +19,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.DB.DBConnector;
+import com.example.FCM.MyFirebaseInstanceIDService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class LoginActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,10 +42,14 @@ public class LoginActivity extends AppCompatActivity
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
 
+    MyFirebaseInstanceIDService myFirebaseInstanceIDService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        myFirebaseInstanceIDService = new MyFirebaseInstanceIDService();
 
         id_Edit = (EditText) findViewById(R.id.login_id_edit);
         pw_Edit = (EditText) findViewById(R.id.login_pw_edit);
@@ -68,7 +76,7 @@ public class LoginActivity extends AppCompatActivity
 //                startActivity(intent);
 //                finish();
 
-
+                Log.d("response" , "response tokkkn : " + token);
                 // 이메일과 비밀번호 확인하기
                 new GetLoginInfoTask().execute(new DBConnector());
 
@@ -76,6 +84,10 @@ public class LoginActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    public String toLatin(String str) throws java.io.UnsupportedEncodingException {
+        return new String(str.getBytes(),"ISO-8859-1");
     }
 
     private class GetLoginInfoTask extends AsyncTask<DBConnector, Long, JSONObject> {
@@ -99,6 +111,9 @@ public class LoginActivity extends AppCompatActivity
     }
 
     public void settextToAdapter(JSONObject jsonObject) {
+
+
+        Log.d("response","user object : " + jsonObject);
 
        if(jsonObject == null){
           //로그인 실패
@@ -147,7 +162,12 @@ public class LoginActivity extends AppCompatActivity
                loginPrefsEditor.putString("experience_1", jsonObject.getString("experience_1").toString());
                loginPrefsEditor.putString("experience_2", jsonObject.getString("experience_2").toString());
                loginPrefsEditor.putString("experience_3", jsonObject.getString("experience_3").toString());
+               loginPrefsEditor.putString("is_receive_push","true");
+               String name_ck2 = URLEncoder.encode(jsonObject.getString("name"),"UTF-8");
+               String name_ck = URLDecoder.decode(name_ck2,"UTF-8");
 
+               Log.d("response","user object1 : "+ name_ck);
+               Log.d("response","user object2 : "+ jsonObject.getString("name").toString());
                if(login_ck.isChecked()){
                    // 로그인 유지하기
 
@@ -158,18 +178,20 @@ public class LoginActivity extends AppCompatActivity
                }
 
                loginPrefsEditor.commit();
-
+       //        myFirebaseInstanceIDService.onTokenRefresh(token);
 
            } catch (JSONException e) {
                e.printStackTrace();
                 Log.d("response", "prefs error : " + e.toString());
+           } catch (UnsupportedEncodingException e) {
+               e.printStackTrace();
            }
 
-           Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-           intent.putExtra("token",token);
-           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-           startActivityForResult(intent,100);
-           finish();
+//           Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//           intent.putExtra("token",token);
+//           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//           startActivityForResult(intent,100);
+//           finish();
 
        }
 
