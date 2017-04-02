@@ -1,5 +1,6 @@
 package com.example.DB;
 
+import android.os.Looper;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -10,11 +11,15 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,36 +45,36 @@ public class DBConnector {
 
         Log.d("response","response login01 : " + id_str + pw_str);
 
-        JSONArray jsonArray = null;
+        Looper.prepare();
         JSONObject jsonObject = null;
 
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
+        HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000);
+        HttpResponse response;
         HttpPost httppost = new HttpPost("http://o-two-sport.com/api/users/login/");
-        //httppost.addHeader("Content-Type","Text/html");
+        httppost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+        JSONObject json = new JSONObject();
 
-       // Log.d("response","response 03 : " + id_str + pw_str);
+        // Log.d("response","response 03 : " + id_str + pw_str);
         try {
             // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("email",id_str));
-            nameValuePairs.add(new BasicNameValuePair("password",pw_str));
+            json.put("email", id_str);
+            json.put("password", pw_str);
+            StringEntity se = new StringEntity(json.toString());
 
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
-//            httppost.setHeader("Content-type", "Text/html");
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-           // int code = response.getStatusLine().getStatusCode();
-            String bobo = EntityUtils.toString(response.getEntity());
-           // response.setHeader("Content-Type", "text/xml; charset=UTF-8");
+            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            httppost.setEntity(se);
+            response = httpclient.execute(httppost);
+            // int code = response.getStatusLine().getStatusCode();
+            String bobo = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+
             Log.d("response","response login : " + bobo.toString());
            // Log.d("response","response login02 : " + code);
 
             jsonObject = new JSONObject(bobo.toString());
-           Log.d("response","response 03 : " + jsonObject);
+            Log.d("response","response 03 : " + jsonObject);
            // jsonArray = new JSONArray(bobo.toString());
-
-
 
         } catch (ClientProtocolException e) {
             Log.d("response","response 04 : " + e.toString());
