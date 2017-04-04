@@ -232,7 +232,7 @@
                         android:layout_height="40dp"
                         android:textSize="15dp"
                         android:hint="@string/phone_hint"
-                        android:inputType="text"
+                        android:inputType="phone"
                         android:background="@android:color/transparent"
                         />
 

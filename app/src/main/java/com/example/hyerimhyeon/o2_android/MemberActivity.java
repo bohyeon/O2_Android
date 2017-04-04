@@ -1,5 +1,6 @@
 package com.example.hyerimhyeon.o2_android;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -153,6 +155,12 @@ public class MemberActivity extends AppCompatActivity
             }
         });
 
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+
 
         userSearch_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +171,12 @@ public class MemberActivity extends AppCompatActivity
                 memberSearchAdapterActivity = new MemberSearchAdapterActivity(getApplicationContext(), newsFeed, memberActivity);
                 expertLv.setAdapter(memberSearchAdapterActivity);
                 new GetSearchUser().execute(new DBConnector());
+
+                InputMethodManager inputManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
     }
@@ -181,7 +195,7 @@ public class MemberActivity extends AppCompatActivity
         } else{
             member_type_str = intent.getStringExtra("member_type");
         }
-        Log.d("response" , "member start : " + member_type_str);
+    //    Log.d("response" , "member start : " + member_type_str);
 
         if(member_type_str.equals("expert")){
             new GetUser().execute(new DBConnector());
@@ -245,13 +259,14 @@ public class MemberActivity extends AppCompatActivity
 
 
     public void settextToAdapter_Search(JSONArray jsonArray) {
-        Log.d("response" , "search_user : " + jsonArray);
+     //   Log.d("response" , "search_user : " + jsonArray);
         NewsfeedItem newsfeedItem;
 
 
         if(jsonArray == null){
             Toast.makeText(getApplicationContext(), "검색 결과가 없습니다.",
                     Toast.LENGTH_LONG).show();
+            memberSearchAdapterActivity.clear();
         }else{
 
             memberSearchAdapterActivity.clear();
@@ -271,8 +286,8 @@ public class MemberActivity extends AppCompatActivity
                     newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
                     newsfeedItem.member_id = jsonObject.getString("id");
 
-                    memberSearchAdapterActivity.add(newsfeedItem);
                     memberSearchAdapterActivity.notifyDataSetChanged();
+                    memberSearchAdapterActivity.add(newsfeedItem);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

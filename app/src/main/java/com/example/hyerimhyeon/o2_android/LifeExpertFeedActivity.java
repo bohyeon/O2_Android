@@ -44,7 +44,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
     Boolean buttonStateOpen;
     Handler handler;
     DrawerLayout drawer;
-    String token , id;
+    String token , id, email;
 
     public SharedPreferences loginPreferences;
     @Override
@@ -72,7 +72,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
         id = loginPreferences.getString("id", "");
-
+        email = loginPreferences.getString("email" , "");
 
 
 

@@ -13,6 +13,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +42,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class MypageSettingActivity extends AppCompatActivity
@@ -58,13 +62,15 @@ public class MypageSettingActivity extends AppCompatActivity
     String token_str, name_str, password_str, profile_image_url, phone_number_str, is_phone_number_public, birthday, is_birthday_public, sport_type_str, expert_type_str, region_str, school_level_str2, school_name_str, company_str, experience_1_str, experience_2_str, experience_3_str, mentor_type_str;
     CheckBox noti_ck;
     String noti_bool = "true";
-
+    String email_str;
     private PopupWindow popWindow;
     private File file = null;
     private static final int REQUEST_INTERNET = 1;
     public SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
-
+    private String current = "";
+    private String yyyymmdd = "YYYYMMDD";
+    private Calendar cal = Calendar.getInstance();
 
     @Override
     public void onStart(){
@@ -72,6 +78,7 @@ public class MypageSettingActivity extends AppCompatActivity
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
+        email_str = loginPreferences.getString("email","");
         Log.d("response" , "token : " + token_str);
         profile_image_url = loginPreferences.getString("profile_image_url","");
 
@@ -82,6 +89,8 @@ public class MypageSettingActivity extends AppCompatActivity
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
+
+        Log.d("response" , "sport type 0 : " + loginPreferences.getString("member_type","").toString());
 
         if(loginPreferences.getString("member_type","").equals("mentee")){
             setContentView(R.layout.activity_mypage_setting_child);
@@ -115,17 +124,19 @@ public class MypageSettingActivity extends AppCompatActivity
             school_level_sp = (Spinner) findViewById(R.id.c_setting_school);
             school_level_sp.setAdapter(adapter2);
 
-            List<String> strings = Arrays.asList("축구","농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시");
+            List<String> strings = Arrays.asList("종목선택","축구","농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시","기타");
 
             final String sport_type = loginPreferences.getString("sport_type","");
             int sport_type_int = 0;
+            Log.d("response" , "sport type 1 : " + sport_type);
             for(int i=0; i<strings.size(); i++){
                 if(strings.get(i).equals(sport_type)){
+
                     sport_type_int = i;
                 }
             }
 
-            List<String> strings_school = Arrays.asList("종목선택","초등학교","중학교","고등학교");
+            List<String> strings_school = Arrays.asList("학력선택","초등학교","중학교","고등학교");
             String school_level_str = loginPreferences.getString("school_level","");
             int school_level_int = 0;
             for(int i=0; i<strings_school.size(); i++){
@@ -134,7 +145,7 @@ public class MypageSettingActivity extends AppCompatActivity
                 }
             }
 
-            List<String> strings_location = Arrays.asList("종목선택","서울","인천","경기도");
+            List<String> strings_location = Arrays.asList("지역선택","서울","부산","인천","대구","광주","울산","경기도","강원도","충청북도","충청남도","전라남도","전라북도","경상북도","경상남도","제주도");
             String location_str = loginPreferences.getString("region","");
             int location_int = 0;
             for(int i=0; i<strings_location.size(); i++){
@@ -157,12 +168,14 @@ public class MypageSettingActivity extends AppCompatActivity
             }
 
 
+
+
             sport_type_sp.setSelection(sport_type_int);
             school_level_sp.setSelection(school_level_int);
             location.setSelection(location_int);
             //  phone.setText(loginPreferences.getString("phone_number",""));
 
-
+            Log.d("response" , "sport type 11 : " + sport_type_sp.getSelectedItem());
 
 
             profile_img = (ImageView) findViewById(R.id.setting_profile_img);
@@ -174,6 +187,72 @@ public class MypageSettingActivity extends AppCompatActivity
                 new DownLoadImageTask_profile(profile_img).execute("http://" + loginPreferences.getString("profile_url",""));
 
             }
+
+            TextWatcher tw = new TextWatcher() {
+
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    if (!s.toString().equals(current)) {
+                        String clean = s.toString().replaceAll("[^\\d.]", "");
+                        String cleanC = current.replaceAll("[^\\d.]", "");
+
+                        int cl = clean.length();
+                        int sel = cl;
+                        for (int i = 2; i <= cl && i < 6; i += 2) {
+                            sel++;
+                        }
+                        //Fix for pressing delete next to a forward slash
+                        if (clean.equals(cleanC)) sel--;
+
+                        if (clean.length() < 8){
+                            clean = clean + yyyymmdd.substring(clean.length());
+                        }else{
+                            //This part makes sure that when we finish entering numbers
+                            //the date is correct, fixing it otherwise
+                            int day  = Integer.parseInt(clean.substring(0,4));
+                            int mon  = Integer.parseInt(clean.substring(4,6));
+                            int year = Integer.parseInt(clean.substring(6,8));
+
+                            if(mon > 12) mon = 12;
+                            cal.set(Calendar.MONTH, mon-1);
+                            year = (year<1900)?1900:(year>2100)?2100:year;
+                            cal.set(Calendar.YEAR, year);
+                            // ^ first set year for the line below to work correctly
+                            //with leap years - otherwise, date e.g. 29/02/2012
+                            //would be automatically corrected to 28/02/2012
+
+                            day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                            //  clean = String.format("%02d%02d%02d",day, mon, year);
+                        }
+
+                        clean = String.format("%s-%s-%s", clean.substring(0, 4),
+                                clean.substring(4, 6),
+                                clean.substring(6, 8));
+
+                        sel = sel < 0 ? 0 : sel;
+                        current = clean;
+                        birth.setText(current);
+                        birth.setSelection(sel < current.length() ? sel : current.length());
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            };
+
+
+            phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            birth.addTextChangedListener(tw);
 
             child_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -189,20 +268,21 @@ public class MypageSettingActivity extends AppCompatActivity
                                 password_str = pw.getText().toString();
                             }
 
+
                             profile_image_url = profile_image_url;
                             phone_number_str = phone.getText().toString();
                             is_phone_number_public = "true";
                             birthday = birth.getText().toString();
                             is_birthday_public = "true";
                             sport_type_str = sport_type_sp.getSelectedItem().toString();
-                            expert_type_str = "";
+                            expert_type_str = "-";
                             region_str = location.getSelectedItem().toString();
                             school_level_str2 = school_level_sp.getSelectedItem().toString();
                             school_name_str = school_name.getText().toString();
-                            company_str = "";
-                            experience_1_str = "";
-                            experience_2_str = "";
-                            experience_3_str = "";
+                            company_str = "-";
+                            experience_1_str = "-";
+                            experience_2_str = "-";
+                            experience_3_str = "-";
 
                             if(noti_ck.isChecked()){
                                 noti_bool = "true";
@@ -285,7 +365,7 @@ public class MypageSettingActivity extends AppCompatActivity
             location.setAdapter(adapter1);
 
 
-            List<String> strings = Arrays.asList("축구","농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시");
+            List<String> strings = Arrays.asList("종목선택","축구","농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시","기타");
 
             String sport_type = loginPreferences.getString("sport_type","");
             int sport_type_int = 0;
@@ -296,7 +376,7 @@ public class MypageSettingActivity extends AppCompatActivity
             }
 
 
-            List<String> strings_location = Arrays.asList("종목선택","서울","인천","경기도");
+            List<String> strings_location = Arrays.asList("지역선택","서울","부산","인천","대구","광주","울산","경기도","강원도","충청북도","충청남도","전라남도","전라북도","경상북도","경상남도","제주도");
             String location_str = loginPreferences.getString("region","");
             int location_int = 0;
             for(int i=0; i<strings_location.size(); i++){
@@ -395,10 +475,78 @@ public class MypageSettingActivity extends AppCompatActivity
                 new DownLoadImageTask_profile(profile_img).execute("http://" + loginPreferences.getString("profile_url",""));
 
             }
+            TextWatcher tw = new TextWatcher() {
+
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    if (!s.toString().equals(current)) {
+                        String clean = s.toString().replaceAll("[^\\d.]", "");
+                        String cleanC = current.replaceAll("[^\\d.]", "");
+
+                        int cl = clean.length();
+                        int sel = cl;
+                        for (int i = 2; i <= cl && i < 6; i += 2) {
+                            sel++;
+                        }
+                        //Fix for pressing delete next to a forward slash
+                        if (clean.equals(cleanC)) sel--;
+
+                        if (clean.length() < 8){
+                            clean = clean + yyyymmdd.substring(clean.length());
+                        }else{
+                            //This part makes sure that when we finish entering numbers
+                            //the date is correct, fixing it otherwise
+                            int day  = Integer.parseInt(clean.substring(0,4));
+                            int mon  = Integer.parseInt(clean.substring(4,6));
+                            int year = Integer.parseInt(clean.substring(6,8));
+
+                            if(mon > 12) mon = 12;
+                            cal.set(Calendar.MONTH, mon-1);
+                            year = (year<1900)?1900:(year>2100)?2100:year;
+                            cal.set(Calendar.YEAR, year);
+                            // ^ first set year for the line below to work correctly
+                            //with leap years - otherwise, date e.g. 29/02/2012
+                            //would be automatically corrected to 28/02/2012
+
+                            day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                            //  clean = String.format("%02d%02d%02d",day, mon, year);
+                        }
+
+                        clean = String.format("%s-%s-%s", clean.substring(0, 4),
+                                clean.substring(4, 6),
+                                clean.substring(6, 8));
+
+                        sel = sel < 0 ? 0 : sel;
+                        current = clean;
+                        birth.setText(current);
+                        birth.setSelection(sel < current.length() ? sel : current.length());
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            };
+
+
+            phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            birth.addTextChangedListener(tw);
+
 
             mento_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    Log.d("response" , "sport type 2 : " + sport_type_sp.getSelectedItem().toString());
 
                     loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
                     loginPrefsEditor = loginPreferences.edit();
@@ -410,21 +558,24 @@ public class MypageSettingActivity extends AppCompatActivity
                         password_str = pw.getText().toString();
                     }
 
+                    Log.d("response" , "password : " + password_str);
+
                     profile_image_url = profile_image_url;
                     phone_number_str = phone.getText().toString();
                     is_phone_number_public = "true";
                     birthday = birth.getText().toString();
                     is_birthday_public = "true";
                     sport_type_str = sport_type_sp.getSelectedItem().toString();
-                    expert_type_str = "";
+
+                    expert_type_str = "-";
                     region_str = location.getSelectedItem().toString();
-                    school_level_str2 = "";
-                    school_name_str = "";
+                    school_level_str2 = "-";
+                    school_name_str = "-";
 
                     company_str = company.getText().toString();
-                    experience_1_str = "";
-                    experience_2_str = "";
-                    experience_3_str = "";
+                    experience_1_str = "-";
+                    experience_2_str = "-";
+                    experience_3_str = "-";
 
                     if(noti_ck.isChecked()){
                         noti_bool = "true";
@@ -470,8 +621,8 @@ public class MypageSettingActivity extends AppCompatActivity
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
-                            Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
+//                            Toast.LENGTH_LONG).show();
                     new DeleteLogout().execute(new DBConnector());
                 }
             });
@@ -494,14 +645,14 @@ public class MypageSettingActivity extends AppCompatActivity
             experience_1 = (EditText) findViewById(R.id.e_setting_experience01);
             experience_2 = (EditText) findViewById(R.id.e_setting_experience02);
             experience_3 = (EditText) findViewById(R.id.e_setting_experience03);
-            noti_ck = (CheckBox) findViewById(R.id.mentor_setting_noti);
+            noti_ck = (CheckBox) findViewById(R.id.expert_setting_noti);
 
 
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
-                            Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
+//                            Toast.LENGTH_LONG).show();
                     new DeleteLogout().execute(new DBConnector());
                 }
             });
@@ -513,7 +664,7 @@ public class MypageSettingActivity extends AppCompatActivity
 
 
 
-            List<String> strings_expertType = Arrays.asList("종목선택","스포츠 의학","스포츠 심리","스포츠 트레이닝","스포츠 영양","스포츠 재활","스포츠 진로","기타");
+            List<String> strings_expertType = Arrays.asList("분야선택","스포츠 의학","스포츠 심리","스포츠 트레이닝","스포츠 영양","스포츠 재활","스포츠 진로","기타");
             String expert_type = loginPreferences.getString("expert_type","");
             int expert_type_int = 0;
             for(int i=0; i<strings_expertType.size(); i++){
@@ -537,6 +688,71 @@ public class MypageSettingActivity extends AppCompatActivity
             //  phone.setText(loginPreferences.getString("phone_number",""));
 
 
+            TextWatcher tw = new TextWatcher() {
+
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    if (!s.toString().equals(current)) {
+                        String clean = s.toString().replaceAll("[^\\d.]", "");
+                        String cleanC = current.replaceAll("[^\\d.]", "");
+
+                        int cl = clean.length();
+                        int sel = cl;
+                        for (int i = 2; i <= cl && i < 6; i += 2) {
+                            sel++;
+                        }
+                        //Fix for pressing delete next to a forward slash
+                        if (clean.equals(cleanC)) sel--;
+
+                        if (clean.length() < 8){
+                            clean = clean + yyyymmdd.substring(clean.length());
+                        }else{
+                            //This part makes sure that when we finish entering numbers
+                            //the date is correct, fixing it otherwise
+                            int day  = Integer.parseInt(clean.substring(0,4));
+                            int mon  = Integer.parseInt(clean.substring(4,6));
+                            int year = Integer.parseInt(clean.substring(6,8));
+
+                            if(mon > 12) mon = 12;
+                            cal.set(Calendar.MONTH, mon-1);
+                            year = (year<1900)?1900:(year>2100)?2100:year;
+                            cal.set(Calendar.YEAR, year);
+                            // ^ first set year for the line below to work correctly
+                            //with leap years - otherwise, date e.g. 29/02/2012
+                            //would be automatically corrected to 28/02/2012
+
+                            day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                            //  clean = String.format("%02d%02d%02d",day, mon, year);
+                        }
+
+                        clean = String.format("%s-%s-%s", clean.substring(0, 4),
+                                clean.substring(4, 6),
+                                clean.substring(6, 8));
+
+                        sel = sel < 0 ? 0 : sel;
+                        current = clean;
+                        birth.setText(current);
+                        birth.setSelection(sel < current.length() ? sel : current.length());
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            };
+
+
+            phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+            birth.addTextChangedListener(tw);
 
             if(loginPreferences.getString("is_receive_push","").equals("true")){
                 noti_ck.setChecked(true);
@@ -595,11 +811,11 @@ public class MypageSettingActivity extends AppCompatActivity
                     is_phone_number_public = "true";
                     birthday = birth.getText().toString();
                     is_birthday_public = "true";
-                    sport_type_str = "";
+                    sport_type_str = "-";
                     expert_type_str = expert_type_sp.getSelectedItem().toString();
-                    region_str = "";
-                    school_level_str2 = "";
-                    school_name_str = "";
+                    region_str = "-";
+                    school_level_str2 = "-";
+                    school_name_str = "-";
 
                     company_str = company.getText().toString();
                     experience_1_str = experience_1.getText().toString();
@@ -794,7 +1010,7 @@ public class MypageSettingActivity extends AppCompatActivity
 
     public void settextToAdapter(JSONObject jsonObject) {
 
-//        Log.d("response" , "update user : " + jsonObject.toString());
+        Log.d("response" , "update user : " + jsonObject.toString());
        // Log.d("response" , "check img : " +jsonObject);
         if(jsonObject == null){
 
@@ -823,6 +1039,8 @@ public class MypageSettingActivity extends AppCompatActivity
                 loginPrefsEditor.putString("experience_3",jsonObject.getString("experience_3").toString());
                 loginPrefsEditor.putString("is_receive_push",jsonObject.getString("is_receive_push").toString());
 
+                Log.d("response" , "sport type 3 : " + jsonObject.getString("sport_type").toString());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -833,7 +1051,7 @@ public class MypageSettingActivity extends AppCompatActivity
             Toast.makeText(getApplicationContext(), name_str+"님 회원정보가 수정되었습니다.",
                     Toast.LENGTH_LONG).show();
 
-            Intent intent = getIntent();
+            Intent intent = new Intent(this, MypageSettingActivity.class);
             finish();
             startActivity(intent);
         }

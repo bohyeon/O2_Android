@@ -36,7 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class NewsfeedWriteActivity extends AppCompatActivity {
+public class NewsfeedUpdateActivity extends AppCompatActivity {
     private Button cameraBtn, galleryBtn;
     private ImageView backBtn;
     private ImageView selectedImg;
@@ -46,7 +46,7 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
     private String postContent;
     private static int RESULT_LOAD_IMAGE = 1;
 
-    NewsfeedWriteActivity newsfeedWriteActivity = this;
+    NewsfeedUpdateActivity newsfeedWriteActivity = this;
     SharedPreferences pref;
     int memberId = 0;
     URLInString urlInString;
@@ -58,11 +58,14 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
     Boolean buttonStateOpen;
 
     String token = "";
-    String post_type = "sport_knowledge_feed";
+    String post_type = "";
     String post_img_url = "";
     String youtube_link = "";
     String youtube_title = "";
+    String content = "";
     String sport_type;
+    String post_id = "";
+
 
     private static final int REQUEST_EXTERNAL_STORAGE = 2;
     private static final int REQUEST_CAMERA = 1;
@@ -96,28 +99,32 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
         // post_type 받아오기
         Intent intent = getIntent();
         post_type = intent.getStringExtra("post_type");
+        content = intent.getStringExtra("content");
+        post_id = intent.getStringExtra("post_id");
+//        youtube_title = intent.getStringExtra("youtube_title");
+//        youtube_link = intent.getStringExtra("youtube_link");
+        post_img_url = intent.getStringExtra("post_image_url");
 
-        if(intent.getStringExtra("sport_type")==null){
 
-        }else{
-            sport_type = intent.getStringExtra("sport_type");
-            Log.d("response" , "sport_type :" + sport_type);
+
+        if(!post_img_url.equals("")){
+            //Log.d("response", "post img url : " + post_img_url);
+            Picasso.with(this)
+                    .load("http://"+post_img_url)
+                    .placeholder(R.drawable.blankimg)
+                    .error(R.drawable.blankimg)
+                    .into(selectedImg);
         }
+
+        editPost.setText(content);
+
+//        if(intent.getStringExtra("sport_type")==null){
 //
-//        galleryBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                // get a picture without crop.
-//                Intent i = new Intent(
-//                        Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//
-//                startActivityForResult(i, RESULT_LOAD_IMAGE);
-//
-//
-//            }
-//        });
+//        }else{
+//            sport_type = intent.getStringExtra("sport_type");
+//          //  Log.d("response" , "sport_type :" + sport_type);
+//        }
+
 
         cameraBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,11 +205,14 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
                    }
 
 
+
                    if(youtube_link.equals("")){
+
                        if(file != null){
+
                            new UploadImage().execute(new DBConnector());
                        }else{
-                           new Posts().execute(new DBConnector());
+                           new PutContent().execute(new DBConnector());
                        }
 
                    }else{
@@ -221,6 +231,42 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    private class PutContent extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+                Log.d("response22 " , "update" + token + post_img_url);
+            return params[0].PutContent(token, post_id, post_type, postContent, youtube_title, youtube_link, post_img_url);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter_putContent(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter_putContent(JSONObject jsonObject) {
+
+
+//        Intent intent = new Intent( this, MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        startActivity(intent);
+
+        if(jsonObject == null){
+
+        }else{
+
+            finish();
+        }
 
     }
 
@@ -270,10 +316,11 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
 
             try {
                 youtube_title = jsonArray.getString("title").toString();
+
                 if(file!=null){
                     new UploadImage().execute(new DBConnector());
                 }else{
-                    new Posts().execute(new DBConnector());
+                    new PutContent().execute(new DBConnector());
                 }
 
             } catch (JSONException e) {
@@ -305,6 +352,7 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
 
     public void settextToAdapter_postImage(JSONObject jsonObject) {
 
+
         if(jsonObject == null){
 
         }else{
@@ -315,11 +363,14 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
 
                 Log.d("response" , "profile_img L " + post_img_url);
                 if(post_img_url != ""){
-                    new Posts().execute(new DBConnector());
+                    new PutContent().execute(new DBConnector());
                 }
+
+                Log.d("response" , "update img : " + post_img_url);
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.d("response" , "update img e: " + e.toString());
             }
 
 

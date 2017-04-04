@@ -40,7 +40,7 @@ public class NoticeActivity extends AppCompatActivity
     NoticeActivity noticeActivity;
     NoticeAdapterActivity noticeAdapterActivity;
     NewsFeed newsFeed;
-    String token, id;
+    String token, id, is_admin;
     Handler handler;
     DrawerLayout drawer;
     Boolean buttonStateOpen;
@@ -72,6 +72,7 @@ public class NoticeActivity extends AppCompatActivity
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
         id = loginPreferences.getString("id", "");
+        is_admin = loginPreferences.getString("is_admin","");
 
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
@@ -309,10 +310,16 @@ public class NoticeActivity extends AppCompatActivity
                                 return true;
                             case R.id.write_item:
 
-                                Intent intent2 = new Intent(NoticeActivity.this, NewsfeedWriteActivity.class);
-                                intent2.putExtra("post_type", "notice");
+                                if(is_admin.equals("true")){
+                                    Intent intent2 = new Intent(NoticeActivity.this, NewsfeedWriteActivity.class);
+                                    intent2.putExtra("post_type", "notice");
 
-                                startActivityForResult(intent2, 300);
+                                    startActivityForResult(intent2, 300);
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "관리자 전용게시판 입니다.",
+                                            Toast.LENGTH_LONG).show();
+                                }
+
 
                                 return true;
 //                            case R.id.setting_item:

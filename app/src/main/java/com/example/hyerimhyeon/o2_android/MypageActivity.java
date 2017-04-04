@@ -55,7 +55,7 @@ public class MypageActivity extends AppCompatActivity
     ImageView profile_img;
     Handler handler;
     TextView nametv, typetv, companytv;
-    String token, id;
+    String token, id, email;
     DrawerLayout drawer;
     private static final int REQUEST_INTERNET = 1;
     public SharedPreferences loginPreferences;
@@ -89,7 +89,7 @@ public class MypageActivity extends AppCompatActivity
          loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         id = loginPreferences.getString("id","");
         token = loginPreferences.getString("token","");
-
+        email = loginPreferences.getString("email","");
 
         nametv = (TextView) findViewById(R.id.mypage_name);
         typetv = (TextView) findViewById(R.id.mypage_type);
@@ -415,7 +415,7 @@ public class MypageActivity extends AppCompatActivity
 
     public void settextToAdapter_noti(JSONArray jsonArray) {
 
-        Log.d("response" , "comment post : " + jsonArray);
+
 
         // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
         NewsfeedItem_Noti newsfeedItem;
@@ -434,10 +434,17 @@ public class MypageActivity extends AppCompatActivity
 
 
                 try {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    JSONObject userJsonObj = jsonObject.getJSONObject("user");
+                    Log.d("response" , "comment post j: " + jsonArray.toString());
 
-                    newsfeedItem.name = userJsonObj.getString("name");
+                    String jsonObject = jsonArray.getJSONObject(i).getString("payload");
+                 //   String payloadJson = jsonObject.getJSONObject("payload").toString();
+
+                    JSONObject payloadJsonObj = new JSONObject(jsonObject);
+
+                    newsfeedItem.name = payloadJsonObj.getString("message");
+                    newsfeedItem.profile_url = payloadJsonObj.getString("profile_image_url");
+                    newsfeedItem.post_id = payloadJsonObj.getString("target_id");
+                    //newsfeedItem.post_id = jsonArray.getJSONObject(i).getString("id");
 
 
                     mypageAlarmAdapterActivity.add(newsfeedItem);
@@ -446,6 +453,7 @@ public class MypageActivity extends AppCompatActivity
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.d("response" , "comment post e: " + e.toString());
                 }
 
             }
@@ -498,13 +506,14 @@ public class MypageActivity extends AppCompatActivity
 
     public void settextToAdapter_comment(JSONArray jsonArray) {
 
-          Log.d("response" , "comment post : " + jsonArray);
+        //  Log.d("response" , "comment post : " + jsonArray);
 
         // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
         NewsfeedItem_comment newsfeedItem;
 
 
         if(jsonArray == null){
+            mypageCommentAdapterActivity.clear();
 //            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
 //                    Toast.LENGTH_LONG).show();
         }else{

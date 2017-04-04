@@ -14,49 +14,39 @@
        <item>레슬링</item>
        <item>승마</item>
        <item>체조</item>
-       <item>사이클</item>
-       <item>수영</item>
+
        <item>육상</item>
        <item>펜싱</item>
        <item>요트</item>
        <item>조정</item>
-       <item>카누/카약</item>
        <item>사격</item>
        <item>하키</item>
        <item>핸드볼</item>
-       <item>근대5종</item>
-       <item>트라이애슬론(철인3종)</item>
+       <item>근대3종</item>
+       <item>철인3종</item>
        <item>배드민턴</item>
        <item>골프</item>
-       <item>사이클</item>
+       <item>싸이클</item>
+
        <item>수영</item>
        <item>럭비</item>
-       <item>야구</item>
        <item>씨름</item>
        <item>보디빌딩</item>
-       <item>수상스키</item>
-       <item>정구</item>
-       <item>당구</item>
-       <item>라켓볼</item>
-       <item>바둑</item>
-       <item>루지</item>
-       <item>스켈레톤</item>
        <item>봅슬레이</item>
-       <item>알파인스키</item>
-       <item>스키점프</item>
-
-       <item>프리스타일스키</item>
-       <item>바이애슬론</item>
-       <item>노르딕복합</item>
-       <item>아이스하키</item>
+       <item>스키,스노우보드</item>
+       <item>하키</item>
        <item>컬링</item>
-       <item>스피드스케이팅</item>
-       <item>쇼트트랙</item>
-       <item>피겨스케이팅</item>
-       <item>스노우보드</item>
-       <item>크로스컨트리</item>
-       <item>스키점프</item>
+       <item>빙상</item>
+       <item>공수도</item>
+       <item>양궁</item>
+       <item>볼링</item>
 
+       <item>검도</item>
+       <item>롤러</item>
+       <item>세팍타크로</item>
+       <item>소프트볼</item>
+       <item>스쿼시</item>
+       <item>기타</item>
 
    </string-array>
 

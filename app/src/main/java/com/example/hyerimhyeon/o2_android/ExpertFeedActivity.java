@@ -39,7 +39,7 @@ public class ExpertFeedActivity extends AppCompatActivity
 
     ExpertfeedAdapterActivity expertfeedAdapterActivity;
     NewsFeed newsFeed;
-    String token , id;
+    String token , id, email;
     Boolean buttonStateOpen;
     Handler handler;
     DrawerLayout drawer;
@@ -71,7 +71,7 @@ public class ExpertFeedActivity extends AppCompatActivity
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
         id = loginPreferences.getString("id", "");
-
+        email = loginPreferences.getString("email","");
       //  drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

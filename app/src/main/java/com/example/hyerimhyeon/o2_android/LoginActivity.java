@@ -1,6 +1,7 @@
 package com.example.hyerimhyeon.o2_android;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -139,6 +140,7 @@ public class LoginActivity extends AppCompatActivity
            loginPrefsEditor = loginPreferences.edit();
 
            loginPrefsEditor.putString("id", id_str);
+           loginPrefsEditor.putString("email", id_str);
            loginPrefsEditor.putString("pw", pw_str);
          //  loginPrefsEditor.putString("token", token);
 
@@ -162,6 +164,7 @@ public class LoginActivity extends AppCompatActivity
                loginPrefsEditor.putString("experience_1", jsonObject.getString("experience_1").toString());
                loginPrefsEditor.putString("experience_2", jsonObject.getString("experience_2").toString());
                loginPrefsEditor.putString("experience_3", jsonObject.getString("experience_3").toString());
+               loginPrefsEditor.putString("is_admin", jsonObject.getString("is_admin").toString());
                loginPrefsEditor.putString("is_receive_push","true");
                String name_ck2 = URLEncoder.encode(jsonObject.getString("name"),"UTF-8");
                String name_ck = URLDecoder.decode(name_ck2,"UTF-8");
@@ -178,7 +181,7 @@ public class LoginActivity extends AppCompatActivity
                }
 
                loginPrefsEditor.commit();
-       //        myFirebaseInstanceIDService.onTokenRefresh(token);
+               myFirebaseInstanceIDService.onTokenRefresh(token);
 
            } catch (JSONException e) {
                e.printStackTrace();
@@ -187,11 +190,11 @@ public class LoginActivity extends AppCompatActivity
                e.printStackTrace();
            }
 
-//           Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//           intent.putExtra("token",token);
-//           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//           startActivityForResult(intent,100);
-//           finish();
+           Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+           intent.putExtra("token",token);
+           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+           startActivityForResult(intent,100);
+           finish();
 
        }
 

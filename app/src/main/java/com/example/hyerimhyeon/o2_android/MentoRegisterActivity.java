@@ -10,6 +10,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Calendar;
 
 public class MentoRegisterActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +50,9 @@ public class MentoRegisterActivity extends AppCompatActivity
 
     public SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
+    private String current = "";
+    private String yyyymmdd = "YYYYMMDD";
+    private Calendar cal = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +130,72 @@ public class MentoRegisterActivity extends AppCompatActivity
 
         location = (Spinner) findViewById(R.id.m_register_location);
         location.setAdapter(adapter2);
+
+        TextWatcher tw = new TextWatcher() {
+
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (!s.toString().equals(current)) {
+                    String clean = s.toString().replaceAll("[^\\d.]", "");
+                    String cleanC = current.replaceAll("[^\\d.]", "");
+
+                    int cl = clean.length();
+                    int sel = cl;
+                    for (int i = 2; i <= cl && i < 6; i += 2) {
+                        sel++;
+                    }
+                    //Fix for pressing delete next to a forward slash
+                    if (clean.equals(cleanC)) sel--;
+
+                    if (clean.length() < 8){
+                        clean = clean + yyyymmdd.substring(clean.length());
+                    }else{
+                        //This part makes sure that when we finish entering numbers
+                        //the date is correct, fixing it otherwise
+                        int day  = Integer.parseInt(clean.substring(0,4));
+                        int mon  = Integer.parseInt(clean.substring(4,6));
+                        int year = Integer.parseInt(clean.substring(6,8));
+
+                        if(mon > 12) mon = 12;
+                        cal.set(Calendar.MONTH, mon-1);
+                        year = (year<1900)?1900:(year>2100)?2100:year;
+                        cal.set(Calendar.YEAR, year);
+                        // ^ first set year for the line below to work correctly
+                        //with leap years - otherwise, date e.g. 29/02/2012
+                        //would be automatically corrected to 28/02/2012
+
+                        day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                        //  clean = String.format("%02d%02d%02d",day, mon, year);
+                    }
+
+                    clean = String.format("%s-%s-%s", clean.substring(0, 4),
+                            clean.substring(4, 6),
+                            clean.substring(6, 8));
+
+                    sel = sel < 0 ? 0 : sel;
+                    current = clean;
+                    birth.setText(current);
+                    birth.setSelection(sel < current.length() ? sel : current.length());
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+        };
+
+
+        phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        birth.addTextChangedListener(tw);
 
 
         register_btn.setOnClickListener(new View.OnClickListener() {
@@ -353,7 +426,7 @@ public class MentoRegisterActivity extends AppCompatActivity
 
                 loginPrefsEditor.putString("email",email);
                 loginPrefsEditor.putString("name",name_str);
-                loginPrefsEditor.putString("id",jsonObject.getString("id"));
+                loginPrefsEditor.putString("id","me");
                 loginPrefsEditor.putString("profile_url",profile_img_url);
                 loginPrefsEditor.putString("password",password);
                 loginPrefsEditor.putString("phone_number",phone_str);
@@ -364,6 +437,7 @@ public class MentoRegisterActivity extends AppCompatActivity
                 loginPrefsEditor.putString("member_type","mentor");
                 loginPrefsEditor.putString("is_receive_push", "true");
                 loginPrefsEditor.putString("company",company);
+                loginPrefsEditor.putString("is_admin", jsonObject.getString("is_admin").toString());
 
                 //loginPrefsEditor.putString("school_name",schcool_name_str);
                 loginPrefsEditor.putString("token",jsonObject.getString("token").toString());

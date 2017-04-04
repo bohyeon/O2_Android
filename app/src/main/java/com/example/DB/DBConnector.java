@@ -1,5 +1,6 @@
 package com.example.DB;
 
+import android.os.Looper;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -10,11 +11,15 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +35,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DBConnector {
 
 
@@ -38,41 +42,40 @@ public class DBConnector {
 
     public static JSONObject LoginDBConnector(String id_str, String pw_str) {
 
-        Log.d("response","response login01 : " + id_str + pw_str);
+        //Log.d("response","response login01 : " + id_str + pw_str);
 
-        JSONArray jsonArray = null;
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
+
         JSONObject jsonObject = null;
 
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
+        HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000);
+        HttpResponse response;
         HttpPost httppost = new HttpPost("http://o-two-sport.com/api/users/login/");
-        //httppost.addHeader("Content-Type","Text/html");
+        httppost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+        JSONObject json = new JSONObject();
 
-       // Log.d("response","response 03 : " + id_str + pw_str);
+        // Log.d("response","response 03 : " + id_str + pw_str);
         try {
             // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("email",id_str));
-            nameValuePairs.add(new BasicNameValuePair("password",pw_str));
+            json.put("email", id_str);
+            json.put("password", pw_str);
+            StringEntity se = new StringEntity(json.toString(), HTTP.UTF_8);
 
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
-//            httppost.setHeader("Content-type", "Text/html");
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-           // int code = response.getStatusLine().getStatusCode();
-            String bobo = EntityUtils.toString(response.getEntity());
-           // response.setHeader("Content-Type", "text/xml; charset=UTF-8");
-            Log.d("response","response login : " + bobo.toString());
-           // Log.d("response","response login02 : " + code);
+            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            httppost.setEntity(se);
+            response = httpclient.execute(httppost);
+            // int code = response.getStatusLine().getStatusCode();
+            String bobo = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
 
             jsonObject = new JSONObject(bobo.toString());
-           Log.d("response","response 03 : " + jsonObject);
-           // jsonArray = new JSONArray(bobo.toString());
-
-
-
+            Log.d("response","response 04 : " + jsonObject.toString());
         } catch (ClientProtocolException e) {
-            Log.d("response","response 04 : " + e.toString());
+
             e.printStackTrace();
 
             // TODO Auto-generated catch block
@@ -82,9 +85,10 @@ public class DBConnector {
             // TODO Auto-generated catch block
         }
 
-       // Log.d("response","response 06 : " + jsonObject.toString());
+        // Log.d("response","response 06 : " + jsonObject.toString());
         return  jsonObject;
     }
+
 
     public static String PushToken(String token, String registration_id) {
 
@@ -305,7 +309,7 @@ public class DBConnector {
             String bobo = EntityUtils.toString(response.getEntity());
 
          //   Log.d("response","response mentee " + response.toString());
-
+            Log.d("response","response mento " + bobo.toString());
             jsonObject = new JSONObject(bobo.toString());
 
 
@@ -362,9 +366,9 @@ public class DBConnector {
             HttpResponse response = httpclient.execute(httppost);
             String expert = EntityUtils.toString(response.getEntity());
 
-     //       Log.d("response","response expert " + expert.toString());
+            Log.d("response","response expert " + expert.toString());
 
-            jsonObject = new JSONObject(expert.toString());
+            jsonObject = new JSONObject(expert);
 
 
         } catch (ClientProtocolException e) {
@@ -411,7 +415,7 @@ public class DBConnector {
 
             jsonObject = new JSONObject(bobo.toString());
 
-          //  Log.d("response2", "response1 : " + jsonObject.toString());
+
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -477,6 +481,8 @@ public class DBConnector {
 
         JSONObject jsonObject = null;
 
+        Log.d("response2", "update back : " + image);
+
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost("http://o-two-sport.com/api/posts/post_image/");
@@ -501,7 +507,6 @@ public class DBConnector {
             HttpResponse response = httpclient.execute(httppost);
             String bobo = EntityUtils.toString(response.getEntity());
 
-        //    Log.d("response2", "image : " + bobo.toString());
 
             jsonObject = new JSONObject(bobo.toString());
 
@@ -591,6 +596,40 @@ public class DBConnector {
         }
 
         return  jsonObject;
+    }
+
+
+    public static Integer DeleteContent(String token, String post_id) {
+
+        JSONObject jsonObject = null;
+        int code = 0;
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpDelete httppost = new HttpDelete("http://o-two-sport.com/api/posts/"+post_id+"/");
+        httppost.addHeader("Authorization","Token " +token);
+
+        try {
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+//            String bobo = EntityUtils.toString(response.getEntity());
+            code = response.getStatusLine().getStatusCode();
+
+
+            //    Log.d("response2", "delete : " + jsonObject.toString());
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+            //  Log.d("response2", "response2 : " + e.toString());
+            // TODO Auto-generated catch block
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO Auto-generated catch block
+        }
+
+        return  code;
     }
 
     public static JSONObject DeleteComment(String token, String comment_id) {
@@ -736,6 +775,7 @@ public class DBConnector {
 
       //      Log.d("response","post reponse : " + responseStrBuilder.toString());
             jsonArray = new JSONArray(responseStrBuilder.toString());
+            Log.d("response2", "post : " + jsonArray.toString());
 
         } catch (IOException | JSONException e) {
 
@@ -745,6 +785,40 @@ public class DBConnector {
 
         return jsonArray;
     }
+
+    public  JSONObject GetPost_Detail(String token, String post_id){
+
+        // Log.d("response","res toekn : " + token);
+        JSONObject jsonArray = null;
+        //   Log.d("response","getPost token : " + token.toString());
+
+        try {
+            URL url = new URL("http://o-two-sport.com/api/posts/"+post_id+"/");
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Authorization","Token " +token);
+            conn.connect();
+
+            InputStream is = conn.getInputStream();
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+
+            //      Log.d("response","post reponse : " + responseStrBuilder.toString());
+            jsonArray = new JSONObject(responseStrBuilder.toString());
+         //   Log.d("response2", "comment post jj : " + jsonArray.toString());
+
+        } catch (IOException | JSONException e) {
+
+            e.printStackTrace();
+            //    Log.d("response","post reponse2 : " + e.toString());
+        }
+
+        return jsonArray;
+    }
+
 
     public  JSONArray GetPost_User(String token, String user_id){
 
@@ -972,11 +1046,13 @@ public class DBConnector {
         JSONArray jsonArray = null;
 
         try {
-            URL url = new URL("http://o-two-sport.com/api/noti/");
+            URL url = new URL("http://o-two-sport.com/api/notis/");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization","Token " +token);
             conn.connect();
+
+            int status = conn.getResponseCode();
 
             InputStream is = conn.getInputStream();
             BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -986,8 +1062,8 @@ public class DBConnector {
                 responseStrBuilder.append(inputStr);
 
             jsonArray = new JSONArray(responseStrBuilder.toString());
+          //  Log.d("response" , "noti : " + jsonArray);
 
-            Log.d("response" , "noti : " + jsonArray);
 
         } catch (IOException | JSONException e) {
             Log.d("response" , "noti e : " + e.toString());
@@ -1063,35 +1139,131 @@ public class DBConnector {
     public static JSONObject PutUserInfo(String token, String name, String password, String profile_image_url, String phone_number, String is_phone_number_public, String birthday,String is_birthday_public, String sport_type, String mentor_type, String expert_type, String region, String school_level, String school_name, String company, String experience_1, String experience_2, String experience_3, String is_receive_push){
 
 
-    JSONObject jsonObject = null;
+          JSONObject jsonObject = null;
+
+        if (Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
+      //  JSONObject jsonObject = null;
 
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
+        HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000);
+        HttpResponse response;
         HttpPut httppost = new HttpPut("http://o-two-sport.com/api/users/self/");
+        httppost.addHeader("Authorization","Token " +token);
+        httppost.addHeader(HTTP.CONTENT_TYPE, "application/json");
+        JSONObject json = new JSONObject();
+
+
+        try {
+            // Add your data
+
+            json.put("name",name);
+            json.put("password",password);
+            json.put("profile_image_url",profile_image_url);
+            json.put("phone_number",phone_number);
+            json.put("is_phone_number_public",is_phone_number_public);
+
+            json.put("birthday",birthday);
+            json.put("is_birthday_public",is_birthday_public);
+            json.put("sport_type",sport_type);
+            json.put("mentor_type",mentor_type);
+
+            json.put("expert_type",expert_type);
+            json.put("region",region);
+            json.put("school_level",school_level);
+            json.put("school_name",school_name);
+
+            json.put("company",company);
+            json.put("experience_1",experience_1);
+            json.put("experience_2",experience_2);
+            json.put("experience_3",experience_3);
+            json.put("is_receive_push",is_receive_push);
+
+
+            StringEntity se = new StringEntity(json.toString(), HTTP.UTF_8);
+
+            se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+            httppost.setEntity(se);
+            response = httpclient.execute(httppost);
+            // int code = response.getStatusLine().getStatusCode();
+            String bobo = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+
+            Log.d("response","update user2 : " + bobo.toString());
+            // Log.d("response","response login02 : " + code);
+
+            jsonObject = new JSONObject(bobo.toString());
+       //     Log.d("response","response 03 : " + jsonObject);
+            // jsonArray = new JSONArray(bobo.toString());
+
+            // nameValuePairs.add(new BasicNameValuePair("password",password));
+//
+//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//
+//            nameValuePairs.add(new BasicNameValuePair("name",name));
+//           // nameValuePairs.add(new BasicNameValuePair("password",password));
+//            nameValuePairs.add(new BasicNameValuePair("profile_image_url",profile_image_url));
+//            nameValuePairs.add(new BasicNameValuePair("phone_number",phone_number));
+//            nameValuePairs.add(new BasicNameValuePair("is_phone_number_public",is_phone_number_public));
+//            nameValuePairs.add(new BasicNameValuePair("birthday",birthday));
+//            nameValuePairs.add(new BasicNameValuePair("is_birthday_public",is_birthday_public));
+//            nameValuePairs.add(new BasicNameValuePair("sport_type",sport_type));
+//            nameValuePairs.add(new BasicNameValuePair("mentor_type",mentor_type));
+//            nameValuePairs.add(new BasicNameValuePair("expert_type",expert_type));
+//            nameValuePairs.add(new BasicNameValuePair("region",region));
+//            nameValuePairs.add(new BasicNameValuePair("school_level",school_level));
+//            nameValuePairs.add(new BasicNameValuePair("school_name",school_name));
+//            nameValuePairs.add(new BasicNameValuePair("company",company));
+//            nameValuePairs.add(new BasicNameValuePair("experience_1",experience_1));
+//            nameValuePairs.add(new BasicNameValuePair("experience_2",experience_2));
+//            nameValuePairs.add(new BasicNameValuePair("experience_3",experience_3));
+//            nameValuePairs.add(new BasicNameValuePair("is_receive_push",is_receive_push));
+//
+//            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
+//
+//            // Execute HTTP Post Request
+//            HttpResponse response = httpclient.execute(httppost);
+//            String bobo = EntityUtils.toString(response.getEntity());
+//
+//
+//            jsonObject = new JSONObject(bobo.toString());
+
+     //        Log.d("response2", "response1 : " + jsonObject.toString());
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        //      Log.d("response2", "response2 : " + e.toString());
+            // TODO Auto-generated catch block
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            // TODO Auto-generated catch block
+        }
+
+        return  jsonObject;
+    }
+
+    public static JSONObject PutContent(String token, String post_id, String post_type, String content, String youtube_title, String youtube_link, String post_image_url){
+
+
+        JSONObject jsonObject = null;
+
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPut httppost = new HttpPut("http://o-two-sport.com/api/posts/"+post_id+"/");
         httppost.addHeader("Authorization","Token " +token);
 
         try {
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
-            nameValuePairs.add(new BasicNameValuePair("name",name));
-           // nameValuePairs.add(new BasicNameValuePair("password",password));
-            nameValuePairs.add(new BasicNameValuePair("profile_image_url",profile_image_url));
-            nameValuePairs.add(new BasicNameValuePair("phone_number",phone_number));
-            nameValuePairs.add(new BasicNameValuePair("is_phone_number_public",is_phone_number_public));
-            nameValuePairs.add(new BasicNameValuePair("birthday",birthday));
-            nameValuePairs.add(new BasicNameValuePair("is_birthday_public",is_birthday_public));
-            nameValuePairs.add(new BasicNameValuePair("sport_type",sport_type));
-            nameValuePairs.add(new BasicNameValuePair("mentor_type",mentor_type));
-            nameValuePairs.add(new BasicNameValuePair("expert_type",expert_type));
-            nameValuePairs.add(new BasicNameValuePair("region",region));
-            nameValuePairs.add(new BasicNameValuePair("school_level",school_level));
-            nameValuePairs.add(new BasicNameValuePair("school_name",school_name));
-            nameValuePairs.add(new BasicNameValuePair("company",company));
-            nameValuePairs.add(new BasicNameValuePair("experience_1",experience_1));
-            nameValuePairs.add(new BasicNameValuePair("experience_2",experience_2));
-            nameValuePairs.add(new BasicNameValuePair("experience_3",experience_3));
-            nameValuePairs.add(new BasicNameValuePair("is_receive_push",is_receive_push));
+            nameValuePairs.add(new BasicNameValuePair("post_type",post_type));
+            nameValuePairs.add(new BasicNameValuePair("content",content));
+            nameValuePairs.add(new BasicNameValuePair("youtube_title",youtube_title));
+            nameValuePairs.add(new BasicNameValuePair("youtube_link",youtube_link));
+            nameValuePairs.add(new BasicNameValuePair("post_image_url",post_image_url));
 
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
@@ -1099,15 +1271,15 @@ public class DBConnector {
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
             String bobo = EntityUtils.toString(response.getEntity());
-
+            Log.d("response2", "response1 : " + response.toString());
 
             jsonObject = new JSONObject(bobo.toString());
 
-     //        Log.d("response2", "response1 : " + jsonObject.toString());
+
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-        //      Log.d("response2", "response2 : " + e.toString());
+            //      Log.d("response2", "response2 : " + e.toString());
             // TODO Auto-generated catch block
         } catch (IOException | JSONException e) {
             e.printStackTrace();

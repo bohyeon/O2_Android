@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     ListView newsfeedLv;
     TextView actionbar_title;
@@ -50,8 +51,9 @@ public class MainActivity extends AppCompatActivity
     Boolean buttonStateOpen;
     Handler handler;
     DrawerLayout drawer;
-    String token, id;
+    String token, id, email;
     String member_type;
+    NewsfeedItem newsfeedItem;
     TextView expert_tv, mentee_tv, mentor_tv;
     int child_int = 1;
     int mento_int = 1;
@@ -62,6 +64,12 @@ public class MainActivity extends AppCompatActivity
     public SharedPreferences loginPreferences;
     private boolean mLockListView;
 
+    //it will tell us weather to load more items or not
+    boolean loadingMore = false;
+    private int scrollState;
+    private int scrollpos;
+    ProgressBar pb;
+    private int offset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +95,23 @@ public class MainActivity extends AppCompatActivity
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
         id = loginPreferences.getString("id", "");
-
+        email = loginPreferences.getString("email","");
 
             Log.d("response" , "response main token : " + token);
+
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
 
 
         View header = getLayoutInflater().inflate(R.layout.main_header, null, false);
         this.newsfeedLv.addHeaderView(header);
+
+//        View footerView = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.loading_view, null, false);
+//        this.newsfeedLv.addFooterView(footerView);
+//
+//        pb = new ProgressBar(this);
+//        newsfeedLv.addFooterView(pb);
+
 
         childCnt = (LinearLayout) header.findViewById(R.id.main_childCnt);
         mentoCnt = (LinearLayout) header.findViewById(R.id.main_mentoCnt);
@@ -139,8 +155,21 @@ public class MainActivity extends AppCompatActivity
         this.newsfeedAdapterActivity = new NewsfeedAdapterActivity(this, newsFeed, this);
         this.newsfeedLv.setAdapter(newsfeedAdapterActivity);
 
+//        newsfeedLv.setOnScrollListener(new EndlessScrollListener() {
+//
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                // TODO Auto-generated method stub
+//                new GetPosts().execute(new DBConnector());
+//
+//            }
+//        });
+
+      //  this.newsfeedLv.setOnScrollListener(this);
 
     }
+
+
 
 
     @Override

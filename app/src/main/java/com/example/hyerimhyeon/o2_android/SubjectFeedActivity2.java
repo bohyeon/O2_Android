@@ -36,7 +36,7 @@ public class SubjectFeedActivity2 extends AppCompatActivity
     NewsFeed newsFeed;
     String sport_type;
     TextView actionbar_title;
-    String token, id;
+    String token, id, email;
     Handler handler;
     public SharedPreferences loginPreferences;
     private static final int REQUEST_EXTERNAL_STORAGE = 2;
@@ -50,6 +50,7 @@ public class SubjectFeedActivity2 extends AppCompatActivity
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
         id = loginPreferences.getString("id", "");
+        email = loginPreferences.getString("email","");
 
         Intent intent = getIntent();
         sport_type = intent.getStringExtra("sport_type");

@@ -17,11 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.DB.DBConnector;
@@ -52,8 +55,11 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
     String token, post_id;
     String select_pods_id;
     String youtube_link,id;
+    String update_postId, update_content, update_postType, update_youtubeTitle, update_youtubeLink, update_imageUrl;
     Boolean is_like;
     Bitmap imgView;
+
+    int count = 10;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 2;
     private PopupWindow popWindow;
@@ -264,7 +270,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
 
 
     static class ViewHolder{
-        LinearLayout content_layout;
+        RelativeLayout content_layout;
         ImageView profile_img = null;
         ImageView image = null;
         TextView like_btn = null;
@@ -278,6 +284,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
         LinearLayout youtube_layout = null;
         ImageView youtube_img = null;
         TextView youtube_title = null;
+        ImageView delete_img;
+        Spinner delete_spi;
+        LinearLayout spinner_box;
         YouTubePlayerView youTubePlayerView = null;
     }
 
@@ -301,7 +310,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
             viewHolder.regist_date = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_registDate);
             viewHolder.content = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_content);
             viewHolder.like = (TextView) itemView.findViewById(R.id.main_newsfeed_like);
-            viewHolder.content_layout = (LinearLayout) itemView.findViewById(R.id.main_feed_layout);
+            viewHolder.content_layout = (RelativeLayout) itemView.findViewById(R.id.main_feed_layout);
             viewHolder.like_btn = (TextView) itemView.findViewById(R.id.main_like_btn);
             viewHolder.image = (ImageView) itemView.findViewById(R.id.main_newsfeed_lv_img);
             viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.main_profile_img);
@@ -309,10 +318,68 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
             viewHolder.youtube_layout = (LinearLayout) itemView.findViewById(R.id.youtube_layout);
             viewHolder.youtube_img = (ImageView) itemView.findViewById(R.id.youtube_img);
             viewHolder.youtube_title = (TextView) itemView.findViewById(R.id.main_youtube_title);
-
-
+            viewHolder.delete_img = (ImageView) itemView.findViewById(R.id.main_arrow_btn);
+            viewHolder.delete_spi = (Spinner) itemView.findViewById(R.id.main_delete_spinner);
+            viewHolder.spinner_box = (LinearLayout) itemView.findViewById(R.id.main_spinner_box);
 
             final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+
+
+            if(newfeedItemPosition.email.equals(mainActivity.email)){
+                Log.d("response" , "eamil : " + newfeedItemPosition.email + " id : " + mainActivity.email);
+
+                viewHolder.spinner_box.setVisibility(LinearLayout.VISIBLE);
+                viewHolder.delete_img.setVisibility(LinearLayout.VISIBLE);
+                viewHolder.delete_spi.setVisibility(LinearLayout.VISIBLE);
+            }else if(! newfeedItemPosition.email.equals(mainActivity.email)){
+                viewHolder.spinner_box.setVisibility(LinearLayout.GONE);
+              //  viewHolder.delete_img.setVisibility(LinearLayout.GONE);
+            }
+
+
+            viewHolder.delete_img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewHolder.delete_spi.performClick();
+                }
+            });
+
+
+            viewHolder.delete_spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                {
+                    String selectedItem = parent.getItemAtPosition(position).toString();
+                    if(selectedItem.equals("글 삭제"))
+                    {
+
+                        select_pods_id = newfeedItemPosition.post_id;
+                        new DeleteContent().execute(new DBConnector());
+                    }else if(selectedItem.equals("글 수정")){
+
+                        update_postId = newfeedItemPosition.post_id;
+                        update_content = newfeedItemPosition.content;
+                        update_youtubeTitle = newfeedItemPosition.youtube_tite;
+                        update_youtubeLink = newfeedItemPosition.youtube_link;
+                        update_imageUrl = newfeedItemPosition.post_image_url;
+
+
+                        Intent intent = new Intent(context, NewsfeedUpdateActivity.class);
+                        intent.putExtra("post_type","sport_knowledge_feed");
+                        intent.putExtra("post_id",update_postId);
+                        intent.putExtra("content", update_content);
+                        intent.putExtra("youtube_title", update_youtubeTitle);
+                        intent.putExtra("youtube_link" , update_youtubeLink);
+                        intent.putExtra("post_image_url" , update_imageUrl);
+                        ((Activity) getContext()).startActivityForResult(intent,200);
+                        //new PutContent().execute(new DBConnector());
+                    }
+                } // to close the onItemSelected
+                public void onNothingSelected(AdapterView<?> parent)
+                {
+
+                }
+            });
 
             if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
 
@@ -330,7 +397,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                 if(!newfeedItemPosition.youtube_id.equals("") ){
                      viewHolder.youtube_layout.setBackground(null);
                     Log.d("response", "youtube ㅅㅂ : " + newfeedItemPosition.youtube_id);
-                    youtube_link = newfeedItemPosition.youtube_link;
+                  //  youtube_link = newfeedItemPosition.youtube_link;
                     //   new GetYoutube().execute(new DBConnector());
                     // new DownLoadImageTask_youtube(viewHolder.youtube_img).execute("http://img.youtube.com/vi/"+newfeedItemPosition.youtube_id+"/1.jpg");
 
@@ -677,7 +744,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
             viewHolder.regist_date = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_registDate);
             viewHolder. content = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_content);
             viewHolder. like = (TextView) itemView.findViewById(R.id.main_newsfeed_like);
-            viewHolder.content_layout = (LinearLayout) itemView.findViewById(R.id.main_feed_layout);
+            viewHolder.content_layout = (RelativeLayout) itemView.findViewById(R.id.main_feed_layout);
             viewHolder.like_btn = (TextView) itemView.findViewById(R.id.main_like_btn);
             viewHolder.image = (ImageView) itemView.findViewById(R.id.main_newsfeed_lv_img);
             viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.main_profile_img);
@@ -685,14 +752,72 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
             viewHolder.youtube_layout = (LinearLayout) itemView.findViewById(R.id.youtube_layout);
             viewHolder.youtube_img = (ImageView) itemView.findViewById(R.id.youtube_img);
             viewHolder.youtube_title = (TextView) itemView.findViewById(R.id.main_youtube_title);
+            viewHolder.delete_img = (ImageView) itemView.findViewById(R.id.main_arrow_btn);
+            viewHolder.delete_spi = (Spinner) itemView.findViewById(R.id.main_delete_spinner);
+            viewHolder.spinner_box = (LinearLayout) itemView.findViewById(R.id.main_spinner_box);
 
-//
 //            YouTubePlayerView youTubeView = (YouTubePlayerView) itemView.findViewById(R.id.youtube_view);
 //            youTubeView.initialize("AIzaSyBTzYl1ZiZSMPSBSC-9Wdw_b4km0dRzI38", this);
 
             if(newsFeed.newsfeedItem.size() != 0){
 
                 final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+
+
+
+                if(newfeedItemPosition.email.equals(mainActivity.email)){
+                    Log.d("response" , "eamil : " + newfeedItemPosition.email + " id : " + mainActivity.email);
+
+                    viewHolder.spinner_box.setVisibility(LinearLayout.VISIBLE);
+                    viewHolder.delete_img.setVisibility(LinearLayout.VISIBLE);
+                    viewHolder.delete_spi.setVisibility(LinearLayout.VISIBLE);
+                }else if(! newfeedItemPosition.email.equals(mainActivity.email)){
+                    viewHolder.spinner_box.setVisibility(LinearLayout.GONE);
+                    //  viewHolder.delete_img.setVisibility(LinearLayout.GONE);
+                }
+
+                viewHolder.delete_img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewHolder.delete_spi.performClick();
+                    }
+                });
+
+
+                viewHolder.delete_spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                {
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+                    {
+                        String selectedItem = parent.getItemAtPosition(position).toString();
+                        if(selectedItem.equals("글 삭제"))
+                        {
+                            select_pods_id = newfeedItemPosition.post_id;
+                            new DeleteContent().execute(new DBConnector());
+                        }else if(selectedItem.equals("글 수정")){
+
+                            update_postId = newfeedItemPosition.post_id;
+                            update_content = newfeedItemPosition.content;
+                            update_youtubeTitle = newfeedItemPosition.youtube_tite;
+                            update_youtubeLink = newfeedItemPosition.youtube_link;
+                            update_imageUrl = newfeedItemPosition.post_image_url;
+
+
+                            Intent intent = new Intent(context, NewsfeedUpdateActivity.class);
+                            intent.putExtra("post_type","sport_knowledge_feed");
+                            intent.putExtra("post_id",update_postId);
+                            intent.putExtra("content", update_content);
+                            intent.putExtra("youtube_title", update_youtubeTitle);
+                            intent.putExtra("youtube_link" , update_youtubeLink);
+                            intent.putExtra("post_image_url" , update_imageUrl);
+                            ((Activity) getContext()).startActivityForResult(intent,200);
+                           // new PutContent().execute(new DBConnector());
+                        }
+                    } // to close the onItemSelected
+                    public void onNothingSelected(AdapterView<?> parent)
+                    {
+
+                    }
+                });
 
                 if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
 
@@ -797,9 +922,11 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
 
                 viewHolder.name.setText(newfeedItemPosition.name);
 
+
                 String type_str = "";
 
                 if(newfeedItemPosition.member_type != null){
+                    Log.d("response", "member_type : " + newfeedItemPosition.member_type);
                     if(newfeedItemPosition.member_type.equals("mentor")){
                         type_str = "멘토";
                     }else if(newfeedItemPosition.member_type.equals("mentee")){
@@ -863,6 +990,8 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                 viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        
                         Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
                         intent.putExtra("name",newfeedItemPosition.name);
                         intent.putExtra("company",newfeedItemPosition.company);
@@ -1010,7 +1139,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("token", token);
 
 
-                        Log.d("response", "03200 : " + newfeedItemPosition2.member_type);
+                       // Log.d("response", "03200 : " + newfeedItemPosition2.member_type);
                         ((Activity) getContext()).startActivityForResult(intent,200);
 
                     }
@@ -1022,7 +1151,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
             viewHolder.like_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("response" , "like btn : " + position);
+               //     Log.d("response" , "like btn : " + position);
 
                     int position_like = position;
                     final NewsfeedItem newfeedItemPosition2 = newsFeed.newsfeedItem.get(position);
@@ -1107,7 +1236,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
 
     }
 
-       private class DeleteLike extends AsyncTask<DBConnector, Long, JSONObject> {
+    private class DeleteLike extends AsyncTask<DBConnector, Long, JSONObject> {
 
 
         @Override
@@ -1136,6 +1265,84 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
         }
 
     }
+
+    private class DeleteContent extends AsyncTask<DBConnector, Long, Integer> {
+
+
+        @Override
+        protected Integer doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+       //     Log.d("response22 " , "delete" + token + "  " + select_pods_id);
+            return params[0].DeleteContent(token, select_pods_id);
+
+        }
+
+        @Override
+        protected void onPostExecute(final Integer jsonObject) {
+
+            settextToAdapter_deleteContent(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter_deleteContent(Integer jsonObject) {
+
+
+//        Log.d("response" , "delete");
+//        Intent intent = new Intent( context.getApplicationContext(), MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        ((Activity) getContext()).startActivity(intent);
+
+        mainActivity.onStart();
+
+
+        if(jsonObject == null){
+
+        }else{
+
+        }
+
+    }
+
+
+
+    private class PutContent extends AsyncTask<DBConnector, Long, JSONObject> {
+
+
+        @Override
+        protected JSONObject doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+            //     Log.d("response22 " , "delete" + token + "  " + select_pods_id);
+            return params[0].PutContent(token, update_postId, update_postType, update_content, update_youtubeTitle, update_youtubeLink, update_imageUrl);
+
+        }
+
+        @Override
+        protected void onPostExecute(final JSONObject jsonObject) {
+
+            settextToAdapter_putContent(jsonObject);
+
+        }
+    }
+
+    public void settextToAdapter_putContent(JSONObject jsonObject) {
+
+
+        Intent intent = new Intent( context.getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        ((Activity) getContext()).startActivity(intent);
+
+
+        if(jsonObject == null){
+
+        }else{
+
+        }
+
+    }
+
 
     private class GetYoutube extends AsyncTask<DBConnector, Long, JSONObject> {
 

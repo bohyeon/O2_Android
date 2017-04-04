@@ -1,4 +1,4 @@
-package com.example.hyerimhyeon.o2_android;
+package com.example.ScrollListener;
 
 import android.annotation.TargetApi;
 import android.content.Context;

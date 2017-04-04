@@ -8,8 +8,12 @@
        <item>손해사정인</item>
        <item>증권,투자전문가</item>
        <item>보험전문가</item>
-
-
    </string-array>
+
+    <string-array name="DeleteOrChange">
+        <item> </item>
+        <item>글 수정</item>
+        <item>글 삭제</item>
+    </string-array>
 
 </resources>

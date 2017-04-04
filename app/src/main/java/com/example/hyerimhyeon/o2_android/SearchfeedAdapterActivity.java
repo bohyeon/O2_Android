@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.DB.DBConnector;
@@ -71,7 +72,7 @@ public class SearchfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
     static class ViewHolder{
-        LinearLayout content_layout;
+        RelativeLayout content_layout;
         ImageView image, profile_img;
         TextView like_btn, like;
         TextView name, type, belong, regist_date, content, comment_btn;
@@ -99,7 +100,7 @@ public class SearchfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.regist_date = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_registDate);
             viewHolder.content = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_content);
             viewHolder.like = (TextView) itemView.findViewById(R.id.main_newsfeed_like);
-            viewHolder.content_layout = (LinearLayout) itemView.findViewById(R.id.main_feed_layout);
+            viewHolder.content_layout = (RelativeLayout) itemView.findViewById(R.id.main_feed_layout);
             viewHolder.like_btn = (TextView) itemView.findViewById(R.id.main_like_btn);
             viewHolder.image = (ImageView) itemView.findViewById(R.id.main_newsfeed_lv_img);
             viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.main_profile_img);
@@ -443,7 +444,7 @@ public class SearchfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.regist_date = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_registDate);
             viewHolder. content = (TextView) itemView.findViewById(R.id.main_newsfeed_lv_content);
             viewHolder. like = (TextView) itemView.findViewById(R.id.main_newsfeed_like);
-            viewHolder.content_layout = (LinearLayout) itemView.findViewById(R.id.main_feed_layout);
+            viewHolder.content_layout = (RelativeLayout) itemView.findViewById(R.id.main_feed_layout);
             viewHolder.like_btn = (TextView) itemView.findViewById(R.id.main_like_btn);
             viewHolder.image = (ImageView) itemView.findViewById(R.id.main_newsfeed_lv_img);
             viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.main_profile_img);
