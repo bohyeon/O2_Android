@@ -5,13 +5,14 @@
 
         <item
             android:id="@+id/nav_camera"
-            android:title="스포츠 지식 On" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:title="스포츠전문가 지식 On" />
+            android:title="스포츠 지식 ON" />
+
         <item
             android:id="@+id/nav_lifesport"
-            android:title="매니지먼트 서비스" />
+            android:title="매니지먼트 서비스 ON" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:title="스포츠전문가 지식" />
         <item
             android:id="@+id/nav_gallery"
             android:title="종목별피드" />

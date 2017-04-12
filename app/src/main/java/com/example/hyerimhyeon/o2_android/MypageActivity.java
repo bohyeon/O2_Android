@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.DB.DBConnector;
 
@@ -71,7 +70,7 @@ public class MypageActivity extends AppCompatActivity
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_mypage);
         ImageView logo = (ImageView) headerView.findViewById(R.id.nav_header_logo);
 
         logo.setOnClickListener(new View.OnClickListener() {
@@ -105,10 +104,12 @@ public class MypageActivity extends AppCompatActivity
         }
         nametv.setText(name_encode);
         typetv.setText(loginPreferences.getString("type",""));
-        if(loginPreferences.getString("company","")!=null){
-            companytv.setText(loginPreferences.getString("company",""));
+        if(loginPreferences.getString("member_type","").equals("mentor")){
+            companytv.setText(loginPreferences.getString("sport_type",""));
+        }else if(loginPreferences.getString("member_type","").equals("expert")){
+            companytv.setText(loginPreferences.getString("expert_type",""));
         }else{
-            companytv.setText("");
+            companytv.setText(loginPreferences.getString("sport_type",""));
         }
 
         if(loginPreferences.getString("profile_url","").equals("")|| loginPreferences.getString("profile_url","") == null|| loginPreferences.getString("profile_url","") == " "|| loginPreferences.getString("profile_url","") == "null"|| loginPreferences.getString("profile_url","") == "" || loginPreferences.getString("profile_url","")=="http://" || loginPreferences.getString("profile_url","")=="http://null" || loginPreferences.getString("profile_url","").equals("http://") || loginPreferences.getString("profile_url","").equals("http:/null/")){
@@ -304,8 +305,9 @@ public class MypageActivity extends AppCompatActivity
 
 
         if(jsonArray == null){
-            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
-                    Toast.LENGTH_LONG).show();
+            mypageMypostAdapterActivity.clear();
+//            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
+//                    Toast.LENGTH_LONG).show();
         }else{
 
             mypageMypostAdapterActivity.clear();
@@ -319,9 +321,18 @@ public class MypageActivity extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     JSONObject userJsonObj = jsonObject.getJSONObject("user");
 
+
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                    newsfeedItem.birthday = userJsonObj.getString("birthday");
+                    newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                    newsfeedItem.region = userJsonObj.getString("region");
+                    newsfeedItem.school_level = userJsonObj.getString("school_level");
+                    newsfeedItem.school_name = userJsonObj.getString("school_name");
+
 
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -422,6 +433,7 @@ public class MypageActivity extends AppCompatActivity
 
 
         if(jsonArray == null){
+            mypageAlarmAdapterActivity.clear();
 //            Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
 //                    Toast.LENGTH_LONG).show();
         }else{
@@ -434,7 +446,7 @@ public class MypageActivity extends AppCompatActivity
 
 
                 try {
-                    Log.d("response" , "comment post j: " + jsonArray.toString());
+                  //  Log.d("response" , "comment post j: " + jsonArray.toString());
 
                     String jsonObject = jsonArray.getJSONObject(i).getString("payload");
                  //   String payloadJson = jsonObject.getJSONObject("payload").toString();
@@ -442,7 +454,7 @@ public class MypageActivity extends AppCompatActivity
                     JSONObject payloadJsonObj = new JSONObject(jsonObject);
 
                     newsfeedItem.name = payloadJsonObj.getString("message");
-                    newsfeedItem.profile_url = payloadJsonObj.getString("profile_image_url");
+                    newsfeedItem.profile_url = payloadJsonObj.getString("profile_url");
                     newsfeedItem.post_id = payloadJsonObj.getString("target_id");
                     //newsfeedItem.post_id = jsonArray.getJSONObject(i).getString("id");
 
@@ -453,7 +465,7 @@ public class MypageActivity extends AppCompatActivity
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Log.d("response" , "comment post e: " + e.toString());
+                   // Log.d("response" , "comment post e: " + e.toString());
                 }
 
             }
@@ -506,7 +518,7 @@ public class MypageActivity extends AppCompatActivity
 
     public void settextToAdapter_comment(JSONArray jsonArray) {
 
-        //  Log.d("response" , "comment post : " + jsonArray);
+       //   Log.d("response" , "comment post : " + jsonArray);
 
         // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
         NewsfeedItem_comment newsfeedItem;
@@ -532,6 +544,14 @@ public class MypageActivity extends AppCompatActivity
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                    newsfeedItem.birthday = userJsonObj.getString("birthday");
+                    newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                    newsfeedItem.region = userJsonObj.getString("region");
+                    newsfeedItem.school_level = userJsonObj.getString("school_level");
+                    newsfeedItem.school_name = userJsonObj.getString("school_name");
+
 
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -548,6 +568,9 @@ public class MypageActivity extends AppCompatActivity
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                     newsfeedItem.member_id = userJsonObj.getString("id");
                     newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
+                    newsfeedItem.experience_1 = userJsonObj.getString("experience_1");
+                    newsfeedItem.experience_2 = userJsonObj.getString("experience_2");
+                    newsfeedItem.experience_3 = userJsonObj.getString("experience_3");
 
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
@@ -564,7 +587,7 @@ public class MypageActivity extends AppCompatActivity
                         }else if(str.toString().indexOf("youtu.be") != -1 ){
                             //   Log.d("response", "youtube_str :  "+ str);
                             video_id = str.substring(17);
-                            Log.d("response", "youtube_id :  "+ video_id);
+                         //   Log.d("response", "youtube_id :  "+ video_id);
                         }
 
                         newsfeedItem.youtube_id = video_id;

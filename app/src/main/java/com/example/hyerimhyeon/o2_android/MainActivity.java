@@ -92,16 +92,28 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+//        int permissionReadStorage = ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_NETWORK_STATE);
+//        //  int permissionWriteStorage = ContextCompat.checkSelfPermission(mainActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        if(permissionReadStorage == PackageManager.PERMISSION_DENIED ) {
+//            ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, REQUEST_EXTERNAL_STORAGE);
+//        } else {
+//
+//            new GetPosts().execute(new DBConnector());
+//            new GetUser().execute(new DBConnector());
+//            new GetMentorUser().execute(new DBConnector());
+//            new GetMenteeUser().execute(new DBConnector());
+//        }
+
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
         id = loginPreferences.getString("id", "");
         email = loginPreferences.getString("email","");
 
-            Log.d("response" , "response main token : " + token);
+        Log.d("response" , "register token : " + token);
 
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
-
+        //newsfeedLv.setSelectionAfterHeaderView();
 
         View header = getLayoutInflater().inflate(R.layout.main_header, null, false);
         this.newsfeedLv.addHeaderView(header);
@@ -332,7 +344,7 @@ public class MainActivity extends AppCompatActivity
         // 아이템을 추가하는 동안 중복 요청을 방지하기 위해 락을 걸어둡니다.
         mLockListView = true;
 
-        Log.d("response" , "youtube : " + jsonArray);
+     //   Log.d("response" , "youtube : " + jsonArray);
         Runnable run = new Runnable()
         {
             @Override
@@ -340,6 +352,7 @@ public class MainActivity extends AppCompatActivity
             {
 
                 if(jsonArray == null){
+                    newsfeedAdapterActivity.clear();
                     Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
                             Toast.LENGTH_LONG).show();
                 }else {
@@ -359,6 +372,13 @@ public class MainActivity extends AppCompatActivity
                             newsfeedItem.name = userJsonObj.getString("name");
                             newsfeedItem.email = userJsonObj.getString("email");
                             newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                            newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                            newsfeedItem.birthday = userJsonObj.getString("birthday");
+                            newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                            newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                            newsfeedItem.region = userJsonObj.getString("region");
+                            newsfeedItem.school_level = userJsonObj.getString("school_level");
+                            newsfeedItem.school_name = userJsonObj.getString("school_name");
 
                             newsfeedItem.content = jsonObject.getString("content");
                             newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -374,12 +394,14 @@ public class MainActivity extends AppCompatActivity
                             newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                             newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                             newsfeedItem.member_id = userJsonObj.getString("id");
-                            newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
+                            newsfeedItem.experience_1 = userJsonObj.getString("experience_1");
+                            newsfeedItem.experience_2 = userJsonObj.getString("experience_2");
+                            newsfeedItem.experience_3 = userJsonObj.getString("experience_3");
 
                             if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                                newsfeedItem.youtube_id = "";
                             }else{
-                              //  newsfeedItem.youtube_tite = userJsonObj.getString("youtube_title");
+                                newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
                                 String str = newsfeedItem.youtube_link;
                                 String video_id = "";
 
@@ -465,7 +487,7 @@ public class MainActivity extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("스포츠 지식 On");
+        actionbar_title.setText("스포츠 지식 ON");
 
 
        buttonStateOpen = false;

@@ -152,6 +152,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
 
 
         if(jsonArray == null){
+            expertfeedAdapterActivity.clear();
             Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
                     Toast.LENGTH_LONG).show();
         }else{
@@ -166,9 +167,17 @@ public class LifeExpertFeedActivity extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     JSONObject userJsonObj = jsonObject.getJSONObject("user");
 
+
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                    newsfeedItem.birthday = userJsonObj.getString("birthday");
+                    newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                    newsfeedItem.region = userJsonObj.getString("region");
+                    newsfeedItem.school_level = userJsonObj.getString("school_level");
+                    newsfeedItem.school_name = userJsonObj.getString("school_name");
 
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -184,12 +193,14 @@ public class LifeExpertFeedActivity extends AppCompatActivity
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                     newsfeedItem.member_id = userJsonObj.getString("id");
-                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
-
+                    newsfeedItem.experience_1 = userJsonObj.getString("experience_1");
+                    newsfeedItem.experience_2 = userJsonObj.getString("experience_2");
+                    newsfeedItem.experience_3 = userJsonObj.getString("experience_3");
 
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
                     }else{
+                        newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
                         String str = newsfeedItem.youtube_link;
                         String video_id = "";
 
@@ -261,7 +272,7 @@ public class LifeExpertFeedActivity extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("매니지먼트 서비스");
+        actionbar_title.setText("매니지먼트 서비스 ON");
 
         buttonStateOpen = false;
 

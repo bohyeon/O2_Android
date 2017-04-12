@@ -100,7 +100,7 @@ public class SubjectFeedActivity2 extends AppCompatActivity
 
             //it is executed on Background thread
 
-            return params[0].GetPost_sport(token, sport_type);
+            return params[0].GetPost_sport(token, sport_type.trim());
 
         }
 
@@ -139,12 +139,16 @@ public class SubjectFeedActivity2 extends AppCompatActivity
 
 
         if(jsonArray == null){
+
+            subjectfeedAdapterActivity.clear();
+//            subjectfeedAdapterActivity.add(newsfeedItem);
+//            subjectfeedAdapterActivity.notifyDataSetChanged();
             Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
                     Toast.LENGTH_LONG).show();
         }else{
 
-            subjectfeedAdapterActivity.clear();
 
+            subjectfeedAdapterActivity.clear();
             for(int i = 0 ; i<jsonArray.length(); i++){
 
                 newsfeedItem = new NewsfeedItem();
@@ -153,9 +157,18 @@ public class SubjectFeedActivity2 extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     JSONObject userJsonObj = jsonObject.getJSONObject("user");
 
+
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                    newsfeedItem.birthday = userJsonObj.getString("birthday");
+                    newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                    newsfeedItem.region = userJsonObj.getString("region");
+                    newsfeedItem.school_level = userJsonObj.getString("school_level");
+                    newsfeedItem.school_name = userJsonObj.getString("school_name");
+
 
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -176,6 +189,7 @@ public class SubjectFeedActivity2 extends AppCompatActivity
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
                     }else{
+                        newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
                         String str = newsfeedItem.youtube_link;
                         String video_id = "";
 
@@ -252,7 +266,7 @@ public class SubjectFeedActivity2 extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SubjectFeedActivity2.this, SearchActivity.class);
-                intent.putExtra("type","common");
+                intent.putExtra("type","OnlySport");
                 intent.putExtra("sport_type",sport_type);
                 startActivityForResult(intent,1);
             }

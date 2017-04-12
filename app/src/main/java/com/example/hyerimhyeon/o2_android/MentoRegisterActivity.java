@@ -16,13 +16,17 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.DB.DBConnector;
@@ -44,8 +48,10 @@ public class MentoRegisterActivity extends AppCompatActivity
     EditText mail, pw, pw_ck, name, phone, birth, type_name, location_name, belong_name, shcool_name, school_type;
     String email, password, name_str, password_ck, profile_img_url, phone_str, birth_str, sport_type, region, mentor_type, company, invite_code;
     String phone_open, birth_open;
-
+    CheckBox agree01_ck, agree02_ck;
+    TextView agree_tv, userAgree_tv;
     RadioButton one, two, three, four;
+    ScrollView agree01_scroll, top_scroll, agree02_scroll;
     private File file = null;
 
     public SharedPreferences loginPreferences;
@@ -74,6 +80,47 @@ public class MentoRegisterActivity extends AppCompatActivity
         two = (RadioButton) findViewById(R.id.m_register_radio2);
         three = (RadioButton) findViewById(R.id.m_register_radio3);
         four = (RadioButton) findViewById(R.id.m_register_radio4);
+        agree_tv = (TextView) findViewById(R.id.m_register_agree);
+        agree01_scroll = (ScrollView) findViewById(R.id.m_register_scroll01);
+        userAgree_tv = (TextView) findViewById(R.id.m_register_agree02);
+        agree02_scroll = (ScrollView) findViewById(R.id.m_register_scroll02);
+        top_scroll = (ScrollView) findViewById(R.id.m_register_top_scroll);
+        agree01_ck = (CheckBox) findViewById(R.id.m_agree_ck);
+        agree02_ck = (CheckBox) findViewById(R.id.m_agree_ck02);
+
+        //  agree_tv.setMovementMethod(new ScrollingMovementMethod());
+
+        top_scroll.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                //  Log.v(TAG,”PARENT TOUCH”);
+                findViewById(R.id.m_register_scroll01).getParent().requestDisallowInterceptTouchEvent(false);
+                return false;
+            }
+        });
+
+        agree01_scroll.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                // Log.v(TAG,”CHILD TOUCH”);
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        agree02_scroll.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                // Log.v(TAG,”CHILD TOUCH”);
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
 
         one.isSelected();
         mentor_type = one.getText().toString();
@@ -241,7 +288,26 @@ public class MentoRegisterActivity extends AppCompatActivity
 
                                                         if (password.equals(password_ck)) {
 
-                                                            new UploadImage().execute(new DBConnector());
+                                                            if (agree01_ck.isChecked() == true) {
+
+                                                                if (agree02_ck.isChecked() == true) {
+
+                                                                    new UploadImage().execute(new DBConnector());
+
+
+                                                                } else {
+                                                                    Toast.makeText(getApplicationContext(), "개인정보취급방침에 동의해주세요.",
+                                                                            Toast.LENGTH_LONG).show();
+                                                                }
+
+
+
+                                                            } else {
+                                                                Toast.makeText(getApplicationContext(), "이용약관에 동의해주세요.",
+                                                                        Toast.LENGTH_LONG).show();
+                                                            }
+
+
 
 
                                                         } else {
@@ -401,7 +467,7 @@ public class MentoRegisterActivity extends AppCompatActivity
 
     public void settextToAdapter2(JSONObject jsonObject) {
 
-        Log.d("response ", "mento json : " + jsonObject.toString());
+        //Log.d("response ", "mento json : " + jsonObject.toString());
 
         if (jsonObject == null) {
 
@@ -411,7 +477,7 @@ public class MentoRegisterActivity extends AppCompatActivity
             loginPrefsEditor = loginPreferences.edit();
 
             try {
-                Log.d("response", "mentee name : " + jsonObject.getString("name"));
+               // Log.d("response", "mentee name : " + jsonObject.getString("name"));
 
 //                loginPrefsEditor.putString("email", jsonObject.getString("email").toString());
 //                loginPrefsEditor.putString("name", jsonObject.getString("name").toString());
@@ -425,12 +491,15 @@ public class MentoRegisterActivity extends AppCompatActivity
 //                loginPrefsEditor.putString("token",jsonObject.getString("token").toString());
 
                 loginPrefsEditor.putString("email",email);
+                loginPrefsEditor.putString("pw",password);
                 loginPrefsEditor.putString("name",name_str);
-                loginPrefsEditor.putString("id","me");
+                loginPrefsEditor.putString("id",jsonObject.getString("id").toString());
                 loginPrefsEditor.putString("profile_url",profile_img_url);
                 loginPrefsEditor.putString("password",password);
                 loginPrefsEditor.putString("phone_number",phone_str);
                 loginPrefsEditor.putString("birthday",birth_str);
+                loginPrefsEditor.putString("is_phone_number_public","false");
+                loginPrefsEditor.putString("is_birthday_public", "false");
                 loginPrefsEditor.putString("sport_type",sport_type);
                 loginPrefsEditor.putString("region",region);
                 loginPrefsEditor.putString("mentor_type",mentor_type);

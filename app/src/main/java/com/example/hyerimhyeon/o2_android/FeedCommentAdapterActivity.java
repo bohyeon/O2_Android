@@ -93,11 +93,14 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                type.setText(type_str);
 
-
-            if(!newfeedItemPosition.type.equals("mentee")){
-                belong.setText(newfeedItemPosition.company);
+           // Log.d("response" , "comment  :  "+ newfeedItemPosition.member_type);
+            if(newfeedItemPosition.member_type.equals("mentor")){
+                belong.setText(newfeedItemPosition.sport_type);
+            }else if(newfeedItemPosition.member_type.equals("expert")){
+                // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
+                belong.setText(newfeedItemPosition.expert_type);
             }else{
-                belong.setText("");
+                belong.setText(newfeedItemPosition.sport_type);
             }
 
             if(newfeedItemPosition.profile_url.equals("")|| newfeedItemPosition.profile_url == null||newfeedItemPosition.profile_url == " "||newfeedItemPosition.profile_url == "null"|| newfeedItemPosition.profile_url == "" || newfeedItemPosition.profile_url=="http://" || newfeedItemPosition.profile_url=="http://null" || newfeedItemPosition.profile_url.equals("http://") || newfeedItemPosition.profile_url.equals("http:/null/")){
@@ -106,7 +109,7 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 new DownLoadImageTask_profile(profile_img).execute("http://"+newfeedItemPosition.profile_url);
 
             }
-            Log.d("response" , "id : " + feedDetailActivity.email + " id2 : " + newfeedItemPosition.email);
+            //Log.d("response" , "id : " + feedDetailActivity.email + " id2 : " + newfeedItemPosition.email);
             if(feedDetailActivity.email.equals(newfeedItemPosition.email)){
                 comment_box.setVisibility(LinearLayout.VISIBLE);
                 comment_remove.setOnClickListener(new View.OnClickListener() {
@@ -166,10 +169,14 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 type.setText(type_str);
 
 
-                if(!newfeedItemPosition.type.equals("mentee")){
-                    belong.setText(newfeedItemPosition.company);
+        //        Log.d("response" , "comment  :  "+ newfeedItemPosition.member_type);
+                if(newfeedItemPosition.member_type.equals("mentor")){
+                    belong.setText(newfeedItemPosition.sport_type);
+                }else if(newfeedItemPosition.member_type.equals("expert")){
+                    // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
+                    belong.setText(newfeedItemPosition.expert_type);
                 }else{
-                    belong.setText("");
+                    belong.setText(newfeedItemPosition.sport_type);
                 }
 
 
@@ -180,7 +187,7 @@ public class FeedCommentAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                 }
 
-                Log.d("response" , "id : " + feedDetailActivity.email + " id2 : " + newfeedItemPosition.email);
+              //  Log.d("response" , "id : " + feedDetailActivity.email + " id2 : " + newfeedItemPosition.email);
                 if(feedDetailActivity.email.equals(newfeedItemPosition.email)){
                     comment_box.setVisibility(LinearLayout.VISIBLE);
                     comment_remove.setOnClickListener(new View.OnClickListener() {

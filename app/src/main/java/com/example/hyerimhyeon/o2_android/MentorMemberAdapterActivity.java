@@ -20,10 +20,14 @@ public class MentorMemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     MemberActivity memberActivity;
     Context context;
     NewsfeedItem newsfeedItem;
-    ImageView profile_img;
+
     MentorMemberAdapterActivity newsfeedAdapterActivity;
 
-    TextView name, type, belong, regist_date, content;
+    static class ViewHolder{
+        ImageView profile_img;
+        TextView name, type, belong, regist_date, content;
+
+    }
 
     public MentorMemberAdapterActivity(Context context, NewsFeed newsFeed, MemberActivity memberActivity) {
 
@@ -40,19 +44,20 @@ public class MentorMemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         View itemView;
-
+        final ViewHolder viewHolder;
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             itemView = layoutInflater.inflate(R.layout.activity_member_item, parent, false);
 
-            name = (TextView) itemView.findViewById(R.id.member_lv_name);
-            type = (TextView) itemView.findViewById(R.id.member_lv_type);
-            belong = (TextView) itemView.findViewById(R.id.member_lv_belong);
-            profile_img = (ImageView) itemView.findViewById(R.id.member_lv_img);
+            viewHolder.name = (TextView) itemView.findViewById(R.id.member_lv_name);
+            viewHolder.type = (TextView) itemView.findViewById(R.id.member_lv_type);
+            viewHolder.belong = (TextView) itemView.findViewById(R.id.member_lv_belong);
+            viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.member_lv_img);
 
             if(newsFeed.newsfeedItem.size() > position){
                 final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
-                name.setText(newfeedItemPosition.name);
-                type.setText(newfeedItemPosition.type);
+                viewHolder.name.setText(newfeedItemPosition.name);
+                viewHolder.type.setText(newfeedItemPosition.type);
 
                 if(newfeedItemPosition.member_type.equals("")){
 
@@ -75,36 +80,50 @@ public class MentorMemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     }else{
                         member_type = "";
                     }
-                    belong.setText(member_type);
+                    viewHolder.belong.setText(member_type);
 
-                    Log.d("response" , "member profile url :  " + newfeedItemPosition.name);
+                    //Log.d("response" , "member profile url :  " + newfeedItemPosition.name);
 
                     if(newfeedItemPosition.profile_url.equals("")|| newfeedItemPosition.profile_url == null||newfeedItemPosition.profile_url == " "||newfeedItemPosition.profile_url == "null"|| newfeedItemPosition.profile_url == "" || newfeedItemPosition.profile_url=="http://" || newfeedItemPosition.profile_url=="http://null" || newfeedItemPosition.profile_url.equals("http://") || newfeedItemPosition.profile_url.equals("http:/null/")){
-                        profile_img.setBackgroundResource(0);
+                        viewHolder.profile_img.setBackgroundResource(0);
                     }else{
-                        profile_img.setBackgroundResource(0);
+                        viewHolder.profile_img.setBackgroundResource(0);
 
                         Picasso.with(context)
                                 .load("http://"+newfeedItemPosition.profile_url)
                                 .resize(250,200)
                                 .placeholder(R.drawable.blankimg)
                                 .error(R.drawable.blankimg)
-                                .into(profile_img);
+                                .into(viewHolder.profile_img);
                         // new DownLoadImageTask_profile(viewHolder.profile_img).execute("http://"+newfeedItemPosition.profile_url);
 
                     }
 
-                    profile_img.setOnClickListener(new View.OnClickListener() {
+                    viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                            intent.putExtra("email",newfeedItemPosition.email);
                             intent.putExtra("name",newfeedItemPosition.name);
                             intent.putExtra("company",newfeedItemPosition.company);
+                            intent.putExtra("region",newfeedItemPosition.region);
                             intent.putExtra("member_type",newfeedItemPosition.member_type);
+                            intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
                             intent.putExtra("expert_type",newfeedItemPosition.expert_type);
                             intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                             intent.putExtra("member_id",newfeedItemPosition.member_id);
                             intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                            intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                            intent.putExtra("birthday",newfeedItemPosition.birthday);
+                            Log.d("response" , "phone number public :  " + newfeedItemPosition.is_phone_number_public);
+                            intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                            intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                            intent.putExtra("school_level",newfeedItemPosition.school_level);
+                            intent.putExtra("school_name",newfeedItemPosition.school_name);
+                            intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                            intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                            intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+                           // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             ((Activity) getContext()).startActivity(intent);
                         }
                     });
@@ -118,19 +137,20 @@ public class MentorMemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
         } else {
 
+            viewHolder = new ViewHolder();
             itemView = convertView;
 
-            name = (TextView) itemView.findViewById(R.id.member_lv_name);
-            type = (TextView) itemView.findViewById(R.id.member_lv_type);
-            belong = (TextView) itemView.findViewById(R.id.member_lv_belong);
-            profile_img = (ImageView) itemView.findViewById(R.id.member_lv_img);
+            viewHolder.name = (TextView) itemView.findViewById(R.id.member_lv_name);
+            viewHolder.type = (TextView) itemView.findViewById(R.id.member_lv_type);
+            viewHolder.belong = (TextView) itemView.findViewById(R.id.member_lv_belong);
+            viewHolder.profile_img = (ImageView) itemView.findViewById(R.id.member_lv_img);
 
 
             if((newsFeed.newsfeedItem.size() != 0) && (newsFeed.newsfeedItem.size()>position)){
 
                 final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
-                name.setText(newfeedItemPosition.name);
-                type.setText(newfeedItemPosition.type);
+                viewHolder.name.setText(newfeedItemPosition.name);
+                viewHolder.type.setText(newfeedItemPosition.type);
                 if(newfeedItemPosition.member_type.equals("")){
 
                 }else{
@@ -147,38 +167,51 @@ public class MentorMemberAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     }else{
                         member_type = "";
                     }
-                    belong.setText(member_type);
+                    viewHolder.belong.setText(member_type);
                 }
 
-                Log.d("response" , "member profile url :  " + newfeedItemPosition.name);
+              //  Log.d("response" , "member profile url :  " + newfeedItemPosition.name);
 
 
                 if(newfeedItemPosition.profile_url.equals("")|| newfeedItemPosition.profile_url == null||newfeedItemPosition.profile_url == " "||newfeedItemPosition.profile_url == "null"|| newfeedItemPosition.profile_url == "" || newfeedItemPosition.profile_url=="http://" || newfeedItemPosition.profile_url=="http://null" || newfeedItemPosition.profile_url.equals("http://") || newfeedItemPosition.profile_url.equals("http:/null/")){
-                    profile_img.setBackgroundResource(0);
+                    viewHolder.profile_img.setBackgroundResource(0);
                 }else{
-                    profile_img.setBackgroundResource(0);
+                    viewHolder.profile_img.setBackgroundResource(0);
 
                     Picasso.with(context)
                             .load("http://"+newfeedItemPosition.profile_url)
                             .resize(250,200)
                             .placeholder(R.drawable.blankimg)
                             .error(R.drawable.blankimg)
-                            .into(profile_img);
+                            .into(viewHolder.profile_img);
                     // new DownLoadImageTask_profile(viewHolder.profile_img).execute("http://"+newfeedItemPosition.profile_url);
 
                 }
 
-                profile_img.setOnClickListener(new View.OnClickListener() {
+                viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                        intent.putExtra("email",newfeedItemPosition.email);
                         intent.putExtra("name",newfeedItemPosition.name);
                         intent.putExtra("company",newfeedItemPosition.company);
                         intent.putExtra("member_type",newfeedItemPosition.member_type);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
                         intent.putExtra("expert_type",newfeedItemPosition.expert_type);
                         intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                         intent.putExtra("member_id",newfeedItemPosition.member_id);
                         intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        //Log.d("response" , "phone number public :  " + newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         getContext().startActivity(intent);
                     }

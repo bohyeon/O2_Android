@@ -1,5 +1,6 @@
 package com.example.hyerimhyeon.o2_android;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -49,7 +51,7 @@ public class MypageSettingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    Button child_btn, mento_btn, expert_btn, register_btn, logout_btn;
+    Button child_btn, mento_btn, expert_btn, register_btn, logout_btn, delete_btn;
     RadioButton one, two, three, four;
     Spinner type, location, sport_type_sp, school_level_sp, expert_type_sp;
     TextView actionbar_title;
@@ -59,6 +61,7 @@ public class MypageSettingActivity extends AppCompatActivity
     Boolean buttonStateOpen;
     EditText email, pw, pw_ck, name, phone, birth, sport_type, region, school_level, school_name, company, experience_1, experience_2, experience_3;
     RadioButton radio01, radio02, radio03, radio04;
+    CheckBox birth_public, phone_public;
     String token_str, name_str, password_str, profile_image_url, phone_number_str, is_phone_number_public, birthday, is_birthday_public, sport_type_str, expert_type_str, region_str, school_level_str2, school_name_str, company_str, experience_1_str, experience_2_str, experience_3_str, mentor_type_str;
     CheckBox noti_ck;
     String noti_bool = "true";
@@ -79,7 +82,8 @@ public class MypageSettingActivity extends AppCompatActivity
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         email_str = loginPreferences.getString("email","");
-        Log.d("response" , "token : " + token_str);
+        token_str = loginPreferences.getString("token","");
+       // Log.d("response" , "token : " + token_str);
         profile_image_url = loginPreferences.getString("profile_image_url","");
 
     }
@@ -90,7 +94,7 @@ public class MypageSettingActivity extends AppCompatActivity
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
 
-        Log.d("response" , "sport type 0 : " + loginPreferences.getString("member_type","").toString());
+//        Log.d("response" , "sport type 0 : " + loginPreferences.getString("member_type","").toString());
 
         if(loginPreferences.getString("member_type","").equals("mentee")){
             setContentView(R.layout.activity_mypage_setting_child);
@@ -107,7 +111,39 @@ public class MypageSettingActivity extends AppCompatActivity
             logout_btn = (Button) findViewById(R.id.c_setting_logout);
             noti_ck = (CheckBox) findViewById(R.id.c_setting_noti);
             //email = (EditText) findViewById(R.id.c_setting_mail);
+            birth_public = (CheckBox) findViewById(R.id.c_setting_birth_ok);
+            phone_public = (CheckBox) findViewById(R.id.c_setting_phone_ok);
+            delete_btn = (Button) findViewById(R.id.c_setting_delete);
 
+            delete_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(MypageSettingActivity.this)
+                            .setMessage("작성하신 글들은 꿈나무에게 큰 도움이 됩니다! 정말 탈퇴를 하시겠습니까?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new DeleteUser().execute(new DBConnector());
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
+            });
+
+
+
+            if(loginPreferences.getString("is_phone_number_public","").equals("true")){
+                phone_public.setChecked(true);
+            }else{
+                phone_public.setChecked(false);
+            }
+
+            if(loginPreferences.getString("is_birthday_public","").equals("true")){
+                birth_public.setChecked(true);
+            }else{
+                birth_public.setChecked(false);
+            }
 
             String[] str=getResources().getStringArray(R.array.mSpinnerArr);
             ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, str);
@@ -124,11 +160,11 @@ public class MypageSettingActivity extends AppCompatActivity
             school_level_sp = (Spinner) findViewById(R.id.c_setting_school);
             school_level_sp.setAdapter(adapter2);
 
-            List<String> strings = Arrays.asList("종목선택","축구","농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시","기타");
+            List<String> strings = Arrays.asList("종목선택","축구","야구","농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시","기타");
 
             final String sport_type = loginPreferences.getString("sport_type","");
             int sport_type_int = 0;
-            Log.d("response" , "sport type 1 : " + sport_type);
+            //Log.d("response" , "sport type 1 : " + sport_type);
             for(int i=0; i<strings.size(); i++){
                 if(strings.get(i).equals(sport_type)){
 
@@ -175,7 +211,7 @@ public class MypageSettingActivity extends AppCompatActivity
             location.setSelection(location_int);
             //  phone.setText(loginPreferences.getString("phone_number",""));
 
-            Log.d("response" , "sport type 11 : " + sport_type_sp.getSelectedItem());
+           // Log.d("response" , "sport type 11 : " + sport_type_sp.getSelectedItem());
 
 
             profile_img = (ImageView) findViewById(R.id.setting_profile_img);
@@ -262,18 +298,31 @@ public class MypageSettingActivity extends AppCompatActivity
                     loginPrefsEditor = loginPreferences.edit();
 
                             name_str = name.getText().toString();
-                            if(pw.getText().toString().equals("")){
-                                password_str = loginPreferences.getString("password","");
+                            if(pw_ck.getText().toString().equals("")){
+                                password_str = loginPreferences.getString("pw","").trim();
                             }else{
-                                password_str = pw.getText().toString();
+                                password_str = pw_ck.getText().toString().trim();
                             }
 
 
                             profile_image_url = profile_image_url;
                             phone_number_str = phone.getText().toString();
-                            is_phone_number_public = "true";
+                            is_phone_number_public = phone_public.isChecked()+"";
+                            if(is_phone_number_public.equals("true")){
+                                is_phone_number_public = "True";
+                            }else{
+                                is_phone_number_public = "False";
+                            }
+
                             birthday = birth.getText().toString();
-                            is_birthday_public = "true";
+                            is_birthday_public = birth_public.isChecked()+"";
+                            if(is_birthday_public.equals("true")){
+                                is_birthday_public = "True";
+                            }else{
+                                is_birthday_public = "False";
+                            }
+
+
                             sport_type_str = sport_type_sp.getSelectedItem().toString();
                             expert_type_str = "-";
                             region_str = location.getSelectedItem().toString();
@@ -285,9 +334,9 @@ public class MypageSettingActivity extends AppCompatActivity
                             experience_3_str = "-";
 
                             if(noti_ck.isChecked()){
-                                noti_bool = "true";
+                                noti_bool = "True";
                             }else{
-                                noti_bool = "false";
+                                noti_bool = "False";
                             }
 
                     token_str = loginPreferences.getString("token","");
@@ -352,7 +401,41 @@ public class MypageSettingActivity extends AppCompatActivity
             logout_btn = (Button) findViewById(R.id.mentor_setting_logout);
             profile_img = (ImageView) findViewById(R.id.mentor_setting_profile_img);
             noti_ck = (CheckBox) findViewById(R.id.mentor_setting_noti);
+            birth_public = (CheckBox) findViewById(R.id.mentor_setting_birth_ok);
+            phone_public = (CheckBox) findViewById(R.id.mentor_setting_phone_ok);
+            delete_btn = (Button) findViewById(R.id.mentor_setting_delete);
 
+            delete_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(MypageSettingActivity.this)
+                            .setMessage("작성하신 글들은 꿈나무에게 큰 도움이 됩니다! 정말 탈퇴를 하시겠습니까?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new DeleteUser().execute(new DBConnector());
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
+            });
+
+
+            if(loginPreferences.getString("is_phone_number_public","").equals("true")){
+                phone_public.setChecked(true);
+            }else{
+                phone_public.setChecked(false);
+            }
+
+            if(loginPreferences.getString("is_birthday_public","").equals("true")){
+                birth_public.setChecked(true);
+            }else{
+                birth_public.setChecked(false);
+            }
+
+            birth_public = (CheckBox) findViewById(R.id.mentor_setting_birth_ok);
+            phone_public = (CheckBox) findViewById(R.id.mentor_setting_phone_ok);
 
             String[] str=getResources().getStringArray(R.array.mSpinnerArr);
             ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, str);
@@ -365,7 +448,7 @@ public class MypageSettingActivity extends AppCompatActivity
             location.setAdapter(adapter1);
 
 
-            List<String> strings = Arrays.asList("종목선택","축구","농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시","기타");
+            List<String> strings = Arrays.asList("종목선택","축구","야구", "농구","배구","탁구","테니스","역도","유도","태권도","복싱","레슬링","승마","체조","육상","펜싱","요트","조정","사격","하키","핸드볼","근대3종","철인3종","배드민턴","골프","싸이클","수영","럭비","씨름","보디빌딩","봅슬레이","스키,스노우보드","하키","컬링","빙상","공수도","양궁","볼링","검도","롤러","세팍타크로","소프트볼","스쿼시","기타");
 
             String sport_type = loginPreferences.getString("sport_type","");
             int sport_type_int = 0;
@@ -457,6 +540,8 @@ public class MypageSettingActivity extends AppCompatActivity
                 radio01.setChecked(false);
             }
 
+
+
             email.setText(loginPreferences.getString("email",""));
             name.setText(loginPreferences.getString("name",""));
             phone.setText(loginPreferences.getString("phone_number",""));
@@ -546,25 +631,36 @@ public class MypageSettingActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                    Log.d("response" , "sport type 2 : " + sport_type_sp.getSelectedItem().toString());
+                 //   Log.d("response" , "sport type 2 : " + sport_type_sp.getSelectedItem().toString());
 
                     loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
                     loginPrefsEditor = loginPreferences.edit();
 
                     name_str = name.getText().toString();
-                    if(pw.getText().toString().equals("")){
-                        password_str = loginPreferences.getString("password","");
+                    if(pw_ck.getText().toString().equals("")){
+                        password_str = loginPreferences.getString("pw","").trim();
                     }else{
-                        password_str = pw.getText().toString();
+                        password_str = pw_ck.getText().toString().trim();
                     }
 
-                    Log.d("response" , "password : " + password_str);
+                  //  Log.d("response" , "password : " + password_str);
 
                     profile_image_url = profile_image_url;
                     phone_number_str = phone.getText().toString();
-                    is_phone_number_public = "true";
+                    is_phone_number_public = phone_public.isChecked()+"";
+                    if(is_phone_number_public.equals("true")){
+                        is_phone_number_public = "True";
+                    }else{
+                        is_phone_number_public = "False";
+                    }
+
                     birthday = birth.getText().toString();
-                    is_birthday_public = "true";
+                    is_birthday_public = birth_public.isChecked()+"";
+                    if(is_birthday_public.equals("true")){
+                        is_birthday_public = "True";
+                    }else{
+                        is_birthday_public = "False";
+                    }
                     sport_type_str = sport_type_sp.getSelectedItem().toString();
 
                     expert_type_str = "-";
@@ -578,9 +674,9 @@ public class MypageSettingActivity extends AppCompatActivity
                     experience_3_str = "-";
 
                     if(noti_ck.isChecked()){
-                        noti_bool = "true";
+                        noti_bool = "True";
                     }else{
-                        noti_bool = "false";
+                        noti_bool = "False";
                     }
 
                     token_str = loginPreferences.getString("token","");
@@ -628,7 +724,7 @@ public class MypageSettingActivity extends AppCompatActivity
             });
 
 
-        }else if(loginPreferences.getString("member_type","").equals("expert")){
+        }else {
             setContentView(R.layout.activity_mypage_setting_expert);
 
 
@@ -636,7 +732,7 @@ public class MypageSettingActivity extends AppCompatActivity
             name = (EditText) findViewById(R.id.e_setting_name);
             phone = (EditText) findViewById(R.id.e_setting_phone);
             birth = (EditText) findViewById(R.id.e_setting_birth);
-            company = (EditText) findViewById(R.id.e_setting_company);
+           // company = (EditText) findViewById(R.id.e_setting_company);
 
             pw = (EditText) findViewById(R.id.e_setting_pw);
             pw_ck = (EditText) findViewById(R.id.e_setting_pw2);
@@ -647,12 +743,44 @@ public class MypageSettingActivity extends AppCompatActivity
             experience_3 = (EditText) findViewById(R.id.e_setting_experience03);
             noti_ck = (CheckBox) findViewById(R.id.expert_setting_noti);
 
+            birth_public = (CheckBox) findViewById(R.id.e_setting_birth_ok);
+            phone_public = (CheckBox) findViewById(R.id.e_setting_phone_ok);
+
+            delete_btn = (Button) findViewById(R.id.e_setting_delete);
+
+
+            delete_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(MypageSettingActivity.this)
+                            .setMessage("작성하신 글들은 꿈나무에게 큰 도움이 됩니다! 정말 탈퇴를 하시겠습니까?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new DeleteUser().execute(new DBConnector());
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
+            });
+
+
+            if(loginPreferences.getString("is_phone_number_public","").equals("true")){
+                phone_public.setChecked(true);
+            }else{
+                phone_public.setChecked(false);
+            }
+
+            if(loginPreferences.getString("is_birthday_public","").equals("true")){
+                birth_public.setChecked(true);
+            }else{
+                birth_public.setChecked(false);
+            }
 
             logout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), name_str+"님 로그아웃 완료!",
-//                            Toast.LENGTH_LONG).show();
                     new DeleteLogout().execute(new DBConnector());
                 }
             });
@@ -663,23 +791,23 @@ public class MypageSettingActivity extends AppCompatActivity
             expert_type_sp.setAdapter(adapter);
 
 
-
             List<String> strings_expertType = Arrays.asList("분야선택","스포츠 의학","스포츠 심리","스포츠 트레이닝","스포츠 영양","스포츠 재활","스포츠 진로","기타");
             String expert_type = loginPreferences.getString("expert_type","");
-            int expert_type_int = 0;
+
+            int expert_type_int = 7;
             for(int i=0; i<strings_expertType.size(); i++){
                 if(strings_expertType.get(i).equals(expert_type)){
                     expert_type_int = i;
                 }
             }
-
-            Log.d("response","expert log : " + loginPreferences.getString("company",""));
+            //Log.d("response","expert_type : " + expert_type_int);
+           // Log.d("response","expert log : " + loginPreferences.getString("company",""));
 
             email.setText(loginPreferences.getString("email",""));
             name.setText(loginPreferences.getString("name",""));
             phone.setText(loginPreferences.getString("phone_number",""));
             birth.setText(loginPreferences.getString("birthday",""));
-            company.setText(loginPreferences.getString("company",""));
+         //   company.setText(loginPreferences.getString("company",""));
             expert_type_sp.setSelection(expert_type_int);
             experience_1.setText(loginPreferences.getString("experience_1",""));
             experience_2.setText(loginPreferences.getString("experience_2",""));
@@ -750,7 +878,6 @@ public class MypageSettingActivity extends AppCompatActivity
 
             };
 
-
             phone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
             birth.addTextChangedListener(tw);
 
@@ -800,32 +927,43 @@ public class MypageSettingActivity extends AppCompatActivity
                     loginPrefsEditor = loginPreferences.edit();
 
                     name_str = name.getText().toString();
-                    if(pw.getText().toString().equals("")){
-                        password_str = loginPreferences.getString("password","");
+                    if(pw_ck.getText().toString().equals("")){
+                        password_str = loginPreferences.getString("pw","").trim();
                     }else{
-                        password_str = pw.getText().toString();
+                        password_str = pw_ck.getText().toString().trim();
                     }
+
 
                     profile_image_url = profile_image_url;
                     phone_number_str = phone.getText().toString();
-                    is_phone_number_public = "true";
+                    is_phone_number_public = phone_public.isChecked()+"";
+                    if(is_phone_number_public.equals("true")){
+                        is_phone_number_public = "True";
+                    }else{
+                        is_phone_number_public = "False";
+                    }
                     birthday = birth.getText().toString();
-                    is_birthday_public = "true";
+                    is_birthday_public = birth_public.isChecked()+"";
+                    if(is_birthday_public.equals("true")){
+                        is_birthday_public = "True";
+                    }else{
+                        is_birthday_public = "False";
+                    }
                     sport_type_str = "-";
                     expert_type_str = expert_type_sp.getSelectedItem().toString();
                     region_str = "-";
                     school_level_str2 = "-";
                     school_name_str = "-";
 
-                    company_str = company.getText().toString();
+                 //   company_str = company.getText().toString();
                     experience_1_str = experience_1.getText().toString();
                     experience_2_str = experience_2.getText().toString();
                     experience_3_str = experience_3.getText().toString();
 
                     if(noti_ck.isChecked()){
-                        noti_bool = "true";
+                        noti_bool = "True";
                     }else{
-                        noti_bool = "false";
+                        noti_bool = "False";
                     }
 
                     token_str = loginPreferences.getString("token","");
@@ -876,12 +1014,12 @@ public class MypageSettingActivity extends AppCompatActivity
             try {
                 profile_image_url = jsonObject.getString("profile_image_url").toString();
 
-                Log.d("response", "profile_img u " + jsonObject);
+                //Log.d("response", "profile_img u " + jsonObject);
                 if (profile_image_url != "") {
                     loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
                     loginPrefsEditor = loginPreferences.edit();
                     String img_url = jsonObject.getString("profile_image_url").replace("\\/","\\");
-                    Log.d("response", "profile_img u " + img_url);
+                    //Log.d("response", "profile_img u " + img_url);
                     loginPrefsEditor.putString("profile_url",img_url);
 
                     loginPrefsEditor.commit();
@@ -986,6 +1124,56 @@ public class MypageSettingActivity extends AppCompatActivity
 
     }
 
+    private class DeleteUser extends AsyncTask<DBConnector, Long, Integer> {
+
+
+        @Override
+        protected Integer doInBackground(DBConnector... params) {
+
+            //it is executed on Background thread
+            //   String token = "db4fdaf8d9cb71b454a47c114422e29c4165e203";
+
+            return params[0].DeleteUser(token_str);
+
+        }
+
+        @Override
+        protected void onPostExecute(final Integer code) {
+
+            settextToAdapter_logout_deleteuser(code);
+
+        }
+    }
+
+    public void settextToAdapter_logout_deleteuser(Integer code) {
+
+        if (code == null) {
+
+        } else {
+
+            if(code == 204){
+
+                loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+                loginPrefsEditor = loginPreferences.edit();
+
+                loginPrefsEditor.clear();
+                loginPrefsEditor.commit();
+
+                Toast.makeText(getApplicationContext(), "탈퇴가 완료되었습니다.",
+                        Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(MypageSettingActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                //finish();
+                startActivity(intent);
+
+            }
+
+        }
+
+
+    }
+
 
 
     private class PutUserInfo extends AsyncTask<DBConnector, Long, JSONObject> {
@@ -996,6 +1184,7 @@ public class MypageSettingActivity extends AppCompatActivity
 
             //it is executed on Background thread
            // Log.d("response" , "update user token: " + token_str.toString());
+           // Log.d("response","password1 : "+ password_str);
             return params[0].PutUserInfo(token_str, name_str , password_str,profile_image_url,phone_number_str, is_phone_number_public, birthday, is_birthday_public, sport_type_str, mentor_type_str, expert_type_str, region_str, school_level_str2, school_name_str, company_str, experience_1_str, experience_2_str, experience_3_str, noti_bool);
 
         }
@@ -1010,7 +1199,7 @@ public class MypageSettingActivity extends AppCompatActivity
 
     public void settextToAdapter(JSONObject jsonObject) {
 
-        Log.d("response" , "update user : " + jsonObject.toString());
+//        Log.d("response" , "update user : " + jsonObject.toString());
        // Log.d("response" , "check img : " +jsonObject);
         if(jsonObject == null){
 
@@ -1026,11 +1215,15 @@ public class MypageSettingActivity extends AppCompatActivity
            //     loginPrefsEditor.putString("profile_image_url",jsonObject.getString("profile_url").toString());
                 loginPrefsEditor.putString("phone_number",jsonObject.getString("phone_number").toString());
                 loginPrefsEditor.putString("birthday",jsonObject.getString("birthday").toString());
+                loginPrefsEditor.putString("pw",password_str);
+                loginPrefsEditor.putString("birthday",jsonObject.getString("birthday").toString());
+                loginPrefsEditor.putString("is_phone_number_public", jsonObject.getString("is_phone_number_public").toString());
+                loginPrefsEditor.putString("is_birthday_public", jsonObject.getString("is_birthday_public").toString());
                 loginPrefsEditor.putString("sport_type",jsonObject.getString("sport_type").toString());
+                loginPrefsEditor.putString("expert_type",jsonObject.getString("expert_type").toString());
                 loginPrefsEditor.putString("region",jsonObject.getString("region").toString());
                 loginPrefsEditor.putString("school_level",jsonObject.getString("school_level").toString());
                 loginPrefsEditor.putString("school_name",jsonObject.getString("school_name").toString());
-
                 loginPrefsEditor.putString("mentor_type",jsonObject.getString("mentor_type").toString());
                 loginPrefsEditor.putString("company",jsonObject.getString("company").toString());
                 loginPrefsEditor.putString("expert_type",jsonObject.getString("expert_type").toString());
@@ -1039,7 +1232,7 @@ public class MypageSettingActivity extends AppCompatActivity
                 loginPrefsEditor.putString("experience_3",jsonObject.getString("experience_3").toString());
                 loginPrefsEditor.putString("is_receive_push",jsonObject.getString("is_receive_push").toString());
 
-                Log.d("response" , "sport type 3 : " + jsonObject.getString("sport_type").toString());
+      //          Log.d("response" , "sport type 3 : " + jsonObject.getString("sport_type").toString());
 
             } catch (JSONException e) {
                 e.printStackTrace();

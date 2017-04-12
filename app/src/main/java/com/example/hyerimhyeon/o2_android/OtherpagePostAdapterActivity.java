@@ -58,6 +58,7 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     static class ViewHolder{
         TextView like_btn ,like, comment_btn, content;
         ImageView image;
+        ImageView delete_img;
     }
 
 
@@ -104,10 +105,12 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.youtube_layout = (LinearLayout) itemView.findViewById(R.id.youtube_layout);
             viewHolder.youtube_img = (ImageView) itemView.findViewById(R.id.youtube_img);
             viewHolder.youtube_title = (TextView) itemView.findViewById(R.id.main_youtube_title);
-
+            viewHolder.delete_img = (ImageView) itemView.findViewById(R.id.main_arrow_btn);
 
 
             final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+
+            viewHolder.delete_img.setVisibility(View.INVISIBLE);
 
             if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
 
@@ -233,11 +236,15 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
                 viewHolder.type.setText(type_str);
 
-                if(!newfeedItemPosition.member_type.equals("mentee")){
-                    viewHolder.belong.setText(newfeedItemPosition.company);
+                if(newfeedItemPosition.member_type.equals("mentor")){
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
+                }else if(newfeedItemPosition.member_type.equals("expert")){
+                    // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
+                    viewHolder.belong.setText(newfeedItemPosition.expert_type);
                 }else{
-                    viewHolder.belong.setText("");
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
                 }
+
             }else{
                 viewHolder.type.setText("");
                 viewHolder.belong.setText("");
@@ -277,8 +284,8 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
-                    ((Activity) getContext()).startActivity(intent);
+//                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+//                    ((Activity) getContext()).startActivity(intent);
                 }
             });
 
@@ -295,6 +302,9 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -327,6 +337,9 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -357,6 +370,9 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -389,6 +405,9 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -467,6 +486,7 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.youtube_layout = (LinearLayout) itemView.findViewById(R.id.youtube_layout);
             viewHolder.youtube_img = (ImageView) itemView.findViewById(R.id.youtube_img);
             viewHolder.youtube_title = (TextView) itemView.findViewById(R.id.main_youtube_title);
+            viewHolder.delete_img = (ImageView) itemView.findViewById(R.id.main_arrow_btn);
 
 //
 //            YouTubePlayerView youTubeView = (YouTubePlayerView) itemView.findViewById(R.id.youtube_view);
@@ -475,6 +495,8 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             if(newsFeed.newsfeedItem.size() != 0){
 
                 final NewsfeedItem newfeedItemPosition = newsFeed.newsfeedItem.get(position);
+
+                viewHolder.delete_img.setVisibility(View.INVISIBLE);
 
                 if(newfeedItemPosition.youtube_id == null || newfeedItemPosition.youtube_id.equals("")){
 
@@ -593,10 +615,13 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     }
                     viewHolder.type.setText(type_str);
 
-                    if(!newfeedItemPosition.member_type.equals("mentee")){
-                        viewHolder.belong.setText(newfeedItemPosition.company);
+                    if(newfeedItemPosition.member_type.equals("mentor")){
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
+                    }else if(newfeedItemPosition.member_type.equals("expert")){
+                        // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
+                        viewHolder.belong.setText(newfeedItemPosition.expert_type);
                     }else{
-                        viewHolder.belong.setText("");
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
                     }
 
                 }else{
@@ -641,8 +666,8 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.profile_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
-                    ((Activity) getContext()).startActivity(intent);
+//                    Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+//                    ((Activity) getContext()).startActivity(intent);
                 }
             });
 
@@ -694,6 +719,9 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -728,6 +756,9 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -764,6 +795,9 @@ public class OtherpagePostAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);

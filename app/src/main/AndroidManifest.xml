@@ -213,7 +213,16 @@
         <activity
             android:name=".MypageSettingActivity"
             android:label="O2 Sport"
-            android:theme="@style/CustomTheme">
+            android:theme="@style/CustomTheme"
+            android:windowSoftInputMode="stateHidden">
+
+        </activity>
+
+        <activity
+            android:name=".OtherPageMoreActivity"
+            android:label="O2 Sport"
+            android:theme="@style/CustomTheme"
+            android:windowSoftInputMode="stateHidden">
 
         </activity>
 
@@ -223,8 +232,6 @@
             android:largeHeap="true"
             android:theme="@style/AppTheme.NoActionBar"
             >
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

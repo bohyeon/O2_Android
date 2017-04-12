@@ -20,9 +20,8 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
+        android:layout_height="match_parent"
+        android:background="@color/mainBlue">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,11 +38,11 @@
                 android:padding="20dp">
 
                 <ImageButton
-                    android:id="@+id/mypage_backBtn"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/menu_icon"
-                    android:layout_alignParentLeft="true"/>
+                    android:id="@+id/other_moreBtn"
+                    android:layout_width="25dp"
+                    android:layout_height="7dp"
+                    android:background="@drawable/more_icon"
+                    android:layout_alignParentRight="true"/>
 
             </RelativeLayout>
 
@@ -60,6 +59,7 @@
                 android:orientation="horizontal"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:background="@color/mainBlue"
                 android:layout_marginTop="15dp">
 
 
@@ -105,7 +105,8 @@
                 <ListView
                     android:id="@+id/mypage_mypost"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></ListView>
+                    android:layout_height="match_parent"
+                    android:background="@color/white"></ListView>
 
 
         </LinearLayout>

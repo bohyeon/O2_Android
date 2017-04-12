@@ -67,7 +67,6 @@ public class SearchActivity extends AppCompatActivity
             sport_type = "";
         }
 
-
         if (type.equals("common")) {
             setContentView(R.layout.activity_search);
 
@@ -154,6 +153,32 @@ public class SearchActivity extends AppCompatActivity
 
         } else {
             setContentView(R.layout.activity_search);
+
+            Log.d("response" , "sport search : ");
+            sport_btn = (ImageButton) findViewById(R.id.search_common);
+            search_box = (EditText) findViewById(R.id.search_edit);
+            back_btn = (ImageButton) findViewById(R.id.search_back_icon);
+
+            back_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
+            sport_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    content_query = search_box.getText().toString();
+                    Intent intent1 = new Intent(SearchActivity.this, SearchFeedActivity.class);
+                    intent1.putExtra("content_query",content_query);
+                    intent1.putExtra("post_type","");
+                    intent1.putExtra("sport_type",sport_type);
+                    startActivityForResult(intent1,10);
+                }
+            });
+
         }
 
 

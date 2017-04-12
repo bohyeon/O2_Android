@@ -65,6 +65,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
     private PopupWindow popWindow;
     private static final int REQUEST_INTERNET = 1;
 
+
     public NewsfeedAdapterActivity(Context context, NewsFeed newsFeed, MainActivity mainActivity) {
 
         super(context, R.layout.activity_main_newsfeed, newsFeed.newsfeedItem);
@@ -326,7 +327,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
 
 
             if(newfeedItemPosition.email.equals(mainActivity.email)){
-                Log.d("response" , "eamil : " + newfeedItemPosition.email + " id : " + mainActivity.email);
+                //Log.d("response" , "eamil : " + newfeedItemPosition.email + " id : " + mainActivity.email);
 
                 viewHolder.spinner_box.setVisibility(LinearLayout.VISIBLE);
                 viewHolder.delete_img.setVisibility(LinearLayout.VISIBLE);
@@ -340,9 +341,16 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
             viewHolder.delete_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewHolder.delete_spi.performClick();
+                    select_pods_id = newfeedItemPosition.post_id;
+                    update_postId = newfeedItemPosition.post_id;
+                    update_content = newfeedItemPosition.content;
+                    update_youtubeTitle = newfeedItemPosition.youtube_tite;
+                    update_youtubeLink = newfeedItemPosition.youtube_link;
+                    update_imageUrl = newfeedItemPosition.post_image_url;
+                    onShowPopup(v);
                 }
             });
+
 
 
             viewHolder.delete_spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
@@ -396,7 +404,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
             }else{
                 if(!newfeedItemPosition.youtube_id.equals("") ){
                      viewHolder.youtube_layout.setBackground(null);
-                    Log.d("response", "youtube ㅅㅂ : " + newfeedItemPosition.youtube_id);
+                   // Log.d("response", "youtube ㅅㅂ : " + newfeedItemPosition.youtube_id);
                   //  youtube_link = newfeedItemPosition.youtube_link;
                     //   new GetYoutube().execute(new DBConnector());
                     // new DownLoadImageTask_youtube(viewHolder.youtube_img).execute("http://img.youtube.com/vi/"+newfeedItemPosition.youtube_id+"/1.jpg");
@@ -508,12 +516,12 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
 
 
                 if(newfeedItemPosition.member_type.equals("mentor")){
-                    viewHolder.belong.setText(newfeedItemPosition.company);
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
                 }else if(newfeedItemPosition.member_type.equals("expert")){
                    // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
                     viewHolder.belong.setText(newfeedItemPosition.expert_type);
                 }else{
-                    viewHolder.belong.setText(" ");
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
                 }
             }else{
                 viewHolder.type.setText(" ");
@@ -555,13 +563,27 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                    intent.putExtra("email",newfeedItemPosition.email);
                     intent.putExtra("name",newfeedItemPosition.name);
                     intent.putExtra("company",newfeedItemPosition.company);
                     intent.putExtra("member_type",newfeedItemPosition.member_type);
                     intent.putExtra("expert_type",newfeedItemPosition.expert_type);
                     intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                     intent.putExtra("member_id",newfeedItemPosition.member_id);
+                    intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+
                     intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                    intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                    intent.putExtra("birthday",newfeedItemPosition.birthday);
+                    intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                    intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                    intent.putExtra("region",newfeedItemPosition.region);
+                    intent.putExtra("school_level",newfeedItemPosition.school_level);
+                    intent.putExtra("school_name",newfeedItemPosition.school_name);
+                    intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                    intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                    intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                     ((Activity) getContext()).startActivity(intent);
                 }
             });
@@ -580,6 +602,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -592,6 +617,23 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
                         intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
+
+                        intent.putExtra("email",newfeedItemPosition.email);
+                        intent.putExtra("company",newfeedItemPosition.company);
+                        intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
+
                         intent.putExtra("token", token);
                         Log.d("response","0320 : " + newfeedItemPosition2.member_type);
                         Log.d("response", "name2 : " + newfeedItemPosition2.member_type);
@@ -612,6 +654,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -624,6 +669,23 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
                         intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+
+
+                        intent.putExtra("email",newfeedItemPosition.email);
+                        intent.putExtra("company",newfeedItemPosition.company);
+                        intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                         intent.putExtra("token", token);
                         //Log.d("response", "name2 : " + newfeedItemPosition2.name);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -642,6 +704,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -654,6 +719,23 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
                         intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+
+
+                        intent.putExtra("email",newfeedItemPosition.email);
+                        intent.putExtra("company",newfeedItemPosition.company);
+                        intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                         intent.putExtra("token", token);
                         //Log.d("response", "name2 : " + newfeedItemPosition2.name);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -674,6 +756,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -686,6 +771,23 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_link",newfeedItemPosition2.youtube_link);
                         intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
+
+
+                        intent.putExtra("email",newfeedItemPosition.email);
+                        intent.putExtra("company",newfeedItemPosition.company);
+                        intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                         intent.putExtra("token", token);
                         //Log.d("response", "name2 : " + newfeedItemPosition2.name);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -779,7 +881,14 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                 viewHolder.delete_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        viewHolder.delete_spi.performClick();
+                        select_pods_id = newfeedItemPosition.post_id;
+                        update_postId = newfeedItemPosition.post_id;
+                        update_content = newfeedItemPosition.content;
+                        update_youtubeTitle = newfeedItemPosition.youtube_tite;
+                        update_youtubeLink = newfeedItemPosition.youtube_link;
+                        update_imageUrl = newfeedItemPosition.post_image_url;
+
+                        onShowPopup(v);
                     }
                 });
 
@@ -938,16 +1047,13 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                     }
                     viewHolder.type.setText(type_str);
 
-
-
-
                     if(newfeedItemPosition.member_type.equals("mentor")){
-                        viewHolder.belong.setText(newfeedItemPosition.company);
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
                     }else if(newfeedItemPosition.member_type.equals("expert")){
                         // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
                         viewHolder.belong.setText(newfeedItemPosition.expert_type);
                     }else{
-                        viewHolder.belong.setText(" ");
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
                     }
 
                 }else{
@@ -991,8 +1097,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                     @Override
                     public void onClick(View v) {
 
-                        
+
                         Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                        intent.putExtra("email",newfeedItemPosition.email);
                         intent.putExtra("name",newfeedItemPosition.name);
                         intent.putExtra("company",newfeedItemPosition.company);
                         intent.putExtra("member_type",newfeedItemPosition.member_type);
@@ -1000,6 +1107,18 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                         intent.putExtra("member_id",newfeedItemPosition.member_id);
                         intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                         ((Activity) getContext()).startActivity(intent);
                     }
                 });
@@ -1020,6 +1139,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -1034,6 +1156,21 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
                         intent.putExtra("token", token);
 
+
+                        intent.putExtra("email",newfeedItemPosition2.email);
+                        intent.putExtra("company",newfeedItemPosition2.company);
+                        intent.putExtra("member_id",newfeedItemPosition2.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition2.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition2.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition2.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition2.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition2.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition2.region);
+                        intent.putExtra("school_level",newfeedItemPosition2.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition2.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition2.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition2.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition2.experience_3);
 
                         Log.d("response", "03200 : " + newfeedItemPosition2.member_type);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -1054,6 +1191,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -1067,7 +1207,20 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
                         intent.putExtra("token", token);
-
+                        intent.putExtra("email",newfeedItemPosition2.email);
+                        intent.putExtra("company",newfeedItemPosition2.company);
+                        intent.putExtra("member_id",newfeedItemPosition2.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition2.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition2.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition2.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition2.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition2.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition2.region);
+                        intent.putExtra("school_level",newfeedItemPosition2.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition2.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition2.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition2.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition2.experience_3);
 
                         Log.d("response", "03200 : " + newfeedItemPosition2.member_type);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -1088,6 +1241,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -1101,7 +1257,20 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
                         intent.putExtra("token", token);
-
+                        intent.putExtra("email",newfeedItemPosition2.email);
+                        intent.putExtra("company",newfeedItemPosition2.company);
+                        intent.putExtra("member_id",newfeedItemPosition2.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition2.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition2.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition2.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition2.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition2.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition2.region);
+                        intent.putExtra("school_level",newfeedItemPosition2.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition2.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition2.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition2.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition2.experience_3);
 
                         Log.d("response", "03200 : " + newfeedItemPosition2.member_type);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -1124,6 +1293,9 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -1137,7 +1309,20 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
                         intent.putExtra("youtube_title", newfeedItemPosition2.youtube_tite);
                         intent.putExtra("youtube_id", newfeedItemPosition2.youtube_id);
                         intent.putExtra("token", token);
-
+                        intent.putExtra("email",newfeedItemPosition2.email);
+                        intent.putExtra("company",newfeedItemPosition2.company);
+                        intent.putExtra("member_id",newfeedItemPosition2.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition2.mentor_type);
+                        intent.putExtra("phone_number",newfeedItemPosition2.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition2.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition2.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition2.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition2.region);
+                        intent.putExtra("school_level",newfeedItemPosition2.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition2.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition2.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition2.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition2.experience_3);
 
                        // Log.d("response", "03200 : " + newfeedItemPosition2.member_type);
                         ((Activity) getContext()).startActivityForResult(intent,200);
@@ -1288,12 +1473,6 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
 
     public void settextToAdapter_deleteContent(Integer jsonObject) {
 
-
-//        Log.d("response" , "delete");
-//        Intent intent = new Intent( context.getApplicationContext(), MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        ((Activity) getContext()).startActivity(intent);
-
         mainActivity.onStart();
 
 
@@ -1381,10 +1560,34 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // inflate the custom popup layout
-        final View inflatedView = layoutInflater.inflate(R.layout.fb_popup_layout, null,false);
+        final View inflatedView = layoutInflater.inflate(R.layout.editcontent_popup, null,false);
         // find the ListView in the popup layout
-        ListView listView = (ListView)inflatedView.findViewById(R.id.commentsListView);
+        TextView edit_content = (TextView)inflatedView.findViewById(R.id.edit_content_btn);
+        TextView delete_content = (TextView)inflatedView.findViewById(R.id.delete_content_btn);
 
+        edit_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, NewsfeedUpdateActivity.class);
+                intent.putExtra("post_type","sport_knowledge_feed");
+                intent.putExtra("post_id",update_postId);
+                intent.putExtra("content", update_content);
+                intent.putExtra("youtube_title", update_youtubeTitle);
+                intent.putExtra("youtube_link" , update_youtubeLink);
+                intent.putExtra("post_image_url" , update_imageUrl);
+                ((Activity) getContext()).startActivityForResult(intent,200);
+                popWindow.dismiss();
+            }
+        });
+
+        delete_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DeleteContent().execute(new DBConnector());
+                popWindow.dismiss();
+            }
+        });
         // get device size
         Display display =  ((Activity)context).getWindowManager().getDefaultDisplay();
         final Point size = new Point();
@@ -1393,11 +1596,11 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
 
 
         // fill the data to the list items
-        setSimpleList(listView);
+      //  setSimpleList(listView);
 
 
         // set height depends on the device size
-        popWindow = new PopupWindow(inflatedView, size.x - 50,size.y - 250, true );
+        popWindow = new PopupWindow(inflatedView, size.x - 100,size.y/4, true );
         // set a background drawable with rounders corners
         popWindow.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.comment_rounded));
         // make it focusable to show the keyboard to enter in `EditText`
@@ -1406,7 +1609,7 @@ public class NewsfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> implemen
         popWindow.setOutsideTouchable(true);
 
         // show the popup at bottom of the screen and set some margin at bottom ie,
-        popWindow.showAtLocation(v, Gravity.BOTTOM, 0,100);
+        popWindow.showAtLocation(v, Gravity.CENTER_VERTICAL, 0,100);
     }
 
 

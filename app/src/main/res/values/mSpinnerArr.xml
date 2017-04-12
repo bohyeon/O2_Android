@@ -3,6 +3,7 @@
    <string-array name="mSpinnerArr">
        <item>종목선택</item>
        <item>축구</item>
+       <item>야구</item>
        <item>농구</item>
        <item>배구</item>
        <item>탁구</item>

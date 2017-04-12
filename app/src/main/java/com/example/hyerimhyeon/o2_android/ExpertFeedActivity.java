@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -120,7 +119,7 @@ public class ExpertFeedActivity extends AppCompatActivity
 
             //it is executed on Background thread
 
-            return params[0].GetPost(token, "sport_expert_knowledge_feed" ,"");
+            return params[0].GetPost_Expert(token);
 
         }
 
@@ -159,6 +158,7 @@ public class ExpertFeedActivity extends AppCompatActivity
 
 
         if (jsonArray == null) {
+            expertfeedAdapterActivity.clear();
             Toast.makeText(getApplicationContext(), "뉴스피드가 없습니다.",
                     Toast.LENGTH_LONG).show();
         } else {
@@ -176,6 +176,13 @@ public class ExpertFeedActivity extends AppCompatActivity
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                    newsfeedItem.birthday = userJsonObj.getString("birthday");
+                    newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                    newsfeedItem.region = userJsonObj.getString("region");
+                    newsfeedItem.school_level = userJsonObj.getString("school_level");
+                    newsfeedItem.school_name = userJsonObj.getString("school_name");
 
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -191,22 +198,14 @@ public class ExpertFeedActivity extends AppCompatActivity
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                     newsfeedItem.member_id = userJsonObj.getString("id");
-                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
+                    newsfeedItem.experience_1 = userJsonObj.getString("experience_1");
+                    newsfeedItem.experience_2 = userJsonObj.getString("experience_2");
+                    newsfeedItem.experience_3 = userJsonObj.getString("experience_3");
 
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
                     }else{
-                        String str = newsfeedItem.youtube_link;
-                        String video_id = "";
-                        if(str.indexOf("&") > 0){
-                            video_id = str.substring(str.indexOf("=")+1 , str.indexOf("&"));
-                        }else{
-                            video_id = str.substring(str.indexOf("=")+1);
-                        }
-                        newsfeedItem.youtube_id = video_id;
-                    }  if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
-                        newsfeedItem.youtube_id = "";
-                    }else{
+                        newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
                         String str = newsfeedItem.youtube_link;
                         String video_id = "";
 
@@ -219,12 +218,13 @@ public class ExpertFeedActivity extends AppCompatActivity
                         }else if(str.toString().indexOf("youtu.be") != -1 ){
                             //   Log.d("response", "youtube_str :  "+ str);
                             video_id = str.substring(17);
-                            Log.d("response", "youtube_id :  "+ video_id);
+                            //Log.d("response", "youtube_id :  "+ video_id);
                         }
 
                         newsfeedItem.youtube_id = video_id;
 
                     }
+
 
                     expertfeedAdapterActivity.add(newsfeedItem);
                     expertfeedAdapterActivity.notifyDataSetChanged();
@@ -278,7 +278,7 @@ public class ExpertFeedActivity extends AppCompatActivity
         parent.setContentInsetsAbsolute(0,0);
 
         actionbar_title = (TextView) findViewById(R.id.actionbar_title);
-        actionbar_title.setText("스포츠전문가 지식On");
+        actionbar_title.setText("스포츠전문가 지식");
 
         buttonStateOpen = false;
 
@@ -313,6 +313,8 @@ public class ExpertFeedActivity extends AppCompatActivity
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.removeAllViews();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {

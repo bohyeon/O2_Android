@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -57,6 +59,7 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     Boolean is_like;
     ImageView image, profile_img;
     private static final int REQUEST_INTERNET = 1;
+    private PopupWindow popWindow;
 
     public LifeExpertfeedAdapterActivity(Context context, NewsFeed newsFeed, LifeExpertFeedActivity lifeExpertFeedActivity) {
 
@@ -142,10 +145,15 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
             viewHolder.delete_img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewHolder.delete_spi.performClick();
+                    select_pods_id = newfeedItemPosition.post_id;
+                    update_postId = newfeedItemPosition.post_id;
+                    update_content = newfeedItemPosition.content;
+                    update_youtubeTitle = newfeedItemPosition.youtube_tite;
+                    update_youtubeLink = newfeedItemPosition.youtube_link;
+                    update_imageUrl = newfeedItemPosition.post_image_url;
+                    onShowPopup(v);
                 }
             });
-
 
             viewHolder.delete_spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
             {
@@ -309,12 +317,12 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
                 if(newfeedItemPosition.member_type.equals("mentor")){
-                    viewHolder.belong.setText(newfeedItemPosition.company);
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
                 }else if(newfeedItemPosition.member_type.equals("expert")){
                     // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
                     viewHolder.belong.setText(newfeedItemPosition.expert_type);
                 }else{
-                    viewHolder.belong.setText(" ");
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
                 }
 
             }else{
@@ -357,13 +365,27 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                    intent.putExtra("email",newfeedItemPosition.email);
                     intent.putExtra("name",newfeedItemPosition.name);
                     intent.putExtra("company",newfeedItemPosition.company);
                     intent.putExtra("member_type",newfeedItemPosition.member_type);
                     intent.putExtra("expert_type",newfeedItemPosition.expert_type);
                     intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                     intent.putExtra("member_id",newfeedItemPosition.member_id);
+                    intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+
                     intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                    intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                    intent.putExtra("birthday",newfeedItemPosition.birthday);
+                    intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                    intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                    intent.putExtra("region",newfeedItemPosition.region);
+                    intent.putExtra("school_level",newfeedItemPosition.school_level);
+                    intent.putExtra("school_name",newfeedItemPosition.school_name);
+                    intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                    intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                    intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                     ((Activity) getContext()).startActivity(intent);
                 }
             });
@@ -381,6 +403,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -413,6 +438,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -443,6 +471,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -475,6 +506,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -580,10 +614,15 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 viewHolder.delete_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        viewHolder.delete_spi.performClick();
+                        select_pods_id = newfeedItemPosition.post_id;
+                        update_postId = newfeedItemPosition.post_id;
+                        update_content = newfeedItemPosition.content;
+                        update_youtubeTitle = newfeedItemPosition.youtube_tite;
+                        update_youtubeLink = newfeedItemPosition.youtube_link;
+                        update_imageUrl = newfeedItemPosition.post_image_url;
+                        onShowPopup(v);
                     }
                 });
-
 
                 viewHolder.delete_spi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
                 {
@@ -739,13 +778,14 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     viewHolder.type.setText(type_str);
 
 
+
                     if(newfeedItemPosition.member_type.equals("mentor")){
-                        viewHolder.belong.setText(newfeedItemPosition.company);
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
                     }else if(newfeedItemPosition.member_type.equals("expert")){
                         // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
                         viewHolder.belong.setText(newfeedItemPosition.expert_type);
                     }else{
-                        viewHolder.belong.setText(" ");
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
                     }
 
                 }else{
@@ -789,13 +829,26 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                        intent.putExtra("email",newfeedItemPosition.email);
                         intent.putExtra("name",newfeedItemPosition.name);
                         intent.putExtra("company",newfeedItemPosition.company);
                         intent.putExtra("member_type",newfeedItemPosition.member_type);
                         intent.putExtra("expert_type",newfeedItemPosition.expert_type);
                         intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                         intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+
                         intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
                         ((Activity) getContext()).startActivity(intent);
                     }
                 });
@@ -817,6 +870,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -851,6 +907,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -885,6 +944,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -921,6 +983,9 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -1133,16 +1198,41 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
     }
 
 
+
     // call this method when required to show popup
     public void onShowPopup(View v){
 
         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // inflate the custom popup layout
-        final View inflatedView = layoutInflater.inflate(R.layout.fb_popup_layout, null,false);
+        final View inflatedView = layoutInflater.inflate(R.layout.editcontent_popup, null,false);
         // find the ListView in the popup layout
-        ListView listView = (ListView)inflatedView.findViewById(R.id.commentsListView);
+        TextView edit_content = (TextView)inflatedView.findViewById(R.id.edit_content_btn);
+        TextView delete_content = (TextView)inflatedView.findViewById(R.id.delete_content_btn);
 
+        edit_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context, NewsfeedUpdateActivity.class);
+                intent.putExtra("post_type","sport_knowledge_feed");
+                intent.putExtra("post_id",update_postId);
+                intent.putExtra("content", update_content);
+                intent.putExtra("youtube_title", update_youtubeTitle);
+                intent.putExtra("youtube_link" , update_youtubeLink);
+                intent.putExtra("post_image_url" , update_imageUrl);
+                ((Activity) getContext()).startActivityForResult(intent,200);
+                popWindow.dismiss();
+            }
+        });
+
+        delete_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DeleteContent().execute(new DBConnector());
+                popWindow.dismiss();
+            }
+        });
         // get device size
         Display display =  ((Activity)context).getWindowManager().getDefaultDisplay();
         final Point size = new Point();
@@ -1151,20 +1241,20 @@ public class LifeExpertfeedAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
         // fill the data to the list items
-        //       setSimpleList(listView);
+        //  setSimpleList(listView);
 
 
         // set height depends on the device size
-//        popWindow = new PopupWindow(inflatedView, size.x - 50,size.y - 250, true );
-//        // set a background drawable with rounders corners
-//        popWindow.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.comment_rounded));
-//        // make it focusable to show the keyboard to enter in `EditText`
-//        popWindow.setFocusable(true);
-//        // make it outside touchable to dismiss the popup window
-//        popWindow.setOutsideTouchable(true);
-//
-//        // show the popup at bottom of the screen and set some margin at bottom ie,
-//        popWindow.showAtLocation(v, Gravity.BOTTOM, 0,100);
+        popWindow = new PopupWindow(inflatedView, size.x - 100,size.y/4, true );
+        // set a background drawable with rounders corners
+        popWindow.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.comment_rounded));
+        // make it focusable to show the keyboard to enter in `EditText`
+        popWindow.setFocusable(true);
+        // make it outside touchable to dismiss the popup window
+        popWindow.setOutsideTouchable(true);
+
+        // show the popup at bottom of the screen and set some margin at bottom ie,
+        popWindow.showAtLocation(v, Gravity.CENTER_VERTICAL, 0,100);
     }
 
 

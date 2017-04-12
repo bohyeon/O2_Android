@@ -95,7 +95,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="비밀번호"
+                        android:text="기존 비밀번호"
                         android:textSize="12dp"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/black"
@@ -128,7 +128,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="비밀번호 확인"
+                        android:text="신규 비밀번호"
                         android:textSize="12dp"
                         android:inputType="textEmailAddress"
                         android:textColor="@color/black"
@@ -201,15 +201,29 @@
                         android:textColor="@color/black"
                         android:layout_marginTop="30dp"/>
 
-                    <EditText
-                        android:id="@+id/mentor_setting_phone"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="15dp"
-                        android:hint="@string/phone_hint"
-                        android:inputType="phone"
-                        android:background="@android:color/transparent"
-                        />
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/mentor_setting_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:textSize="15dp"
+                            android:hint="@string/phone_hint"
+                            android:inputType="phone"
+                            android:background="@android:color/transparent"
+                            />
+
+                        <CheckBox
+                            android:id="@+id/mentor_setting_phone_ok"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="공개"/>
+
+
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -235,15 +249,30 @@
                         android:textColor="@color/black"
                         android:layout_marginTop="30dp"/>
 
-                    <EditText
-                        android:id="@+id/mentor_setting_birth"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="15dp"
-                        android:hint="@string/birthday_hint"
-                        android:inputType="date"
-                        android:background="@android:color/transparent"
-                        />
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/mentor_setting_birth"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:textSize="15dp"
+                            android:hint="@string/birthday_hint"
+                            android:inputType="date"
+                            android:background="@android:color/transparent"
+                            />
+
+
+                        <CheckBox
+                            android:id="@+id/mentor_setting_birth_ok"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="공개"/>
+
+                    </RelativeLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -418,7 +447,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/gray2"
                             android:textSize="15dp"
-                            android:text="알림 수신거부"/>
+                            android:text="알림 수신"/>
 
                         <CheckBox
                             android:id="@+id/mentor_setting_noti"
@@ -450,9 +479,18 @@
                     android:textColor="@color/white"
                     android:padding="10dp"
                     android:textSize="13dp"
+                    android:layout_marginBottom="20dp"/>
+
+                <Button
+                    android:id="@+id/mentor_setting_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:background="@drawable/table_border"
+                    android:text="탈퇴하기"
+                    android:textColor="@color/gray2"
+                    android:padding="10dp"
+                    android:textSize="13dp"
                     android:layout_marginBottom="50dp"/>
-
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -52,7 +52,7 @@
                 android:background="@null"
                 android:textSize="12dp"
                 android:textColor="@color/white"
-                android:hint="ex)삼성생명 라이온즈"/>
+                android:hint="ex)오투스포츠"/>
 
             <ImageButton
                 android:id="@+id/search_common"

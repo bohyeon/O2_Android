@@ -46,7 +46,7 @@
 
                     <TextView
                         android:id="@+id/main_newsfeed_lv_name"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="14dp"
                         android:textColor="@color/black"
@@ -54,7 +54,7 @@
 
                     <TextView
                         android:id="@+id/main_newsfeed_lv_type"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="14dp"
                         android:textColor="@color/mentoColor"
@@ -62,7 +62,7 @@
 
                     <TextView
                         android:id="@+id/main_newsfeed_lv_belong"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="13dp"
                         android:textColor="@color/gray2"
@@ -70,7 +70,7 @@
 
                     <TextView
                         android:id="@+id/main_newsfeed_lv_registDate"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textSize="11dp"
                         android:textColor="@color/gray2"
@@ -91,14 +91,15 @@
 
                 <ImageView
                     android:id="@+id/main_arrow_btn"
-                    android:layout_width="17dp"
-                    android:layout_height="10dp"
-                    android:layout_marginRight="10dp" />
+                    android:layout_width="20dp"
+                    android:layout_height="13dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/arrow_down"/>
 
                 <Spinner
                     android:id="@+id/main_delete_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
                     android:spinnerMode="dropdown"
                     android:entries="@array/DeleteOrChange"/>
 

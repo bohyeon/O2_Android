@@ -139,17 +139,57 @@ public class FeedDetailActivity extends AppCompatActivity
 
             type.setText(type_str);
 
-            // type.setText(intent.getStringExtra("type"));
-            belong.setText(intent.getStringExtra("belong"));
+      //      Log.d("response" , "member_type : " + intent.getStringExtra("member_type"));
+
+            if(intent.getStringExtra("member_type")!=null){
+                if(intent.getStringExtra("member_type").equals("mentor")){
+                    belong.setText(intent.getStringExtra("sport_type"));
+                }else if(intent.getStringExtra("member_type").equals("expert")){
+                    // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
+                    belong.setText(intent.getStringExtra("expert_type"));
+                }else{
+                    belong.setText(intent.getStringExtra("sport_type"));
+                }
+            }
+
+
+           // belong.setText(intent.getStringExtra("belong"));
         }
 
 
 
-        if(!intent.getStringExtra("type").equals("mentee")){
-            belong.setText(intent.getStringExtra("belong"));
-        }else{
-            belong.setText("");
-        }
+//        if(!intent.getStringExtra("type").equals("mentee")){
+//            belong.setText(intent.getStringExtra("belong"));
+//        }else{
+//            belong.setText("");
+//        }
+
+//        profile_img.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent2 = new Intent( FeedDetailActivity.this, OtherPageActivity.class);
+//                intent2.putExtra("name",intent.getStringExtra("name"));
+//                intent2.putExtra("company",intent.getStringExtra("company"));
+//                intent2.putExtra("mentor_type",intent.getStringExtra("mentor_type"));
+//                intent2.putExtra("member_type",intent.getStringExtra("member_type"));
+//                intent2.putExtra("expert_type",intent.getStringExtra("expert_type"));
+//                intent2.putExtra("sport_type",intent.getStringExtra("sport_type"));
+//                intent2.putExtra("member_id",intent.getStringExtra("member_id"));
+//                intent2.putExtra("profile_url",intent.getStringExtra("profile_url"));
+//
+//                intent2.putExtra("phone_number",intent.getStringExtra("phone_number"));
+//                intent2.putExtra("birthday",intent.getStringExtra("birthday"));
+//                intent2.putExtra("is_phone_number_public",intent.getStringExtra("is_phone_number_public"));
+//                intent2.putExtra("is_birthday_public",intent.getStringExtra("is_birthday_public"));
+//                intent2.putExtra("region",intent.getStringExtra("region"));
+//                intent2.putExtra("school_level",intent.getStringExtra("school_level"));
+//                intent2.putExtra("school_name",intent.getStringExtra("school_name"));
+//                intent2.putExtra("experience_1",intent.getStringExtra("experience_1"));
+//                intent2.putExtra("experience_2",intent.getStringExtra("experience_2"));
+//                intent2.putExtra("experience_3",intent.getStringExtra("experience_3"));
+//                startActivity(intent);
+//            }
+//        });
 
 
         content.setText(intent.getStringExtra("content"));
@@ -177,6 +217,7 @@ public class FeedDetailActivity extends AppCompatActivity
         }else{
             like_btn.setTextColor(Color.parseColor("#555555"));
         }
+
 
         if(intent.getStringExtra("youtube_id") == null ||intent.getStringExtra("youtube_id").equals("")){
 
@@ -532,7 +573,7 @@ public class FeedDetailActivity extends AppCompatActivity
         if(jsonArray == null){
 
         }else{
-         //    Log.d("response" , "getcomment : " + jsonArray.toString());
+            Log.d("response" , "getcomment : " + jsonArray.toString());
             feedCommentAdapterActivity.clear();
 
             for(int i = 0 ; i<jsonArray.length(); i++){
@@ -547,11 +588,12 @@ public class FeedDetailActivity extends AppCompatActivity
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.member_type = userJsonObj.getString("member_type");
                     newsfeedItem.type = userJsonObj.getString("member_type");
                     newsfeedItem.company = userJsonObj.getString("company");
-//                    newsfeedItem.sport_type = userJsonObj.getString("sport_type");
-//                    newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
-//                    newsfeedItem.expert_type = userJsonObj.getString("expert_type");
+                    newsfeedItem.sport_type = userJsonObj.getString("sport_type");
+                    newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
+                    newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.regist_date = jsonObject.getString("timestamp").substring(0,10);
                     newsfeedItem.belong = userJsonObj.getString("sport_type");

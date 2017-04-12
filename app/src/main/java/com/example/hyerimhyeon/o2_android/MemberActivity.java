@@ -286,6 +286,18 @@ public class MemberActivity extends AppCompatActivity
                     newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
                     newsfeedItem.member_id = jsonObject.getString("id");
 
+                    newsfeedItem.phone_number = jsonObject.getString("phone_number");
+                    newsfeedItem.birthday = jsonObject.getString("birthday");
+                    newsfeedItem.is_phone_number_public = jsonObject.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = jsonObject.getString("is_birthday_public");
+                    newsfeedItem.region = jsonObject.getString("region");
+                    newsfeedItem.school_level = jsonObject.getString("school_level");
+                    newsfeedItem.school_name = jsonObject.getString("school_name");
+
+                    newsfeedItem.experience_1 = jsonObject.getString("experience_1");
+                    newsfeedItem.experience_2 = jsonObject.getString("experience_2");
+                    newsfeedItem.experience_3 = jsonObject.getString("experience_3");
+
                     memberSearchAdapterActivity.notifyDataSetChanged();
                     memberSearchAdapterActivity.add(newsfeedItem);
 
@@ -339,13 +351,14 @@ public class MemberActivity extends AppCompatActivity
 
     public void settextToAdapter(JSONArray jsonArray) {
 
-          Log.d("response" , "expert user : " + jsonArray.toString());
+      //    Log.d("response" , "expert user : " + jsonArray.toString());
 
         // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
         NewsfeedItem newsfeedItem;
 
 
         if(jsonArray == null){
+            memberAdapterActivity.clear();
             Toast.makeText(getApplicationContext(), "전문가회원이 없습니다.",
                     Toast.LENGTH_LONG).show();
         }else{
@@ -360,18 +373,35 @@ public class MemberActivity extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
 
+
                     newsfeedItem.name = jsonObject.getString("name");
                     newsfeedItem.profile_url = jsonObject.getString("profile_url");
                     newsfeedItem.member_type = jsonObject.getString("member_type");
+                    newsfeedItem.expert_type = jsonObject.getString("expert_type");
+                    newsfeedItem.company = jsonObject.getString("expert_type");
                     newsfeedItem.sport_type = jsonObject.getString("sport_type");
                     newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
-                    newsfeedItem.company = jsonObject.getString("expert_type");
                     newsfeedItem.member_id = jsonObject.getString("id");
+                    newsfeedItem.email = jsonObject.getString("email");
+
+                    newsfeedItem.phone_number = jsonObject.getString("phone_number");
+                    newsfeedItem.birthday = jsonObject.getString("birthday");
+                    newsfeedItem.is_phone_number_public = jsonObject.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = jsonObject.getString("is_birthday_public");
+                    newsfeedItem.region = jsonObject.getString("region");
+                    newsfeedItem.school_level = jsonObject.getString("school_level");
+                    newsfeedItem.school_name = jsonObject.getString("school_name");
+
+                    newsfeedItem.experience_1 = jsonObject.getString("experience_1");
+                    newsfeedItem.experience_2 = jsonObject.getString("experience_2");
+                    newsfeedItem.experience_3 = jsonObject.getString("experience_3");
+
+
                     if(jsonObject.getString("expert_type").equals("life")){
                         newsfeedItem.company = "생활체육";
                     }
 
-                    Log.d("response", "expert url : " +  newsfeedItem.name + newsfeedItem.profile_url);
+                   // Log.d("response", "expert url : " +  newsfeedItem.name + newsfeedItem.profile_url);
 
                     memberAdapterActivity.add(newsfeedItem);
                     memberAdapterActivity.notifyDataSetChanged();
@@ -426,13 +456,14 @@ public class MemberActivity extends AppCompatActivity
 
     public void settextToAdapter_mentor(JSONArray jsonArray) {
 
-//          Log.d("response" , "user : " + jsonArray.toString());
+       //   Log.d("response" , "mentor user : " + jsonArray.toString());
 
         // ArrayList<NewsfeedItem> newsfeedItems = newsFeed.newsfeedItem;
         NewsfeedItem newsfeedItem;
 
 
         if(jsonArray == null){
+            mentorMemberAdapterActivity.clear();
             Toast.makeText(getApplicationContext(), "멘토회원이 없습니다.",
                     Toast.LENGTH_LONG).show();
         }else{
@@ -448,15 +479,23 @@ public class MemberActivity extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     if(!jsonObject.getString("id").equals("26")){
+                        newsfeedItem.email = jsonObject.getString("email");
                         newsfeedItem.name = jsonObject.getString("name");
                         newsfeedItem.profile_url = jsonObject.getString("profile_url");
                         newsfeedItem.member_type = jsonObject.getString("member_type");
                         newsfeedItem.company = jsonObject.getString("company");
                         newsfeedItem.sport_type = jsonObject.getString("sport_type");
+                        newsfeedItem.region = jsonObject.getString("region");
                         newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
                         newsfeedItem.member_id = jsonObject.getString("id");
 
-                        Log.d("response", "mentor url : " +  newsfeedItem.member_id + newsfeedItem.profile_url);
+                        newsfeedItem.phone_number = jsonObject.getString("phone_number");
+                        newsfeedItem.birthday = jsonObject.getString("birthday");
+                        newsfeedItem.is_phone_number_public = jsonObject.getString("is_phone_number_public");
+                        newsfeedItem.is_birthday_public = jsonObject.getString("is_birthday_public");
+
+
+                     //   Log.d("response", "mentor url : " +  newsfeedItem.member_id + newsfeedItem.profile_url);
 
                         mentorMemberAdapterActivity.add(newsfeedItem);
                         mentorMemberAdapterActivity.notifyDataSetChanged();
@@ -524,6 +563,8 @@ public class MemberActivity extends AppCompatActivity
 
 
         if(jsonArray == null){
+            menteeMemberAdapterActivity.clear();
+
             Toast.makeText(getApplicationContext(), "꿈나무 회원이 없습니다.",
                     Toast.LENGTH_LONG).show();
         }else{
@@ -538,13 +579,23 @@ public class MemberActivity extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     newsfeedItem.name = jsonObject.getString("name");
+                    newsfeedItem.email = jsonObject.getString("email");
+                    newsfeedItem.region = jsonObject.getString("region");
+                    newsfeedItem.school_level = jsonObject.getString("school_level");
+                    newsfeedItem.school_name = jsonObject.getString("school_name");
                     newsfeedItem.profile_url = jsonObject.getString("profile_url");
                     newsfeedItem.member_type = jsonObject.getString("member_type");
                     newsfeedItem.company = jsonObject.getString("company");
                     newsfeedItem.sport_type = jsonObject.getString("sport_type");
                     newsfeedItem.mentor_type = jsonObject.getString("mentor_type");
                     newsfeedItem.member_id = jsonObject.getString("id");
-                    Log.d("response", "mentee url : " + newsfeedItem.name + newsfeedItem.profile_url);
+                   // Log.d("response", "mentee url : " + newsfeedItem.name + newsfeedItem.profile_url);
+
+                    newsfeedItem.phone_number = jsonObject.getString("phone_number");
+                    newsfeedItem.birthday = jsonObject.getString("birthday");
+                    newsfeedItem.is_phone_number_public = jsonObject.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = jsonObject.getString("is_birthday_public");
+
 
                     menteeMemberAdapterActivity.add(newsfeedItem);
                     menteeMemberAdapterActivity.notifyDataSetChanged();

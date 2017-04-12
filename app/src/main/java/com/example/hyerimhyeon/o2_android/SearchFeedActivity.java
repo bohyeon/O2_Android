@@ -75,28 +75,13 @@ public class SearchFeedActivity extends AppCompatActivity
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         token = loginPreferences.getString("token", "");
- //       Log.d("response", "search token : " + token);
 
         newsfeedLv = (ListView)findViewById(R.id.main_newsfeed_lv);
 
 
-
-//        View header = getLayoutInflater().inflate(R.layout.main_header, null, false);
-//        this.newsfeedLv.addHeaderView(header);
-
         this.newsFeed = NewsFeed.getNewsFeed();
         this.searchfeedAdapterActivity = new SearchfeedAdapterActivity(this, newsFeed, this);
         this.newsfeedLv.setAdapter(searchfeedAdapterActivity);
-
-//        newsfeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-////                Intent intent = new Intent(ExpertFeedActivity.this, FeedDetailActivity.class);
-////                startActivity(intent);
-//            }
-//        });
-
 
 
     }
@@ -115,7 +100,7 @@ public class SearchFeedActivity extends AppCompatActivity
 
         if(content_query.equals("")){
         //    Log.d("response" , "query :  " + content_query);
-            Toast.makeText(getApplicationContext(), "검색결과가 없습니다.",
+            Toast.makeText(getApplicationContext(), "검색어를 입력해주세요.",
                     Toast.LENGTH_LONG).show();
             finish();
         }else{
@@ -137,18 +122,17 @@ public class SearchFeedActivity extends AppCompatActivity
             String url = "http://o-two-sport.com/api/posts/?";
 
 
+            if(!post_type.equals("")){
+                url = url + "post_type="+post_type;
+            }else{
+                url = url + "sport_type="+sport_type;
+            }
+
             if(!content_query.equals("")){
                 url = url + "&content_query="+content_query;
             }
 
-            if(!post_type.equals("")){
-                url = url + "&post_type="+post_type;
-            }
-
-            if(!sport_type.equals("")){
-                url = url + "&sport_type="+sport_type;
-            }
-
+            Log.d("response" , "sport search2 : " + url);
             return params[0].GetSearch(token, url);
 
 //            return params[0].GetSearch(token, "" ,sport_type,mentor_type,school_level,expert_type,content_query);
@@ -242,6 +226,7 @@ public class SearchFeedActivity extends AppCompatActivity
                             if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                                 newsfeedItem.youtube_id = "";
                             }else{
+                                newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
                                 String str = newsfeedItem.youtube_link;
                                 String video_id = "";
 

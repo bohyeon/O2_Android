@@ -42,6 +42,7 @@
                 android:orientation="horizontal"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:background="@color/mainBlue"
                 android:layout_marginTop="15dp">
 
 

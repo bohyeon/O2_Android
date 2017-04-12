@@ -25,6 +25,16 @@ public class NewsfeedItem extends Object {
     String member_id;
     String youtube_tite;
     String id = "";
+    String phone_number = "";
+    String birthday = "";
+    String is_phone_number_public = "";
+    String is_birthday_public = "";
+    String region = "";
+    String school_level = "";
+    String school_name = "";
+    String experience_1 = "";
+    String experience_2 = "";
+    String experience_3 = "";
 
     public NewsfeedItem(){
 

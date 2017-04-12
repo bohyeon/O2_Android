@@ -86,6 +86,7 @@ public class SubjectFeedActivity extends AppCompatActivity
     private List<Integer> getListItemData(){
         List<Integer> listViewItems = new ArrayList<Integer>();
         listViewItems.add(R.drawable.soccer);
+        listViewItems.add(R.drawable.baseball);
         listViewItems.add(R.drawable.basketball);
         listViewItems.add(R.drawable.valleyball);
         listViewItems.add(R.drawable.pingpong);

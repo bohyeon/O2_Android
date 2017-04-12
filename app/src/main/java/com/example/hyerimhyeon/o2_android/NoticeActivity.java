@@ -172,9 +172,17 @@ public class NoticeActivity extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     JSONObject userJsonObj = jsonObject.getJSONObject("user");
 
+
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                    newsfeedItem.birthday = userJsonObj.getString("birthday");
+                    newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                    newsfeedItem.region = userJsonObj.getString("region");
+                    newsfeedItem.school_level = userJsonObj.getString("school_level");
+                    newsfeedItem.school_name = userJsonObj.getString("school_name");
 
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -190,11 +198,14 @@ public class NoticeActivity extends AppCompatActivity
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                     newsfeedItem.member_id = userJsonObj.getString("id");
-                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
+                    newsfeedItem.experience_1 = userJsonObj.getString("experience_1");
+                    newsfeedItem.experience_2 = userJsonObj.getString("experience_2");
+                    newsfeedItem.experience_3 = userJsonObj.getString("experience_3");
 
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
                     }else{
+                        newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
                         String str = newsfeedItem.youtube_link;
                         String video_id = "";
 
@@ -213,6 +224,7 @@ public class NoticeActivity extends AppCompatActivity
                         newsfeedItem.youtube_id = video_id;
 
                     }
+
                     noticeAdapterActivity.add(newsfeedItem);
                     noticeAdapterActivity.notifyDataSetChanged();
 
@@ -296,40 +308,43 @@ public class NoticeActivity extends AppCompatActivity
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.home_item:
-                                //home is here
-                                return true;
-                            case R.id.noty_item:
-                                Intent intent = new Intent(NoticeActivity.this, MypageActivity.class);
-                                startActivity(intent);
-                                return true;
-                            case R.id.write_item:
+        if(is_admin.equals("true")) {
+            bottomNavigationView.setVisibility(View.VISIBLE);
+            bottomNavigationView.setOnNavigationItemSelectedListener(
+                    new BottomNavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.home_item:
+                                    //home is here
+                                    return true;
+                                case R.id.noty_item:
+                                    Intent intent = new Intent(NoticeActivity.this, MypageActivity.class);
+                                    startActivity(intent);
+                                    return true;
+                                case R.id.write_item:
 
-                                if(is_admin.equals("true")){
+
                                     Intent intent2 = new Intent(NoticeActivity.this, NewsfeedWriteActivity.class);
                                     intent2.putExtra("post_type", "notice");
 
                                     startActivityForResult(intent2, 300);
-                                }else{
-                                    Toast.makeText(getApplicationContext(), "관리자 전용게시판 입니다.",
-                                            Toast.LENGTH_LONG).show();
-                                }
 
 
-                                return true;
+
+                                    return true;
 //                            case R.id.setting_item:
 //                                Intent intent1 = new Intent(ExpertFeedActivity.this, MypageActivity.class);
 //                                startActivity(intent1);
 //                                return true;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
+                    });
+
+        }else{
+           bottomNavigationView.setVisibility(View.INVISIBLE);
+        }
 
 
         return true;

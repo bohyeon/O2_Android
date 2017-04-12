@@ -11,6 +11,7 @@
     tools:showIn="@layout/app_bar_main">
 
     <ScrollView
+        android:id="@+id/e_register_top_scroll"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -309,7 +310,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textSize="15dp"
-                        android:hint="@string/belong_hint"
+                        android:hint="오투스포츠"
                         android:inputType="text"
                         android:background="@android:color/transparent"
                         />
@@ -392,6 +393,109 @@
 
 
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="오투스포츠 이용약관 동의"
+                            android:textSize="12dp"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/black"
+                            android:layout_alignParentLeft="true"/>
+
+                        <CheckBox
+                            android:id="@+id/e_agree_ck"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="동의"/>
+
+                    </RelativeLayout>
+
+                    <ScrollView
+                        android:id="@+id/e_register_scroll01"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="10dp"
+                        android:scrollbars="vertical">
+
+                        <TextView
+                            android:id="@+id/e_register_agree"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:textSize="13dp"
+
+                            android:nestedScrollingEnabled="true"
+                            android:text="@string/register_agree"
+                            android:background="@android:color/transparent"
+                            />
+
+
+                    </ScrollView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="개인정보취급방침 동의"
+                            android:textSize="12dp"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/black"
+                            android:layout_alignParentLeft="true"/>
+
+                        <CheckBox
+                            android:id="@+id/e_agree_ck02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="동의"/>
+
+                    </RelativeLayout>
+
+                    <ScrollView
+                        android:id="@+id/e_register_scroll02"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="10dp"
+                        android:scrollbars="vertical">
+
+                        <TextView
+                            android:id="@+id/e_register_agree02"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:textSize="13dp"
+
+                            android:nestedScrollingEnabled="true"
+                            android:text="@string/register_agree02"
+                            android:background="@android:color/transparent"
+                            />
+
+
+                    </ScrollView>
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/e_register_btn"

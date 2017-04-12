@@ -243,12 +243,12 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
                 if(newfeedItemPosition.member_type.equals("mentor")){
-                    viewHolder.belong.setText(newfeedItemPosition.company);
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
                 }else if(newfeedItemPosition.member_type.equals("expert")){
                     // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
                     viewHolder.belong.setText(newfeedItemPosition.expert_type);
                 }else{
-                    viewHolder.belong.setText(" ");
+                    viewHolder.belong.setText(newfeedItemPosition.sport_type);
                 }
 
 
@@ -292,13 +292,27 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                    intent.putExtra("email",newfeedItemPosition.email);
                     intent.putExtra("name",newfeedItemPosition.name);
                     intent.putExtra("company",newfeedItemPosition.company);
                     intent.putExtra("member_type",newfeedItemPosition.member_type);
                     intent.putExtra("expert_type",newfeedItemPosition.expert_type);
                     intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                     intent.putExtra("member_id",newfeedItemPosition.member_id);
+                    intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+
                     intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                    intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                    intent.putExtra("birthday",newfeedItemPosition.birthday);
+                    intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                    intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                    intent.putExtra("region",newfeedItemPosition.region);
+                    intent.putExtra("school_level",newfeedItemPosition.school_level);
+                    intent.putExtra("school_name",newfeedItemPosition.school_name);
+                    intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                    intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                    intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                     ((Activity) getContext()).startActivity(intent);
                 }
             });
@@ -316,6 +330,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -348,6 +365,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -378,6 +398,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -410,6 +433,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -616,12 +642,12 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
 
 
                     if(newfeedItemPosition.member_type.equals("mentor")){
-                        viewHolder.belong.setText(newfeedItemPosition.company);
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
                     }else if(newfeedItemPosition.member_type.equals("expert")){
                         // Log.d("response" , "belong : " + newfeedItemPosition.name + newfeedItemPosition.expert_type);
                         viewHolder.belong.setText(newfeedItemPosition.expert_type);
                     }else{
-                        viewHolder.belong.setText(" ");
+                        viewHolder.belong.setText(newfeedItemPosition.sport_type);
                     }
 
                 }else{
@@ -665,13 +691,27 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent( context.getApplicationContext(), OtherPageActivity.class);
+                        intent.putExtra("email",newfeedItemPosition.email);
                         intent.putExtra("name",newfeedItemPosition.name);
                         intent.putExtra("company",newfeedItemPosition.company);
                         intent.putExtra("member_type",newfeedItemPosition.member_type);
                         intent.putExtra("expert_type",newfeedItemPosition.expert_type);
                         intent.putExtra("sport_type",newfeedItemPosition.sport_type);
                         intent.putExtra("member_id",newfeedItemPosition.member_id);
+                        intent.putExtra("mentor_type",newfeedItemPosition.mentor_type);
+
                         intent.putExtra("profile_url",newfeedItemPosition.profile_url);
+                        intent.putExtra("phone_number",newfeedItemPosition.phone_number);
+                        intent.putExtra("birthday",newfeedItemPosition.birthday);
+                        intent.putExtra("is_phone_number_public",newfeedItemPosition.is_phone_number_public);
+                        intent.putExtra("is_birthday_public",newfeedItemPosition.is_birthday_public);
+                        intent.putExtra("region",newfeedItemPosition.region);
+                        intent.putExtra("school_level",newfeedItemPosition.school_level);
+                        intent.putExtra("school_name",newfeedItemPosition.school_name);
+                        intent.putExtra("experience_1",newfeedItemPosition.experience_1);
+                        intent.putExtra("experience_2",newfeedItemPosition.experience_2);
+                        intent.putExtra("experience_3",newfeedItemPosition.experience_3);
+
                         ((Activity) getContext()).startActivity(intent);
                     }
                 });
@@ -694,6 +734,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -728,6 +771,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -762,6 +808,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);
@@ -798,6 +847,9 @@ public class NoticeAdapterActivity extends ArrayAdapter<NewsfeedItem> {
                         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("post_id",newfeedItemPosition2.post_id);
                         intent.putExtra("name",newfeedItemPosition2.name);
+                        intent.putExtra("member_type",newfeedItemPosition2.member_type);
+                        intent.putExtra("expert_type",newfeedItemPosition2.expert_type);
+                        intent.putExtra("sport_type",newfeedItemPosition2.sport_type);
                         intent.putExtra("type",newfeedItemPosition2.member_type);
                         intent.putExtra("belong",newfeedItemPosition2.company);
                         intent.putExtra("regist_date",newfeedItemPosition2.regist_date);

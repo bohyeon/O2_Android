@@ -50,27 +50,27 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
-                    android:layout_marginBottom="30dp"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/invite_main_img"
                         android:layout_width="match_parent"
+                        android:layout_marginTop="-40dp"
                         android:layout_height="400dp"
                         android:layout_marginBottom="30dp" />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/mail_icon"/>
+                    <!--<ImageView-->
+                        <!--android:layout_width="20dp"-->
+                        <!--android:layout_height="20dp"-->
+                        <!--android:background="@drawable/mail_icon"/>-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="스포츠인을 초대해주세요!"
-                        android:textColor="@color/mainBlue"
-                        android:textSize="22dp"
-                        android:layout_marginTop="10dp"/>
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="스포츠인을 초대해주세요!"-->
+                        <!--android:textColor="@color/mainBlue"-->
+                        <!--android:textSize="22dp"-->
+                        <!--android:layout_marginTop="10dp"/>-->
 
                 </LinearLayout>
 

@@ -101,8 +101,14 @@ public class NewsfeedWriteActivity extends AppCompatActivity {
 
         }else{
             sport_type = intent.getStringExtra("sport_type");
-            Log.d("response" , "sport_type :" + sport_type);
         }
+
+        if(post_type.equals("life_expert_knowledge_feed")){
+            editPost.setHint("오투스포츠는 검증된 생활전문가 그룹이 종합적인(법률, 세무, 부동산, 투자, 손해사정, 보험) 컨설팅 및 자문서비스를 일관성있게 제공합니다. 일상생활중에 궁금한 것 물어보세요.");
+        }else {
+            editPost.setHint("운동 중에 궁금한 것, 고민되는 것 물어 보세요. 꿈나무에게 힘이 되는 정보 알려 주세요.");
+        }
+
 //
 //        galleryBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override

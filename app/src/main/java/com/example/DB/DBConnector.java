@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +130,35 @@ public class DBConnector {
         return  bobo;
     }
 
+    public static Integer DeleteUser(String token) {
 
+        JSONObject jsonObject = null;
+        int code = 0;
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpDelete httppost = new HttpDelete("http://o-two-sport.com/api/users/self/");
+        httppost.addHeader("Authorization","Token " +token);
+
+        try {
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+           // String bobo = EntityUtils.toString(response.getEntity());
+            code = response.getStatusLine().getStatusCode();
+              Log.d("response2", "delete user code : " + token);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+
+            // TODO Auto-generated catch block
+        } catch (IOException e) {
+            e.printStackTrace();
+            // TODO Auto-generated catch block
+        }
+
+        return  code;
+    }
 
     public static JSONObject PostCode(String invite_code) {
 
@@ -315,11 +344,11 @@ public class DBConnector {
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-            //     Log.d("response","response error " + e.toString());
+            Log.d("response","response error " + e.toString());
             // TODO Auto-generated catch block
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            //    Log.d("response","response error2 " + e.toString());
+            Log.d("response","response error2 " + e.toString());
             // TODO Auto-generated catch block
         }
 
@@ -529,7 +558,7 @@ public class DBConnector {
     public static JSONObject Like(String token, String post_id) {
 
         JSONObject jsonObject = null;
-
+        String code = "";
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost("http://o-two-sport.com/api/likes/"+post_id+"/");
@@ -546,9 +575,11 @@ public class DBConnector {
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
             String bobo = EntityUtils.toString(response.getEntity());
+            code = response.getStatusLine().getStatusCode()+"";
 
+            Log.d("response" , "code :  " + code.toString());
 
-            jsonObject = new JSONObject(bobo.toString());
+            jsonObject = new JSONObject(code.toString());
 
             // Log.d("response2", "response1 : " + jsonObject.toString());
 
@@ -755,12 +786,46 @@ public class DBConnector {
 
     public  JSONArray GetPost(String token, String post_type, String sport_type){
 
-        // Log.d("response","res toekn : " + token);
+       //  Log.d("response","register token3 : " + token);
         JSONArray jsonArray = null;
         //   Log.d("response","getPost token : " + token.toString());
 
         try {
             URL url = new URL("http://o-two-sport.com/api/posts/?post_type="+post_type);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Authorization","Token " +token);
+            conn.connect();
+
+            InputStream is = conn.getInputStream();
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+
+           //       Log.d("response","post reponse : " + responseStrBuilder.toString());
+            jsonArray = new JSONArray(responseStrBuilder.toString());
+           // Log.d("response2", "post : " + jsonArray.toString());
+
+        } catch (IOException | JSONException e) {
+
+            e.printStackTrace();
+            //    Log.d("response","post reponse2 : " + e.toString());
+        }
+
+        return jsonArray;
+    }
+
+
+    public  JSONArray GetPost_Expert(String token){
+
+        Log.d("response","register token3 : " + token);
+        JSONArray jsonArray = null;
+        //   Log.d("response","getPost token : " + token.toString());
+
+        try {
+            URL url = new URL("http://o-two-sport.com/api/posts/?member_type=expert");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization","Token " +token);
@@ -852,33 +917,93 @@ public class DBConnector {
         return jsonArray;
     }
 
+    public  JSONArray GetPost_sport2(String token, String sport_type){
+
+
+        HttpURLConnection urlConnection = null;
+        JSONArray jsonArray = null;
+        String jsonString = null;
+        URL url = null;
+        try {
+            url = new URL("http://o-two-sport.com/api/posts/?sport_type="+sport_type);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("Authorization","Token " +token);
+            urlConnection.setReadTimeout(10000 /* milliseconds */);
+            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+
+            urlConnection.setDoOutput(true);
+
+            urlConnection.connect();
+
+            BufferedReader br=new BufferedReader(new InputStreamReader(url.openStream()));
+
+            char[] buffer = new char[1024];
+            jsonString = new String();
+
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line+"\n");
+            }
+            br.close();
+
+            jsonString = sb.toString();
+
+            Log.d("response","post reponse "+sport_type+": " + jsonString.toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            jsonArray = new JSONArray(jsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonArray;
+    }
+
     public  JSONArray GetPost_sport(String token, String sport_type){
 
         // Log.d("response","res toekn : " + token);
         JSONArray jsonArray = null;
-        //    Log.d("response","getPost token : " + token.toString());
+       // Log.d("response","post reponse0 : " + sport_type);
 
         try {
             URL url = new URL("http://o-two-sport.com/api/posts/?sport_type="+sport_type);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization","Token " +token);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Connection", "close");
             conn.connect();
+
+//            Log.d("response","post reponse1 "+sport_type+": " + url.toString());
 
             InputStream is = conn.getInputStream();
             BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             StringBuilder responseStrBuilder = new StringBuilder();
+
             String inputStr;
             while ((inputStr = streamReader.readLine()) != null)
                 responseStrBuilder.append(inputStr);
 
-            //     Log.d("response","post reponse : " + responseStrBuilder.toString());
             jsonArray = new JSONArray(responseStrBuilder.toString());
+
+          //  Log.d("response","post reponse "+sport_type+": " + responseStrBuilder.toString());
 
         } catch (IOException | JSONException e) {
 
             e.printStackTrace();
-            //    Log.d("response","post reponse2 : " + e.toString());
+          //  Log.d("response","post reponse2 : " + e.toString());
         }
 
         return jsonArray;
@@ -923,7 +1048,8 @@ public class DBConnector {
         try {
             //   URL url = new URL("http://o-two-sport.com/api/posts/?post_type="+post_type+"&sport_type="+sport_type+"&mentor_type="+mentor_type+"&school_level="+school_level+"&expert_type="+expert_type+"&content_query="+content_query);
             URL url = new URL(url_str);
-            //    Log.d("respon" , "search arr2 : " + url_str);
+
+            Log.d("respon" , "search arr2 : " + url_str.toString());
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization","Token " +token);
@@ -936,10 +1062,13 @@ public class DBConnector {
             while ((inputStr = streamReader.readLine()) != null)
                 responseStrBuilder.append(inputStr);
 
+
+
             jsonArray = new JSONArray(responseStrBuilder.toString());
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
+            Log.d("respon" , "search e : " + e.toString());
         }
 
         return jsonArray;
@@ -1028,7 +1157,7 @@ public class DBConnector {
             while ((inputStr = streamReader.readLine()) != null)
                 responseStrBuilder.append(inputStr);
 
-            //   Log.d("response","post reponse : " + responseStrBuilder.toString());
+               Log.d("response","post reponse : " + responseStrBuilder.toString());
             jsonArray = new JSONArray(responseStrBuilder.toString());
 
         } catch (IOException | JSONException e) {
@@ -1156,6 +1285,7 @@ public class DBConnector {
         httppost.addHeader(HTTP.CONTENT_TYPE, "application/json");
         JSONObject json = new JSONObject();
 
+        //Log.d("response","password2 : "+ is_birthday_public);
 
         try {
             // Add your data
@@ -1235,7 +1365,7 @@ public class DBConnector {
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-            //      Log.d("response2", "response2 : " + e.toString());
+                  Log.d("response2", "response2 : " + e.toString());
             // TODO Auto-generated catch block
         } catch (IOException | JSONException e) {
             e.printStackTrace();

@@ -91,7 +91,7 @@ public class OtherPageActivity extends AppCompatActivity
         companytv = (TextView) findViewById(R.id.mypage_company);
         profile_img = (ImageView) findViewById(R.id.mypage_profile_img);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         //   Log.d("response" , "myname: " + loginPreferences.getString("name" , ""));
         nametv.setText(intent.getStringExtra("name"));
         if(intent.getStringExtra("member_type").equals("expert")){
@@ -99,7 +99,7 @@ public class OtherPageActivity extends AppCompatActivity
             companytv.setText(intent.getStringExtra("expert_type"));
         }else if(intent.getStringExtra("member_type").equals("mentor")){
             typetv.setText("멘토");
-            companytv.setText(intent.getStringExtra("company"));
+            companytv.setText(intent.getStringExtra("sport_type")+" " +intent.getStringExtra("company"));
         }else{
             typetv.setText("꿈나무");
             companytv.setText(intent.getStringExtra("sport_type"));
@@ -142,8 +142,40 @@ public class OtherPageActivity extends AppCompatActivity
         // open or close when click a menu button
         buttonStateOpen = false;
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        menu_icon = (ImageButton) findViewById(R.id.mypage_backBtn);
-        menu_icon.setBackgroundResource(0);
+        menu_icon = (ImageButton) findViewById(R.id.other_moreBtn);
+
+        menu_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent intent2 = new Intent( OtherPageActivity.this, OtherPageMoreActivity.class);
+                Log.d("response" , "member_type :  " + intent.getStringExtra("experience_1"));
+                intent2.putExtra("email",intent.getStringExtra("email"));
+
+                intent2.putExtra("name",intent.getStringExtra("name"));
+                intent2.putExtra("company",intent.getStringExtra("company"));
+                intent2.putExtra("mentor_type",intent.getStringExtra("mentor_type"));
+                intent2.putExtra("member_type",intent.getStringExtra("member_type"));
+                intent2.putExtra("expert_type",intent.getStringExtra("expert_type"));
+                intent2.putExtra("sport_type",intent.getStringExtra("sport_type"));
+                intent2.putExtra("member_id",intent.getStringExtra("member_id"));
+                intent2.putExtra("profile_url",intent.getStringExtra("profile_url"));
+
+                intent2.putExtra("phone_number",intent.getStringExtra("phone_number"));
+                intent2.putExtra("birthday",intent.getStringExtra("birthday"));
+                intent2.putExtra("is_phone_number_public",intent.getStringExtra("is_phone_number_public"));
+                intent2.putExtra("is_birthday_public",intent.getStringExtra("is_birthday_public"));
+                intent2.putExtra("region",intent.getStringExtra("region"));
+                intent2.putExtra("school_level",intent.getStringExtra("school_level"));
+                intent2.putExtra("school_name",intent.getStringExtra("school_name"));
+                intent2.putExtra("experience_1",intent.getStringExtra("experience_1"));
+                intent2.putExtra("experience_2",intent.getStringExtra("experience_2"));
+                intent2.putExtra("experience_3",intent.getStringExtra("experience_3"));
+
+                startActivityForResult(intent2,300);
+            }
+        });
 
     }
 
@@ -267,9 +299,18 @@ public class OtherPageActivity extends AppCompatActivity
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     JSONObject userJsonObj = jsonObject.getJSONObject("user");
 
+
+
                     newsfeedItem.name = userJsonObj.getString("name");
                     newsfeedItem.email = userJsonObj.getString("email");
                     newsfeedItem.profile_url = userJsonObj.getString("profile_url");
+                    newsfeedItem.phone_number = userJsonObj.getString("phone_number");
+                    newsfeedItem.birthday = userJsonObj.getString("birthday");
+                    newsfeedItem.is_phone_number_public = userJsonObj.getString("is_phone_number_public");
+                    newsfeedItem.is_birthday_public = userJsonObj.getString("is_birthday_public");
+                    newsfeedItem.region = userJsonObj.getString("region");
+                    newsfeedItem.school_level = userJsonObj.getString("school_level");
+                    newsfeedItem.school_name = userJsonObj.getString("school_name");
 
                     newsfeedItem.content = jsonObject.getString("content");
                     newsfeedItem.post_image_url = jsonObject.getString("post_image_url");
@@ -285,11 +326,14 @@ public class OtherPageActivity extends AppCompatActivity
                     newsfeedItem.mentor_type = userJsonObj.getString("mentor_type");
                     newsfeedItem.expert_type = userJsonObj.getString("expert_type");
                     newsfeedItem.member_id = userJsonObj.getString("id");
-                    newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
+                    newsfeedItem.experience_1 = userJsonObj.getString("experience_1");
+                    newsfeedItem.experience_2 = userJsonObj.getString("experience_2");
+                    newsfeedItem.experience_3 = userJsonObj.getString("experience_3");
 
                     if(newsfeedItem.youtube_link == null || newsfeedItem.youtube_link.equals("") ){
                         newsfeedItem.youtube_id = "";
                     }else{
+                        newsfeedItem.youtube_tite = jsonObject.getString("youtube_title");
                         String str = newsfeedItem.youtube_link;
                         String video_id = "";
 
@@ -302,12 +346,14 @@ public class OtherPageActivity extends AppCompatActivity
                         }else if(str.toString().indexOf("youtu.be") != -1 ){
                             //   Log.d("response", "youtube_str :  "+ str);
                             video_id = str.substring(17);
-                          //  Log.d("response", "youtube_id :  "+ video_id);
+                            Log.d("response", "youtube_id :  "+ video_id);
                         }
 
                         newsfeedItem.youtube_id = video_id;
 
                     }
+
+
                     mypageMypostAdapterActivity.add(newsfeedItem);
                     mypageMypostAdapterActivity.notifyDataSetChanged();
 

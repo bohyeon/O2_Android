@@ -145,14 +145,16 @@ public class LoginActivity extends AppCompatActivity
          //  loginPrefsEditor.putString("token", token);
 
            try {
-               Log.d("response" , "token : " + jsonObject.getString("token"));
+             //  Log.d("response" , "token : " + jsonObject.getString("token"));
                loginPrefsEditor.putString("email", jsonObject.getString("email").toString());
                loginPrefsEditor.putString("name", jsonObject.getString("name").toString());
                loginPrefsEditor.putString("id", jsonObject.getString("id").toString());
-               loginPrefsEditor.putString("password",pw_str);
+             //  loginPrefsEditor.putString("pw",pw_str);
                loginPrefsEditor.putString("token", jsonObject.getString("token").toString());
                loginPrefsEditor.putString("phone_number", jsonObject.getString("phone_number").toString());
                loginPrefsEditor.putString("birthday", jsonObject.getString("birthday").toString());
+               loginPrefsEditor.putString("is_phone_number_public", jsonObject.getString("is_phone_number_public").toString());
+               loginPrefsEditor.putString("is_birthday_public", jsonObject.getString("is_birthday_public").toString());
                loginPrefsEditor.putString("profile_url", jsonObject.getString("profile_url").toString());
                loginPrefsEditor.putString("member_type", jsonObject.getString("member_type").toString());
                loginPrefsEditor.putString("sport_type", jsonObject.getString("sport_type").toString());
@@ -169,8 +171,8 @@ public class LoginActivity extends AppCompatActivity
                String name_ck2 = URLEncoder.encode(jsonObject.getString("name"),"UTF-8");
                String name_ck = URLDecoder.decode(name_ck2,"UTF-8");
 
-               Log.d("response","user object1 : "+ name_ck);
-               Log.d("response","user object2 : "+ jsonObject.getString("name").toString());
+    //           Log.d("response","user object1 : "+ name_ck);
+    //           Log.d("response","user object2 : "+ jsonObject.getString("name").toString());
                if(login_ck.isChecked()){
                    // 로그인 유지하기
 
