@@ -983,7 +983,7 @@ public class DBConnector {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization","Token " +token);
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Connection", "close");
+ //           conn.setRequestProperty("Connection", "close");
             conn.connect();
 
 //            Log.d("response","post reponse1 "+sport_type+": " + url.toString());
