@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.hyerimhyeon.o2_android.MainActivity"
+    tools:context="com.o2_company.hyerimhyeon.o2_android.com.o2_sport.hyerimhyeon.o2_android.MainActivity"
     android:background="@color/mainBlue">
 
     <!--<android.support.design.widget.AppBarLayout-->

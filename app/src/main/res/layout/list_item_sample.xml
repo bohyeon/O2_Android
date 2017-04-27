@@ -7,7 +7,7 @@
     android:layout_height="150dp"
     android:descendantFocusability="blocksDescendants">
 
-    <com.example.grid.DynamicHeightTextView
+    <com.o2_company.grid.DynamicHeightTextView
         android:id="@+id/txt_line1"
         android:layout_width="match_parent"
         android:layout_height="150dp"

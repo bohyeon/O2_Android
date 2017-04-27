@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1023778304053:android:0c1a78d5965aed8f",
         "android_client_info": {
-          "package_name": "com.example.hyerimhyeon.o2_android"
+          "package_name": "com.o2_company.hyerimhyeon.o2_android"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1023778304053-68b1dma2bo1tqdu9pqkktnqshb4dd1vc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.hyerimhyeon.o2_android",
+            "package_name": "com.o2_company.hyerimhyeon.o2_android",
             "certificate_hash": "8326e463c2e8341f5294c26c8f55a529708a0f6a"
           }
         },

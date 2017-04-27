@@ -41,7 +41,7 @@
 
                <TextView
                    android:id="@+id/member_lv_name"
-                   android:layout_width="match_parent"
+                   android:layout_width="wrap_content"
                    android:layout_height="match_parent"
                    android:textSize="14dp"
                    android:textColor="@color/black"
@@ -49,7 +49,7 @@
 
                <TextView
                    android:id="@+id/member_lv_type"
-                   android:layout_width="match_parent"
+                   android:layout_width="wrap_content"
                    android:layout_height="match_parent"
                    android:textSize="14dp"
                    android:textColor="@color/mentoColor"
@@ -57,7 +57,7 @@
 
                <TextView
                    android:id="@+id/member_lv_belong"
-                   android:layout_width="match_parent"
+                   android:layout_width="wrap_content"
                    android:layout_height="match_parent"
                    android:textSize="13dp"
                    android:textColor="@color/gray2"

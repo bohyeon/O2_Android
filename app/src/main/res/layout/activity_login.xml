@@ -9,7 +9,7 @@
     android:background="@color/mainBlue"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main"
-    tools:context="com.example.hyerimhyeon.o2_android.MainActivity"
+    tools:context="com.o2_company.hyerimhyeon.o2_android.com.o2_sport.hyerimhyeon.o2_android.MainActivity"
     >
 
 

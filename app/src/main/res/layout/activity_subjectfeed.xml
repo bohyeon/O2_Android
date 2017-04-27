@@ -11,7 +11,7 @@
 
 
 
-        <!--<com.example.grid.StaggeredGridView-->
+        <!--<StaggeredGridView-->
             <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
             <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
             <!--android:id="@+id/grid_view"-->
@@ -20,7 +20,7 @@
             <!--app:item_margin="8dp"-->
             <!--app:column_count="2" >-->
 
-        <!--</com.example.grid.StaggeredGridView>-->
+        <!--</StaggeredGridView>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/grid_view"
